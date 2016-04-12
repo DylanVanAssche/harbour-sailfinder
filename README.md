@@ -1,0 +1,2 @@
+# Sailfinder
+Sailfinder bug tracker
