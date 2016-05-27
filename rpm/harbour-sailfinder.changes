@@ -1,0 +1,134 @@
+# Rename this file as harbour-sailfinder.changes to include changelog
+# entries in your RPM file.
+#
+# Add new changelog entries following the format below.
+# Add newest entries to the top of the list.
+# Separate entries from eachother with a blank line.
+
+# * date Author's Name <author's email> version-release
+# - Summary of changes
+
+* Thu May 26 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.5-1
+- IMPROVEMENT: Replaced ProgressBar with ViewPlaceHolder element in TinderLoginPage.
+- NEW: Added bio in Mainscreen as asked (with settings option).
+
+* Fri May 20 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.4-1
+- IMPROVEMENT QA: Landscape support.
+
+* Tue May 17 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.3-1
+- NEW: Landscape support.
+- NEW: Tablet support.
+
+* Sun May 15 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.2-1
+- IMPROVEMENT: Errors logging improved.
+- NEW: Autoreconnect when the API doesn't respond. I need some people who can try this out together.
+- NEW: Cover support.
+
+* Fri May 13 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.1-1
+- MAJOR BUGFIX: Disliking now works again.
+- IMPROVEMENT: Updating location.
+- IMPROVEMENT: Errors are now completly handled and are logged into a text file session.log which you can find here: /home/nemo/.config/harbour-sailfinder/session.log
+
+* Mon May 9 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.0-6
+- MAJOR BUGFIX: QA problems.
+
+* Sun May 8 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.0-5
+- MINOR BUGFIX: Reporting only available with matches.
+
+* Fri May 6 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.0-4
+- STORE QA: Downgraded io.thp.pyotherside from 1.4 to 1.3.
+- STORE QA: Downgraded QtPositioning from 5.3 to 5.2.
+- STORE QA: Removed org.nemomobile.keepalive 1.1 since it's not alowed in the Jolla Store. Notification updates in sleep mode are now not guaranteed anymore!
+- STORE QA: Removed saving people from the Python backend.
+- STORE QA: Data dir moved to the right place (home/nemo/.config/harbour-sailfinder)
+
+* Thu May 5 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.0-3
+- MINOR BUGFIX: Reporting wasn't working in the Python backend.
+
+* Wed May 4 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.0-2
+- MAJOR BUGFIX: Several bugfixes.
+- UPGRADE: I rewrote Sailfinder (UI and backend) from the ground up to improve my code and make it easier to maintain.
+- IMPROVEMENT: Errors are now handled better. Tinder API errors are now reported to the user.
+- IMPROVEMENT: Loading & refreshing messages is now much faster.
+- IMPROVEMENT: Mainpage speed improvements.
+- IMPROVEMENT: Show the user when we are loading new people.
+- IMPROVEMENT: Support for larger screens.
+- IMPROVEMENT: Cleaned up the code a lot.
+- NEW: Source code now available on Github under GPLv3
+- NEW: Messagespage shows now from who the messages came and the name + picture of the match.
+- ...
+
+* Sat Apr 16 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.9-1
+- MINOR BUGFIX: Common interests with matches (Github issue 3).
+- MINOR BUGFIX: Set the correctly 'no-image' image in the about pages.
+- MINOR BUGFIX: No users nearby was not converted to a ViewPlaceHolder element from Sailfish Silica.
+- MINOR BUGFIX: Small UI glitch in about match page: Instagram icon.
+- UPGRADE: merged Pynder commit #60 with Sailfinders version of Pynder.
+- IMPROVEMENT: added links to external sources I used in the 'About Sailfinder'.
+- NEW: Enlarge the pictures in the about pages by pressing on the picture.
+- NEW: Save people or matches in the about pages.
+- NEW: View saved people in a special page.
+
+* Wed Apr 13 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.8-1
+- MINOR BUGFIX: After sending a message you saw the message history twice (Github issue 1).
+- MINOR BUGFIX: Common interests (Github issue 2).
+- MINOR BUGFIX: Small UI glitch when scrolling through matches.
+- WARNING: I resetted all the internal settings of the app to make sure everyone has the last version of the configuration files.
+- IMPROVEMENT: Only activate GPS when the user interacts with Sailfinder to save battery.
+- IMPROVEMENT: Replaced some labels by the ViewPlaceHolder (native Sailfish OS component).
+
+* Tue Apr 12 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.7-1
+- REMOVED: Notifications, a lot of users are having problems with 'dbus-python'. If someone can help with the nemo-notifications plugin I can implent it again.
+- IMPROVEMENT: Better handling of the super like limit. The super like limit for free users is limited to 1/session.
+- IMPROVEMENT: GPS location update now also works when the user is on the main page.
+- NEW: Github bugtracker: https://github.com/modulebaan/Sailfinder
+
+* Sun Apr 10 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.6-3
+- MINOR BUGFIX: Several small bugfixes.
+- MINOR BUGFIX: Handle super like limit.
+
+* Sat Apr 09 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.6-2
+- MAJOR BUGFIX: Sailfinder crashed when the configuration files are missing.
+- IMPROVEMENT: Hide the configuration files in a hidden folder .sailfinder in the home directory.
+- IMPROVEMENT: Out of likes timer now also runs when the device is in deep sleep.
+- NEW: Notifications for new matches & new likes.
+
+* Sun Apr 03 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.5-1
+- MINOR BUGFIX: UI instagram icon and username in the about person and about match pages.
+- MINOR BUGFIX: UI 'no users nearby' text wrap.
+- NEW: Cover support on the following pages: main, matches, profile and settings.
+
+* Fri Apr 01 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.4-3
+- MAJOR BUGFIX: Out of range error related to no users anymore in the area
+- NEW: Autoreload people after we change a setting in Settings
+
+* Thu Mar 31 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.4-2
+- MINOR BUGFIX: UI small glitch in about person & match page
+- MAJOR BUGFIX: UI like button
+- MAJOR BUGFIX: Loading people not working after update 0.4-1
+- NEW: Gestures hints added in matches page
+
+* Wed Mar 30 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.4-1
+- MINOR BUGFIX: Several small bugfixes
+- IMPROVEMENT: Increased Sailfinder his performance while liking/disliking people
+- IMPROVEMENT: New like/dislike/superlike buttons
+- REMOVED: Bio on the main page, you can access all the information by pressing (and hold) on the person image
+- NEW: 'About match' page to see more information about a match
+- NEW: Gestures in the user profile to swipe through the user his/her pictures
+- NEW: Error page, when an error occured the user gets notified with an error page. The error has been put into the clipboard to make it easy to report a bug.
+
+* Sat Mar 26 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.3-1
+- MINOR BUGFIX: Several small bugfixes
+- IMPROVEMENT: Increased Sailfinder his performance while liking/disliking people
+- IMPROVEMENT: Update automatically 'out of likes' timer
+- NEW: 'About person' page to see more information about a person.
+- NEW: Gestures when swiping through the pictures of people or to go to their 'About person' page
+- NEW: Gestures hints, you can disable them in Settings
+
+* Sat Mar 19 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.2-1
+- MINOR BUGFIX: Several small bugfixes
+- IMPROVEMENT: Improved About page
+- IMPROVEMENT: Added Paypal donation button
+
+* Fri Mar 18 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 0.1-1
+- Initial release
