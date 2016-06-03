@@ -124,41 +124,68 @@ Page {
                         width: matchesList.width
                         height: pictureMatch.height
 
-                        Row {
-                            spacing: Theme.paddingLarge
+                        Rectangle {
+                            anchors.fill: parent
+                            color: model.color
+                            opacity: model.opacity
+                            z: 1
+                        }
 
-                            Image {
-                                id: pictureMatch
-                                width: Screen.width/3
-                                height: Screen.width/3
-                                source: model.imageURL
-                                onStatusChanged:
-                                {
-                                    if (status == Image.Error) {
-                                        source = "../images/noImage.png"
-                                        console.log('ERROR: pictureloading failed')
+                            Row {
+                                spacing: Theme.paddingLarge
+
+                                Image {
+                                    id: pictureMatch
+                                    width: Screen.width/3
+                                    height: Screen.width/3
+                                    z: 2
+                                    source: model.imageURL
+                                    onStatusChanged:
+                                    {
+                                        if (status == Image.Error) {
+                                            source = "../images/noImage.png"
+                                            console.log('ERROR: pictureloading failed')
+                                        }
                                     }
+                                }
+
+                                Label {
+                                    id: nameMatch
+                                    color: highlighted ? Theme.highlightColor : Theme.primaryColor
+                                    z: 2
+                                    text: model.text
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    x: Theme.horizontalPageMargin
                                 }
                             }
 
-                            Label {
-                                id: nameMatch
-                                color: highlighted ? Theme.highlightColor : Theme.primaryColor
-                                text: model.text
-                                anchors.verticalCenter: parent.verticalCenter
-                                x: Theme.horizontalPageMargin
-                            }
-                        }
                         onClicked:
                         {
                             pageStack.push(Qt.resolvedUrl(page));
-                            python.call('tinder.loadMessages',[index], function(matchNumber) {});
+                            if(model.type == "match")
+                            {
+                                python.call('tinder.loadMessages',[index], function(matchNumber) {});
+                            }
+                            else
+                            {
+                                python.call('tinder.loadAbout',['saved', index], function(aboutType, matchNumber) {});
+                                console.log("INDEX= " + index)
+                            }
                         }
                         onPressAndHold:
                         {
                             pageStack.push(Qt.resolvedUrl('AboutPersonPage.qml'));
-                            python.call('tinder.loadAbout',['match', index], function(aboutType, matchNumber) {});
+                            if(model.type == "match")
+                            {
+                                python.call('tinder.loadAbout',['match', index], function(aboutType, matchNumber) {});
+                            }
+                            else
+                            {
+                                python.call('tinder.loadAbout',['saved', index], function(aboutType, matchNumber) {});
+                                console.log("INDEX= " + index)
+                            }
                         }
+
                     }
                     VerticalScrollDecorator {}
                 }
@@ -189,18 +216,32 @@ Page {
             // When Python is ready, load the matches...
             python.call('tinder.loadNewMatches',[], function() {});
             python.call('tinder.loadMatches',[], function() {});
+            python.call('tinder.loadSaved',[], function() {});
             python.call('tinder.hintsHandler',[2], function() {});
 
             // Get the matches and put them in a list.
             setHandler('getMatch', function(matchName, matchPicture, matchNumber)
             {
-                matchesModel.append({text: matchName, page: "MessagesPage.qml", imageURL: matchPicture, matchNumber: matchNumber, visible: true});
+                matchesModel.append({text: matchName, page: "MessagesPage.qml", imageURL: matchPicture, matchNumber: matchNumber, visible: true, opacity: 1, color: "transparent", type: "match"});
                 matchesList.visible = true;
                 message.enabled = false;
                 if(matchesModel.count == 0)
                 {
                     message.enabled = true;
-                    message.text = "No matches :(";
+                    message.text = "No matches or saved people :(";
+                    message.hintText = "Go back and swipe some people!";
+                }
+            });
+
+            setHandler('getSaved', function(savedName, savedPicture, savedNumber, dirName)
+            {
+                matchesModel.append({text: savedName, page: "AboutPersonPage.qml", imageURL: savedPicture, matchNumber: savedNumber, visible: true, opacity: 0.2, color: "red", type: "saved", identifier: dirName});
+                matchesList.visible = true;
+                message.enabled = false;
+                if(matchesModel.count == 0)
+                {
+                    message.enabled = true;
+                    message.text = "No matches or saved people :(";
                     message.hintText = "Go back and swipe some people!";
                 }
             });
@@ -223,6 +264,19 @@ Page {
             setHandler('error', function(traceback)
             {
                 console.log('Python ERROR: ' + traceback)
+            });
+
+            // Show non-critical errors in the QT console.
+            setHandler('clearList', function(state)
+            {
+                // Clear & refresh
+                message.enabled = true
+                message.text = "Refreshing"
+                message.hintText = "This can take some time..."
+                matchesModel.clear()
+                python.call('tinder.loadNewMatches',[], function() {});
+                python.call('tinder.loadMatches',[], function() {});
+                python.call('tinder.loadSaved',[], function() {});
             });
         }
 

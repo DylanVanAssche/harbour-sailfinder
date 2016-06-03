@@ -93,6 +93,13 @@ Page {
                     Qt.openUrlExternally("https://openrepos.net/content/minitreintje/sailfinder")
                 }
             }
+
+            // Spacer
+            Rectangle {
+                width: parent.width
+                height: 30
+                color: "transparent"
+            }
         }
     }
 }

@@ -8,6 +8,18 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Wed Jun 01 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.6-2
+- QA: I forgot to fix the hardcoded paths, now it's done.
+- IMPROVEMENT: Autorefresh when saving a match.
+
+* Fri May 27 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.6-1
+- MINOR BUGFIX: Messages recently send not visible, only after restart (Github issue #8).
+- MINOR BUGFIX: UI glitch when changing from landscape <-> portrait in the AboutPersonPage, fixed with a dirty hack (Github issue #10).
+- MINOR BUGFIX: Out of superlikes was not working properly anymore.
+- MINOR BUGFIX: Reconnecting UI had some issues.
+- IMPROVEMENT: UI spacer added in AboutPersonPage.
+- NEW: Saved people is back!
+
 * Thu May 26 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.5-1
 - IMPROVEMENT: Replaced ProgressBar with ViewPlaceHolder element in TinderLoginPage.
 - NEW: Added bio in Mainscreen as asked (with settings option).

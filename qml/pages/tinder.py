@@ -28,6 +28,7 @@ pictureCounterNumberAboutPerson = 0;
 likeComplete = 0
 matches = 0
 currentMatch = 0
+savedNumber = 0
 matchNumberReceived = 0
 dataReady = False
 currentSavedMatchNumber = 0
@@ -35,7 +36,7 @@ currentSavedPersonNumber = 0
 
 def cover():
     pyotherside.send("goBackCover", True)
-
+    
 # Login functions
 
 def login(url):
@@ -45,11 +46,11 @@ def login(url):
         os.chdir(homeDir + "/.config/")
     
         # Intialise config files with the default values only if we can't find them (user deleted the files, first launch, ...)
-        if not os.path.exists("harbour-sailfinder/people/"):
-            os.makedirs("harbour-sailfinder/people/")
+        if not os.path.exists("harbour-sailfinder/saved/"):
+            os.makedirs("harbour-sailfinder/saved/")
     
-        if not os.path.exists("harbour-sailfinder/matches/"):
-            os.makedirs("harbour-sailfinder/matches/")
+        if not os.path.exists("harbour-sailfinder/saved/"):
+            os.makedirs("harbour-sailfinder/saved/")
     
         # Search for data.cfg
         if not os.path.isfile("harbour-sailfinder/data.cfg"):
@@ -556,6 +557,7 @@ def likeDislikeSuperlikePerson(action):
         # Superlike
         elif action == 3:
             try:
+                pyotherside.send('resultAction', 3)
                 pyotherside.send('resultAction', people[personsCounterNumberPersons].superlike())
                 dataFile = open("harbour-sailfinder/data.cfg", "w")
                 dataFile.write("Sailfinder V1.5\n")
@@ -563,7 +565,7 @@ def likeDislikeSuperlikePerson(action):
                 dataFile.close()
             except:
                 try:
-                    pyotherside.send('resultAction', 'outOfSuperLikes')
+                    pyotherside.send('resultAction', 3)
                     pyotherside.send('resultAction', people[personsCounterNumberPersons].like())
                 except:
                     logFile = open("harbour-sailfinder/session.log", 'a')
@@ -593,8 +595,9 @@ def likeDislikeSuperlikePerson(action):
 
 # Get more information about a person
 
-def loadAbout(aboutType, matchNumber):
-    currentMatch = matchNumber
+def loadAbout(aboutType, number):
+    global savedNumber
+    currentMatch = number
 
     if aboutType == 'person':
         # Get our person data...
@@ -610,7 +613,7 @@ def loadAbout(aboutType, matchNumber):
             pingTime = str(people[personsCounterNumberPersons].ping_time)
             date, time = pingTime.split("T")
             year, month, day = date.split("-")
-            pyotherside.send('getDataAbout', 'person',people[personsCounterNumberPersons].name, people[personsCounterNumberPersons].age, people[personsCounterNumberPersons].gender, round(people[personsCounterNumberPersons].distance_km, 1), day, month, year, time[0: len(time)-5], people[personsCounterNumberPersons].bio, people[personsCounterNumberPersons].instagram_username, school, job)
+            pyotherside.send('getDataAbout', 'person',people[personsCounterNumberPersons].name, people[personsCounterNumberPersons].age, people[personsCounterNumberPersons].gender, round(people[personsCounterNumberPersons].distance_km, 1), day, month, year, time[0: len(time)-5], people[personsCounterNumberPersons].bio, people[personsCounterNumberPersons].instagram_username, school, job, '')
 
             #Get the person pictures.
             for i in range(len(pictures)):
@@ -647,7 +650,7 @@ def loadAbout(aboutType, matchNumber):
             pingTime = str(matches[currentMatch].user.ping_time)
             date, time = pingTime.split("T")
             year, month, day = date.split("-")
-            pyotherside.send('getDataAbout', 'match', matches[currentMatch].user.name, matches[currentMatch].user.age, matches[currentMatch].user.gender, round(matches[currentMatch].user.distance_km, 1), day, month, year, time[0: len(time)-5], matches[currentMatch].user.bio, matches[currentMatch].user.instagram_username, school, job)
+            pyotherside.send('getDataAbout', 'match', matches[currentMatch].user.name, matches[currentMatch].user.age, matches[currentMatch].user.gender, round(matches[currentMatch].user.distance_km, 1), day, month, year, time[0: len(time)-5], matches[currentMatch].user.bio, matches[currentMatch].user.instagram_username, school, job, number)
 
             #Get the person pictures.
             for i in range(len(matches[currentMatch].user.photos)):
@@ -670,6 +673,177 @@ def loadAbout(aboutType, matchNumber):
             logFile.write(str(time.asctime(time.localtime(time.time()))) + " [ERROR] Loading about match failed (Unknown Error)\n")
             logFile.close()
 
+    elif aboutType == 'saved':
+        savedNumber = number - len(matches)
+        savedDir = os.listdir("harbour-sailfinder/saved/")
+        dataDir = os.listdir("harbour-sailfinder/saved/" + str(savedDir[savedNumber]) + "/")
+        name, dateSaved, timeSaved = savedDir[savedNumber].split('_')
+        
+        dataFile = open("harbour-sailfinder/saved/" + str(savedDir[savedNumber]) + "/" + str(name) + ".data","r")
+        data = dataFile.readlines()
+        dataFile.close();
+        name = data[0]
+        age = data[1]
+        gender = data[2]   
+        distance_km = data[3]
+        jobs = data[4]
+        schools = data[5]
+        instagram_username = data[6]
+        if instagram_username[19:len(instagram_username)-1] == 'None':
+            instagram_username = ''
+        bio = ''
+        for i in range(7, len(data)):
+            bio += data[i]
+        
+        # Send it to QML
+        pyotherside.send('getDataAbout', 'saved', str(name[5:len(name)-1]), str(age[4:len(age)-1]), str(gender[7:len(gender)-1]), str(distance_km[12:16]), '', '', '', '', str(bio[4:len(bio)-1]), str(instagram_username[19:len(instagram_username)-1]), str(schools[8:len(schools)-1]), str(jobs[5:len(jobs)-1]), str(savedDir[savedNumber]))
+        
+        # Load the pictures. Safety: in the directory there can be only 6 images + 1 data file (or less images)
+        if len(dataDir) <= 7:
+            for i in range(0, len(dataDir)-1):
+                pyotherside.send('getPictures', i, "file://" + os.getcwd() + "/harbour-sailfinder/saved/" + str(savedDir[savedNumber]) + "/picture" + str(i) + ".jpg")
+        
+  
+# Save a person or a match to our phone.          
+def save(saveType, indentifier):
+    try:
+        # Date & time creation avoid conflicts with other names.
+        creationTime = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())  
+        
+        if saveType == 'person':
+            name = people[personsCounterNumberPersons].name
+            name = strip_non_ascii(name)
+            
+            # Create a dir to store our data
+            if not os.path.exists("harbour-sailfinder/saved/" + str(name) + "_" + str(creationTime) + "/"):
+                os.makedirs("harbour-sailfinder/saved/" + str(name) + "_" + str(creationTime) + "/")
+                
+            # Open the name.data file and write all the information to it.
+            personFile = open("harbour-sailfinder/saved/" + str(name) + "_" + str(creationTime) + "/" + str(name) + ".data", "w")
+            personFile.write("name=" + name + "\n")
+            personFile.write("age=" + str(people[personsCounterNumberPersons].age) + "\n")
+            personFile.write("gender=" + str(people[personsCounterNumberPersons].gender) + "\n")
+            personFile.write("distance_km=" + str(people[personsCounterNumberPersons].distance_km) + "\n")
+            job = str(people[personsCounterNumberPersons].jobs)
+            job = job.replace("', '","",len(job))
+            job = strip_non_ascii(job)
+            personFile.write("jobs=" + str(job[2:len(job)-2]) + "\n")
+            school = str(people[personsCounterNumberPersons].schools)
+            school = school.replace("', '","",len(school))
+            school = strip_non_ascii(school)
+            personFile.write("schools=" + str(school[2:len(school)-2]) + "\n")
+            personFile.write("instagram_username=" + str(people[personsCounterNumberPersons].instagram_username) + "\n")
+            bio = str(people[personsCounterNumberPersons].bio)
+            bio = strip_non_ascii(bio)
+            personFile.write("bio=" + str(bio) + "\n")
+            personFile.close()
+            
+            # Download the pictures and store them.
+            for i in range(0, len(people[personsCounterNumberPersons].photos)):
+                pictureFile = open("harbour-sailfinder/saved/" + str(name) + "_" + str(creationTime) + "/" + "picture" + str(i) +".jpg", "wb")
+                pictureFile.write(requests.get(str(people[personsCounterNumberPersons].photos[i])).content)
+                pictureFile.close()
+            
+        elif saveType == 'match':
+            indentifier = int(indentifier)
+            pyotherside.send('DEBUG', indentifier)
+            name = matches[indentifier].user.name
+            name = strip_non_ascii(name)
+            
+            # Create a dir to store our data
+            if not os.path.exists("harbour-sailfinder/saved/" + str(name) + "_" + str(creationTime) + "/"):
+                os.makedirs("harbour-sailfinder/saved/" + str(name) + "_" + str(creationTime) + "/")
+                
+            # Open the name.data file and write all the information to it.
+            personFile = open("harbour-sailfinder/saved/" + str(name) + "_" + str(creationTime) + "/" + str(name) + ".data", "w")
+            personFile.write("name=" + name + "\n")
+            personFile.write("age=" + str(matches[indentifier].user.age) + "\n")
+            personFile.write("gender=" + str(matches[indentifier].user.gender) + "\n")
+            personFile.write("distance_km=" + str(matches[indentifier].user.distance_km) + "\n")
+            job = str(matches[indentifier].user.jobs)
+            job = job.replace("', '","",len(job))
+            job = strip_non_ascii(job)
+            personFile.write("jobs=" + str(job[2:len(job)-2]) + "\n")
+            school = str(matches[indentifier].user.schools)
+            school = school.replace("', '","",len(school))
+            school = strip_non_ascii(school)
+            personFile.write("schools=" + str(school[2:len(school)-2]) + "\n")
+            personFile.write("instagram_username=" + str(matches[indentifier].user.instagram_username) + "\n")
+            bio = str(matches[indentifier].user.bio)
+            bio = strip_non_ascii(bio)
+            personFile.write("bio=" + str(bio) + "\n")
+            personFile.close()
+                    
+            # Download the pictures and store them.
+            for i in range(0, len(matches[indentifier].user.photos)):
+                pictureFile = open("harbour-sailfinder/saved/" + str(name) + "_" + str(creationTime) + "/" + "picture" + str(i) +".jpg", "wb")
+                pictureFile.write(requests.get(str(matches[indentifier].user.photos[i])).content)
+                pictureFile.close()
+            
+            # Refresh the matches list
+            pyotherside.send('clearList', True)
+            
+    except IOError:
+        logFile = open("harbour-sailfinder/session.log", 'a')
+        logFile.write(str(time.asctime( time.localtime(time.time()) )) + " [ERROR] Get updateInterval failed: Can't read from ~/.config/harbour-sailfinder/localConfiguration.conf (I/O Error)\n")
+        logFile.close()
+    except:
+        logFile = open("harbour-sailfinder/session.log", 'a')
+        logFile.write(str(time.asctime(time.localtime(time.time()))) + " [ERROR] Loading about match failed (Unknown Error)\n")
+        logFile.close()
+
+# Writing files is only allowed with ASCII code.  
+def strip_non_ascii(string):
+    try:
+        stripped = (c for c in string if 0 < ord(c) < 127)
+        return ''.join(stripped)
+    except:
+        pass
+    
+def loadSaved():
+    
+    # list all our saved matches
+    saved = os.listdir("harbour-sailfinder/saved/")
+   
+    for i in range(0,len(saved)):
+        try:
+            name, dateSaved, timeSaved = saved[i].split('_')
+            pyotherside.send('getSaved', name, os.getcwd() + "/harbour-sailfinder/saved/" + str(saved[i]) + "/picture0.jpg", i)
+            
+        except IOError:
+            logFile = open("harbour-sailfinder/session.log", 'a')
+            logFile.write(str(time.asctime( time.localtime(time.time()) )) + " [ERROR] Get updateInterval failed: Can't read from ~/.config/harbour-sailfinder/localConfiguration.conf (I/O Error)\n")
+            logFile.close()
+        except:
+            logFile = open("harbour-sailfinder/session.log", 'a')
+            logFile.write(str(time.asctime(time.localtime(time.time()))) + " [ERROR] Failed to load match from loadMatches() (Unknown Error)\n")
+            logFile.close()
+            
+def deleteSaved(dirName):
+    try:
+        savedDir = os.listdir(os.getcwd() + "/harbour-sailfinder/saved/")
+        
+        for i in range (len(savedDir)):
+            if dirName in savedDir[i]:
+                dataDir = os.listdir(os.getcwd() + "/harbour-sailfinder/saved/" + str(savedDir[i]) + "/")
+                #Remove all the files
+                for j in range(len(dataDir)):
+                    os.remove(os.getcwd() + "/harbour-sailfinder/saved/" + str(savedDir[i]) + "/" + str(dataDir[j]))
+                    
+                #Remove the empty directory    
+                os.rmdir(os.getcwd() + "/harbour-sailfinder/saved/" + str(savedDir[i]) + "/")
+        
+        pyotherside.send('clearList', True)
+        
+    except IOError:
+        logFile = open("harbour-sailfinder/session.log", 'a')
+        logFile.write(str(time.asctime( time.localtime(time.time()) )) + " [ERROR] Get updateInterval failed: Can't read from ~/.config/harbour-sailfinder/localConfiguration.conf (I/O Error)\n")
+        logFile.close()
+    except:
+        logFile = open("harbour-sailfinder/session.log", 'a')
+        logFile.write(str(time.asctime(time.localtime(time.time()))) + " [ERROR] Failed to load match from loadMatches() (Unknown Error)\n")
+        logFile.close()
+            
 # Matches and messaging functions
 
 # When we matched with another user after we liked them we need to show an overlay with the message 'You and USER matched !'.
@@ -789,9 +963,11 @@ def loadNewMatches():
         logFile.write(str(time.asctime(time.localtime(time.time()))) + " [ERROR] Failed to get new matches (Unknown Error)\n")
         logFile.close()
 
-def deleteMatch():
+def deleteMatch(matchIndex, name):
     try:
-        matches[currentMatch].delete()
+        if name == matches[matchIndex].user.name:
+            matches[matchIndex].delete()
+            pyotherside.send('clearList', True)
         
     except pynder.errors.RequestError:
         logFile = open("harbour-sailfinder/session.log", 'a')
@@ -842,6 +1018,7 @@ def sendMessage(messageText):
     try:
         messageText = str(messageText)
         matches[currentMatch].message(messageText)
+        loadNewMatches()
         
     except pynder.errors.RequestError:
         logFile = open("harbour-sailfinder/session.log", 'a')
@@ -867,6 +1044,7 @@ def loadMessages(matchNumber):
 
     # Try to get al the messages and send them to QML in reverse order (our listview is 180° rotated to show the last message first).
     try:
+        # Reload all the matches to check if we have new messages...
         for msg in range(len(matches[matchNumber].messages)-1, -1, -1):
             # Check from who the message came and put the message on the right side of the screen by using True or False.
             if(matches[matchNumber].messages[msg]._data['from'] == session.profile.id):

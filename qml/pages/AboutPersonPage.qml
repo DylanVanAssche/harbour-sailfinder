@@ -31,14 +31,30 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.3
+import QtSensors 5.0
 
 Page {
     id: page
+    onOrientationChanged:
+    {
+        // Workaround for Silica bug, Silica should automatically update the page.width. We wait 50ms to make sure that the device is rotated. (Github issue #10)
+        waitTimer.start();
+    }
+
+    Timer {
+        id: waitTimer
+        interval: 50
+        running: false
+        repeat: false
+        onTriggered: itemGridView.height = page.width;
+    }
 
     property variant picturesURL: ["../images/noImage.png", "../images/noImage.png", "../images/noImage.png", "../images/noImage.png", "../images/noImage.png", "../images/noImage.png"]
     property variant picturesVisible: [false, false, false, false, false, false]
-    property bool isPerson: true
+    property var dataType: 0
     property bool onlyFirstRow: true
+    property string personID: ''
+    property string matchName: ''
 
     RemorsePopup {
         id: remorseTimer
@@ -56,14 +72,21 @@ Page {
             PullDownMenu {
                 id: pullDownMenu
 
-
                 MenuItem {
                     id: savePulleyMenu
                     text: "Save"
-                    visible: false
+                    visible: true
                     onClicked:
                     {
-                        // Command Python to get the data and put in a file for later.
+                        if(dataType == 2)
+                        {
+                            python.call('tinder.save',['person', 0], function(type, identifier) {});
+                        }
+                        else
+                        {
+                            python.call('tinder.save',['match', personID], function(type, identifier) {});
+                            pageStack.pop();
+                        }
                     }
                 }
 
@@ -73,11 +96,23 @@ Page {
                     visible: false
                     onClicked:
                     {
-                        // Send the command to Python to delete this match
-                        remorseTimer.execute("Unmatching", function() {
-                            python.call('tinder.deleteMatch',[], function() {});
-                            pageStack.pop();
-                        });
+                        if(dataType == 1)
+                        {
+                            // Send the command to Python to delete this match
+                            remorseTimer.execute("Unmatching", function() {
+                                python.call('tinder.deleteMatch',[personID, matchName], function(identifier) {});
+                                pageStack.pop();
+                            });
+                        }
+
+                        if(dataType == 3)
+                        {
+                            // Send the command to Python to delete this match
+                            remorseTimer.execute("Deleting", function() {
+                                python.call('tinder.deleteSaved',[personID], function(identifier) {});
+                                pageStack.pop();
+                            });
+                        }
                     }
                 }
 
@@ -88,7 +123,7 @@ Page {
                     {
                         // Check if we are viewing a match or a person and send the right one to Python if the user wants to report this person/match.
                         remorseTimer.execute("Reporting for SPAM", function() {
-                            if(isPerson)
+                            if(dataType == 2)
                             {
                                 // Spam -> #1
                                 python.call('tinder.report',['person', 1], function(type, cause) {});
@@ -109,7 +144,7 @@ Page {
                     {
                         // Check if we are viewing a match or a person and send the right one to Python if the user wants to report this person/match.
                         remorseTimer.execute("Reporting for INAPPROPRIATE", function() {
-                            if(isPerson)
+                            if(dataType == 2)
                             {
                                 // Abusive -> #2
                                 python.call('tinder.report',['person', 2], function(type, cause) {});
@@ -474,7 +509,6 @@ Page {
                     }
                 }
             }
-
             // Spacer
             Rectangle {
                 width: parent.width
@@ -702,6 +736,13 @@ Page {
                     }
                 }
             }
+
+            // Spacer
+            Rectangle {
+                width: parent.width
+                height: 30
+                color: "transparent"
+            }
         }
 
         ListModel {
@@ -715,19 +756,24 @@ Page {
                 addImportPath(Qt.resolvedUrl('.'));
                 importModule('tinder', function() {});
 
-                setHandler('getDataAbout', function(type, name, age, gender, distance, day, month, year, time, about, instagram_username, schools, jobs)
+                setHandler('getDataAbout', function(type, name, age, gender, distance, day, month, year, time, about, instagram_username, schools, jobs, identifier)
                 {
+                    //Identifier
+                    personID = identifier;
+                    console.log(personID)
+
                     // Name, age and distance.
+                    matchName = name;
                     nameAgeDistancePersonAbout.text = name + ' ('+ age + ')' + ' - ' + distance + ' km away';
 
                     // Show the right gender icon.
                     if(gender == 'male')
                     {
-                        genderIcon.source = "../images/male.png"
+                        genderIcon.source = "../images/male.png";
                     }
                     else
                     {
-                        genderIcon.source = "../images/female.png"
+                        genderIcon.source = "../images/female.png";
                     }
                     genderIcon.visible = true;
 
@@ -778,21 +824,35 @@ Page {
                         bio.visible = false;
                     }
 
+                    // Match
                     if(type == 'match')
                     {
-                        pullDownMenu.visible = true;
                         deletePulleyMenu.visible = true;
                         reportSpamPulleyMenu.visible = true;
                         reportAbusivePulleyMenu.visible = true;
-                        isPerson = false;
+                        lastOnline.visible = true;
+                        dataType = 1;
                     }
-                    else
+
+                    // Person
+                    if(type == 'person')
                     {
-                        pullDownMenu.visible = false;
                         deletePulleyMenu.visible = false;
                         reportSpamPulleyMenu.visible = false;
                         reportAbusivePulleyMenu.visible = false;
-                        isPerson = true;
+                        lastOnline.visible = true;
+                        dataType = 2;
+                    }
+
+                    // Person/Match we saved in the past
+                    if(type == 'saved')
+                    {
+                        deletePulleyMenu.visible = true;
+                        reportSpamPulleyMenu.visible = false;
+                        reportAbusivePulleyMenu.visible = false;
+                        lastOnline.visible = false;
+                        savePulleyMenu.visible = false;
+                        dataType = 3;
                     }
                 });
 
@@ -836,9 +896,9 @@ Page {
             }
 
             //DEBUG
-            /*onReceived: {
+            onReceived: {
                 console.log('Python MESSAGE: ' + data);
-            }*/
+            }
         }
     }
 }

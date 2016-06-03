@@ -42,7 +42,7 @@ Page {
 
         Column {
             id: column
-            width: page.width
+            width: parent.width
             spacing: Theme.paddingLarge
 
             PageHeader {
@@ -54,8 +54,6 @@ Page {
                 enabled: true
                 text: "Connecting to Tinder servers..."
             }
-
-            Component.onCompleted: pullDownHint.start();
         }
     }
 

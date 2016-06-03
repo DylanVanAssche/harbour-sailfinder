@@ -45,6 +45,7 @@ Page {
     property var superLikeLimit: false
     property var counter: 0
     property var reconnectCounter: 0
+    property var timeToReconnect: 0
 
     Timer {
         id: hints
@@ -166,7 +167,7 @@ Page {
 
                 default:
                     // Update the progressbar.
-                    reconnectBar.value = (reconnectCounter - 7) * 6.6667;
+                    reconnectBar.value = (reconnectCounter - 7);
                     reconnectCounter++;
                     break;
             }
@@ -216,19 +217,8 @@ Page {
                 }
 
                 MenuItem {
-                    id: savedPeoplePulleyMenu
-                    text: "Saved people"
-                    visible: false
-                    onClicked:
-                    {
-                        // Open the SavedPeople page and load the saved people data.
-                        pageStack.push(Qt.resolvedUrl('SavedPeoplePage.qml'));
-                    }
-                }
-
-                MenuItem {
                     id: matchesPulleyMenu
-                    text: "Matches"
+                    text: "Matches & Saved people"
                     onClicked:
                     {
                         // Open the Matches page and load the matches data.
@@ -253,8 +243,13 @@ Page {
                     width: parent.width
                     anchors.centerIn: parent
                     visible: false
-                    indeterminate: true
-                    label: "Reconnecting in: " + progressValue + " seconds"
+                    minimumValue: 0
+                    maximumValue: 15
+                    label:
+                    {
+                        timeToReconnect = 15 - progressValue
+                        "Reconnecting in: " + timeToReconnect + " seconds"
+                    }
                 }
             }
 
@@ -710,12 +705,13 @@ Page {
                     pageStack.completeAnimation();
                 }
 
-                if(result == 'outOfSuperLikes')
+                if(result == 3) // Action #3 (superlikes) failed -> out of super likes.
                 {
                     superLike.enabled = false;
                     superLikeLimit = true;
+                    console.log('Out of superlikes!');
                 }
-                console.log(result);
+                console.log('Result like/dislike/superlike: ' + result);
             });
 
             // Activate and deactivate the right swipe directions... This is a workaround for the SlideshowView component who isn't very nice for internet images.

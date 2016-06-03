@@ -13,8 +13,8 @@ Name:       harbour-sailfinder
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailfinder
-Version:    1.5
-Release:    1
+Version:    1.6
+Release:    2
 Group:      Qt/Qt
 License:    LICENSE
 URL:        http://example.org/
