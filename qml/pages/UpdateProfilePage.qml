@@ -58,6 +58,11 @@ Dialog {
                 text: "This feature isn't available in Pynder yet. Feel free to contact me if you want to help to implent it or send a pull request to Pynder on Github with a solution."
             }
 
+           /* Button {
+                text: 'Upload profilepicture'
+                onClicked: python.call('tinder.uploadPictureProfile',[], function() {});
+            }*/
+
             SectionHeader { text: "Bio & gender" }
 
             TextArea {

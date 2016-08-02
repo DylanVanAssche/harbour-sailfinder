@@ -46,3 +46,22 @@ class Session(object):
         limited_until = meta_dct['rating'].get(
             'rate_limited_until', now)  # Milliseconds
         return limited_until / 1000 - now
+    
+    def get_fb_friends(self):
+        """
+        Returns array of all friends using Tinder Social.
+        :return: Array of friends.
+        :rtype: models.Friend[]
+        """
+        response = self._api.fb_friends()
+        friends = response['results']
+        ret = []
+
+        for f in friends:
+            ret.append(models.Friend(f, self))
+
+        return ret
+
+    def upload_test(self):
+        self._api.uploadPicture()
+        return 'OK'

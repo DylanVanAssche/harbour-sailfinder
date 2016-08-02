@@ -33,7 +33,6 @@ import QtQuick.Window 2.0;
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.3
 
-
 Page {
     id: page
     Component.onDestruction:
@@ -79,6 +78,15 @@ Page {
                 z: -1
                 color: "black"
                 opacity: 0.35
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked:
+                {
+                    pageStack.push(Qt.resolvedUrl('AboutPersonPage.qml'));
+                    python.call('tinder.loadAboutMessages',[], function() {});
+                }
             }
         }
 

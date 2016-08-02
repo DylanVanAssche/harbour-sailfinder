@@ -105,6 +105,15 @@ CoverBackground {
             addImportPath(Qt.resolvedUrl('../pages'));
             importModule('tinder', function() {});
 
+            // Default cover.
+            setHandler('defaultCover', function(state)
+            {
+                textCover.text = "Sailfinder";
+                pictureCover.source = "../images/harbour-sailfinder.png";
+                coverActionMain.enabled = false;
+                coverActionEdit.enabled = false;
+            });
+
             // Main cover.
             setHandler('getDataMain', function(name, age, gender, distance)
             {

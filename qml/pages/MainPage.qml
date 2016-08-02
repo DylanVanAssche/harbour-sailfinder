@@ -34,13 +34,13 @@ import io.thp.pyotherside 1.3
 //import org.nemomobile.keepalive 1.1
 import QtPositioning 5.2
 
-
 Page {
     id: page
 
     property var swipeLeftEnabled: true
     property var swipeRightEnabled: true
     property var hintsEnabled: false
+    property var autoLikeEnabled: false
     property var updateState: "None"
     property var superLikeLimit: false
     property var counter: 0
@@ -153,6 +153,7 @@ Page {
                     reconnectCounter++;
                     message.text = "";
                     message.hintText = "";
+                    python.call('tinder.reconnecting',[], function() {});
                     break;
 
                 case 22:
@@ -203,6 +204,24 @@ Page {
                     {
                         // Open the Settings page and load the profile data.
                         pageStack.push(Qt.resolvedUrl('SettingsPage.qml'));
+                    }
+                }
+
+                MenuItem {
+                    id: autolikerPulleyMenu
+                    text: "Enable autoliker"
+                    onClicked:
+                    {
+                        // Open the Settings page and load the profile data.
+                        autoLikeEnabled = !autoLikeEnabled
+                        if(autoLikeEnabled)
+                        {
+                            autolikerPulleyMenu.text = "Disable autoliker"
+                        }
+                        else
+                        {
+                            autolikerPulleyMenu.text = "Enable autoliker"
+                        }
                     }
                 }
 
@@ -375,7 +394,7 @@ Page {
                 IconButton {
                     id: dislike
                     icon.source: {
-                        if (Screen.width < 600)
+                        if (Screen.width < 800)
                         {
                             "../images/dislike_small.png"
                         }
@@ -403,7 +422,7 @@ Page {
                 IconButton {
                     id: superLike
                     icon.source: {
-                        if (Screen.width < 600)
+                        if (Screen.width < 800)
                         {
                             "../images/superLike_small.png"
                         }
@@ -431,7 +450,7 @@ Page {
                 IconButton {
                     id: like
                     icon.source: {
-                        if (Screen.width < 600)
+                        if (Screen.width < 800)
                         {
                             "../images/like_small.png"
                         }
@@ -550,6 +569,27 @@ Page {
         }
     }
 
+    Timer {
+        // Autolike people
+        id: autoLiker
+        repeat: false
+        running: false
+        interval: Math.floor(Math.random() * (10000 - 5000 + 1))
+        onTriggered:
+        {
+            if(Math.floor(Math.random() * (0 - 10 + 1)) < 8)
+            {
+                python.call('tinder.likeDislikeSuperlikePerson',[2], function(action) {});
+                console.log("AUTOLIKER: like")
+            }
+            else
+            {
+                python.call('tinder.likeDislikeSuperlikePerson',[1], function(action) {});
+                console.log("AUTOLIKER: dislike")
+            }
+        }
+    }
+
     function update()
     {
         // Check for new likes.
@@ -568,7 +608,7 @@ Page {
         }
 
         // Sync the cover.
-        python.call('tinder.cover',[0, false], function(pageNumber, pushNecessary) {});
+        python.call('tinder.cover',[], function() {});
 
         updater.finished()
     }
@@ -691,6 +731,10 @@ Page {
 
                 // Reconnecting not necesarry.
                 reconnect.stop();
+
+                // Disable autoliker
+                autoLiker.stop();
+                autoLikeEnabled = false;
             });
 
             // Check if we matched and show then the NewMatchPage
@@ -703,6 +747,14 @@ Page {
                     pageStack.completeAnimation();
                     pageStack.replace(Qt.resolvedUrl('NewMatchPage.qml'));
                     pageStack.completeAnimation();
+                }
+                else
+                {
+                    if(autoLikeEnabled)
+                    {
+                        autoLiker.restart();
+                        autoLiker.interval = Math.floor(Math.random() * (10000 - 5000 + 1));
+                    }
                 }
 
                 if(result == 3) // Action #3 (superlikes) failed -> out of super likes.
@@ -872,10 +924,10 @@ Page {
         }
 
         //DEBUG
-        /*
+
         onReceived:
         {
             console.log('Python MESSAGE: ' + data);
-        }*/
+        }
     }
 }

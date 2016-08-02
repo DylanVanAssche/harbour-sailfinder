@@ -6,6 +6,7 @@ sys.path.append(lib_dir)
 import requests
 import json
 import threading
+import os
 from . import constants
 from . import errors
 
@@ -96,3 +97,18 @@ class TinderAPI(object):
         if 'limit_exceeded' in result and result['limit_exceeded']:
             raise errors.RequestError("Superlike limit exceeded")
         return result
+    
+    def fb_friends(self):
+        """
+        Requests records of all facebook friends using Tinder Social.
+        :return: object containing array of all friends who use Tinder Social.
+        """
+        return self._get("/group/friends")
+        
+    def uploadPicture(self):
+        """
+        Upload a new picture to your profile.
+        """
+        homeDir = os.path.expanduser("~")
+        os.chdir(homeDir)
+        return self._session.request("post", constants.API_IMAGE_HOST + 'image?client_photo_id=ProfilePhoto', data={'media': open('test.png', 'rb')}, proxies=self._proxies)

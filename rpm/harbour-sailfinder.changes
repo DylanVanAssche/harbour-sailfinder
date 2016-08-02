@@ -8,6 +8,19 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Wed Aug 03 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.8-1
+- MINOR BUGFIX: Buttons scaling fix for Jolla C & Intex Aqua Fish (Github issue #16).
+- MINOR BUGFIX: No comma between more then one job or school (Github issue #15).
+- UPGRADE: merged Pynder commit #73 with Sailfinders version of Pynder. Tinder Social support, I will try to add UI support for Tinder Social in the next updates.
+- NEW: Added an autoliker. To avoid bans on Tinder I randomly dislike people. While the autoliker is enabled you can still like/dislike/superlike people as you wish, however after a certain time a profile has been displayed the autoliker will do his job.
+
+* Wed Jul 20 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.7-2
+- MINOR BUGFIX: Cover() function (Github issue #13)
+- MINOR BUGFIX: DeleteMatch() name (Github issue #12)
+- MINOR BUGFIX: Disable cover on connection issues (Github issue #14)
+- IMPROVEMENT: See bio & about when tapping on the user picture in the MessagesPage (Github issue #11)
+- UPGRADE: merged Pynder commit #68 with Sailfinders version of Pynder.
+
 * Wed Jun 01 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 1.6-2
 - QA: I forgot to fix the hardcoded paths, now it's done.
 - IMPROVEMENT: Autorefresh when saving a match.

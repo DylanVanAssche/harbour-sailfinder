@@ -37,6 +37,9 @@ currentSavedPersonNumber = 0
 def cover():
     pyotherside.send("goBackCover", True)
     
+def reconnecting():
+    pyotherside.send("defaultCover", True)
+    
 # Login functions
 
 def login(url):
@@ -218,7 +221,6 @@ def loadProfile(pictureNumber, firstPass):
         logFile.write(str(time.asctime(time.localtime(time.time()))) + " [ERROR] Loading profile failed (Unknown Error)\n")
         logFile.close()
 
-
 def updateProfile(bio, gender):
     try:
         session.profile.bio = bio
@@ -245,6 +247,9 @@ def updateProfile(bio, gender):
         logFile = open("harbour-sailfinder/session.log", 'a')
         logFile.write(str(time.asctime(time.localtime(time.time()))) + " [ERROR] Updating profile failed (Unknown Error)\n")
         logFile.close()
+        
+def uploadPictureProfile():
+    session.upload_test()
 
 def updateLocation(latitude, longitude):
     try:
@@ -373,6 +378,10 @@ def loadPerson(pictureNumber, personsNumber, firstPass):
         global pictureCounterNumberPersons
         global personsCounterNumberPersons
         global pictures
+        
+#        metaDict = session.likes_remaining
+#        for keys in metaDict:
+#            pyotherside.send('META DATA', metaDict[keys])
     
         if session.likes_remaining > 0:
     
@@ -600,15 +609,20 @@ def loadAbout(aboutType, number):
     currentMatch = number
 
     if aboutType == 'person':
-        # Get our person data...
+        # Get our person data... 
         try:
             job = ''
-            school = ''
-            for i in range(len(people[personsCounterNumberPersons].jobs)):
-                job += people[personsCounterNumberPersons].jobs[i]
+            school = ''  
+            try:
+                job = people[personsCounterNumberPersons].jobs[0]
+                school = people[personsCounterNumberPersons].schools[0]
+            except: 
+                pass
+            for i in range(1, len(people[personsCounterNumberPersons].jobs)):
+                job += ',' + people[personsCounterNumberPersons].jobs[i]
 
-            for i in range(len(people[personsCounterNumberPersons].schools)):
-                school += people[personsCounterNumberPersons].schools[i]
+            for i in range(1, len(people[personsCounterNumberPersons].schools)):
+                school += ',' + people[personsCounterNumberPersons].schools[i]
 
             pingTime = str(people[personsCounterNumberPersons].ping_time)
             date, time = pingTime.split("T")
@@ -641,11 +655,16 @@ def loadAbout(aboutType, number):
         try:
             job = ''
             school = ''
-            for i in range(len(matches[currentMatch].user.jobs)):
-                job += matches[currentMatch].user.jobs[i]
+            try:
+                job = matches[currentMatch].user.jobs[0]
+                school = matches[currentMatch].user.schools[0]
+            except:
+                pass
+            for i in range(1, len(matches[currentMatch].user.jobs)):
+                job += ',' + matches[currentMatch].user.jobs[i]
 
-            for i in range(len(matches[currentMatch].user.schools)):
-                school += matches[currentMatch].user.schools[i]
+            for i in range(1, len(matches[currentMatch].user.schools)):
+                school += ',' + matches[currentMatch].user.schools[i]
 
             pingTime = str(matches[currentMatch].user.ping_time)
             date, time = pingTime.split("T")
@@ -1012,6 +1031,9 @@ def report(typeUser, cause):
         logFile.close()
 
 # Handle the messages for a match.
+
+def loadAboutMessages():
+    loadAbout('match', currentMatch)
 
 def sendMessage(messageText):
     # Get the message from QML and send it to Tinder.

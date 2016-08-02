@@ -1,5 +1,7 @@
 API_BASE = 'https://api.gotinder.com'
 
+API_IMAGE_HOST = 'https://imageupload.gotinder.com/'
+
 USER_AGENT = 'Tinder/4.6.1 (iPhone; iOS 9.0.1; Scale/2.00)'
 
 HEADERS = {

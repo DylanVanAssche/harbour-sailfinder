@@ -76,7 +76,7 @@ Page {
 
             ViewPlaceholder {
                 enabled: true
-                text: "Sailfinder V1.6"
+                text: "Sailfinder V1.8"
             }
 
             Component.onCompleted: pullDownHint.start();
