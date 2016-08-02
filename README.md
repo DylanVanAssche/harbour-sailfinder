@@ -2,4 +2,4 @@
 Sailfinder is an unofficial Tinder client for Sailfish OS.
 You can post here your bugs under 'issues' which is far more easier then handle through the comment section of Openrepos.net
 
-The source is now available in this repo.
+The source is now available in this repo under GPLv3
