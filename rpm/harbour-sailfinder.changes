@@ -1,0 +1,36 @@
+* Wed Sep 07 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 2.1-1
+- MINOR BUGFIX: Crash when opening "People" due a special match (Github issue #47)
+- MINOR BUGFIX: UI relogin button Facebook fix (Github issue #46)
+- MINOR BUGFIX: Workaround for settings saving (Github issues #44 and #43)
+- MINOR BUGFIX: Out of likes not always shown on the cover.
+- MINOR BUGFIX: UI fix send message (Github issue #51)
+- IMPROVEMENT: Last seen is now more accurate (Github issue #50)
+- IMPROVEMENT: Automatically quit when Facebook token in Gallery is expired and relogin is needed.
+- IMPROVEMENT: Reduced the relogin interval timer when Tinder token is expired.
+- IMPROVEMENT: Increased GPS update interval to avoid too much API calls to the Mapquest servers and to reduce data usage.
+- NEW: Logout button for Tinder (Github issue #39)
+- NEW: Timestamp messages (Github issue #38)
+- NEW: Highlight people with new messages (Github issue #36)
+- NEW: Refresh manually your People page with a pulldown menu (Github issue #52)
+
+* Wed Aug 31 2016 Dylan Van Assche <dylan.van.assche@protonmail.com> 2.0-1
+- MAJOR UPGRADE: New API to access the Tinder servers which is lighter, faster and with more functions like picture upload, username, both genders,...
+- MAJOR UPGRADE: Fresh UI which is more responsive and better compatible with landscape orientation.
+- MAJOR INPROVEMENT: Removed all non-SailfishOS QML items.
+- MAJOR IMPROVEMENT: Added support to translate Sailfinder.
+- UPGRADE: Python requests from 2.9.3 to 2.10.0.
+- REMOVED: Python modules Pynder & DateUtil removed since we implented the API ourself now, Sailfinder is now smaller in size.
+- REMOVED: Saved people.
+- REMOVED: Hints.
+- REMOVED: About for recommendations is now integrated in the mainpage.
+- NEW: Picture upload via Facebook.
+- NEW: Delete pictures.
+- NEW: Add, update and remove your username + shareURL.
+- NEW: Quick login (long token).
+- NEW: Support for liking both genders.
+- NEW: Instagram photos are now visible.
+- NEW: Clicking on the Instagram username opens the browser to the right Instagram profile page.
+- NEW: Start with language support.
+- NOTE: Older bugreports now became useless since Sailfinder is written from the ground up.
+
+
