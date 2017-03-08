@@ -1,0 +1,21 @@
+Metadata-Version: 1.1
+Name: robobrowser
+Version: 0.5.3
+Summary: Your friendly neighborhood web scraper
+Home-page: https://github.com/jmcarp/robobrowser
+Author: Joshua Carp
+Author-email: jm.carp@gmail.com
+License: MIT
+Description: UNKNOWN
+Keywords: robobrowser
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4

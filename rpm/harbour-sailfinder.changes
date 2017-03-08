@@ -1,0 +1,14 @@
+* Mon Mar 9 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.0-8
+- [MAJOR UPGRADE] Redesigned UI with swiping carousel
+- [MAJOR UPGRADE] Network status and connection is monitored with every request, user will be notified when network is down
+- [MAJOR UPGRADE] Switching between cellular/WiFi is now properly handled
+- [MAJOR UPGRADE] Auto recovery of last request when network was lost
+- [MAJOR UPGRADE] Losing connection will not lead to a crash any more
+- [MAJOR UPGRADE] Rewrite of the Sailfinder backend using Object Oriented Python
+- [MAJOR UPGRADE] Fetching data is much faster and more stable thanks to caching
+- [MAJOR UPGRADE] Login process upgraded without a WebView using native Silica components
+- [MAJOR UPGRADE] Translations are now supported, contributing can be done via the Transifex project
+- [MAJOR UPGRADE] QT5.6 compatible (Sailfish OS 2.1.0.X), only Sailfish OS 2.0.2.51 and higher are supported
+- [LANGUAGES] English(UK), Dutch and Turkish languages added
+- [REMOVE] Share URL is now deprecated by Tinder
+
