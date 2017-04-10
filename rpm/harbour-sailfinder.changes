@@ -1,4 +1,28 @@
-* Mon Mar 9 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.0-8
+* Fri Apr 14 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-8
+- [MINOR BUGFIX] Matches popup visible when turning the device (Github issue #101)
+- [MINOR BUGFIX] Profile cache fixed on update
+- [MINOR BUGFIX] ConnMan status read crash fixed
+- [MINOR BUGFIX] Never discover when discovery was switched off in Profile
+- [MINOR BUGFIX] Busy discovery indicator in Profile fixed
+- [IMPROVEMENT] Reload recommendations when discovery criteria are changed (Github issue #96)
+- [IMPROVEMENT] Redesigned GIF gallery to make it easier to upload GIFs and send messages (Github issue #98)
+- [IMPROVEMENT] Rewritten ImageGrid with a proper GridLayout (Github issue #84)
+- [IMPROVEMENT] Changed the like, dislike and superlike button to a new design
+- [IMPROVEMENT] All types of notifications can now be disabled
+- [NEW] Dynamic updates which download automatically new matches, messages, ... (Github issues #99, #94, #89, #88, #93-2)
+- [NEW] Notifications are showed when the app is running (Github issue #35)
+- [NEW] User will be notified when GIF has been blocked by Tinder, not all content is allowed
+- [NEW] Like and unlike messages (Github issue #70)
+- [NEW] See if matches have liked your message or not
+- [NEW] View your match his/her profile by tapping on his/her avatar (Github issue #93-1)
+- [LANGUAGES] Updated translations
+- [STORE] Updated screenshots
+
+* Sun Mar 12 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.0-9
+- [MINOR BUGFIX] Superlikes button correctly grayed out when out of superlikes (Github issue #93-3)
+- [NEW] Changed app icon a little bit and the store banner
+
+* Wed Mar 8 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.0-8
 - [MAJOR UPGRADE] Redesigned UI with swiping carousel
 - [MAJOR UPGRADE] Network status and connection is monitored with every request, user will be notified when network is down
 - [MAJOR UPGRADE] Switching between cellular/WiFi is now properly handled
@@ -8,7 +32,7 @@
 - [MAJOR UPGRADE] Fetching data is much faster and more stable thanks to caching
 - [MAJOR UPGRADE] Login process upgraded without a WebView using native Silica components
 - [MAJOR UPGRADE] Translations are now supported, contributing can be done via the Transifex project
-- [MAJOR UPGRADE] QT5.6 compatible (Sailfish OS 2.1.0.X), only Sailfish OS 2.0.2.51 and higher are supported
+- [MAJOR UPGRADE] QT5.6 compatible (Sailfish OS 2.1.0.X), only Sailfish OS 2.1.0.X and higher are supported
 - [LANGUAGES] English(UK), Dutch and Turkish languages added
 - [REMOVE] Share URL is now deprecated by Tinder
 

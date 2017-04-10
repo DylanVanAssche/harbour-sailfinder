@@ -1,38 +1,10 @@
-/*
-  Copyright (C) 2013 Jolla Ltd.
-  Contact: Thomas Perl <thomas.perl@jollamobile.com>
-  All rights reserved.
-
-  You may use this file under the terms of BSD license as follows:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR
-  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.3
 import org.nemomobile.configuration 1.0
 import "pages"
+import "./pages/js/util.js" as Util
+import "./pages/js/updates.js" as Updates
 
 ApplicationWindow
 {
@@ -47,6 +19,7 @@ ApplicationWindow
         headerMatches = qsTr("Matches")
         headerProfile = qsTr("Profile")
         headerSocial = "" //qsTr("Social") // Sailfinder V3.X
+        cover = { background: "../resources/images/cover-background.png", text: "Sailfinder" }
         coverText = "Sailfinder"
         coverBackground = "../resources/images/cover-background.png"
         coverBackgroundRecs = "../resources/images/cover-background.png"
@@ -63,6 +36,7 @@ ApplicationWindow
         //cachingSocial = true
         recsData = {}
         matchesData = {}
+        likedMessagesData = {}
         blocksData = {}
         profileData = {}
         //socialData = {} // Sailfinder V3.X
@@ -74,9 +48,12 @@ ApplicationWindow
     }
     // Signals
     signal cleanup()
+    signal refreshMatches()
+    signal refreshRecs()
 
     // Globals
-    readonly property string version: "V3.0";
+    readonly property string version: "V3.1";
+    property string userId
     property string authenticatingText: qsTr("Authenticating") + "..."
     property string headerRecs: qsTr("Recommendations")
     property string headerMatches: qsTr("Matches")
@@ -103,13 +80,28 @@ ApplicationWindow
     property bool returnToLogin
     property var recsData
     property var matchesData
+    property var likedMessagesData
     property var blocksData
     property var profileData
     //property var socialData // Sailfinder V3.X
 
+    // Check for new data/notifications
+    Timer {
+        id: incrementalUpdateTimer
+        interval: Util.parseInterval(settings.refreshInterval)
+        running: false
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: Updates.get(false)
+    }
+
     // Notifications & toaster init
     Toaster { id: toaster }
-    NotificationManager { id: notification }
+    NotificationManager { id: notificationSwipeAgain }
+    NotificationManager { id: notificationLiked }
+    NotificationManager { id: notificationMatches }
+    NotificationManager { id: notificationMessages }
+    //NotificationManager { id: notificationSocial } //Sailfinder V3.X
 
     // App settings
     ConfigurationGroup {
@@ -123,8 +115,10 @@ ApplicationWindow
         property bool showFriends: true
         property bool showInstagram: true
         property bool showSpotify: true
-        property bool showNotifications: false
-        property int refreshInterval: 0
+        property bool showNotifications: true
+        property bool logging: false
+        property int refreshInterval: 1 //Normal refresh interval
+        property int imageFormat: 1 //320x320 image size
     }
 
     // App rememberd parameters
@@ -209,12 +203,17 @@ ApplicationWindow
                 headerMatches = qsTr("Refreshing") + " - " + Math.round(progress) + "%";
                 cachingMatches = true;
             });
-
-            setHandler("blocksData", function (data) { blocksData = data })
-
             setHandler("matchesData", function (data) {
                 matchesData = data;
                 cachingMatches = false;
+            });
+            setHandler("lastActive", function (date) {
+                parameters.last_activity_date = date; // Update last activity date
+                incrementalUpdateTimer.start() // Date is updated, start timer
+                console.log("[INFO] Updated LAST ACTIVE: " + parameters.last_activity_date);
+            });
+            setHandler("likedMessages", function (data) {
+                likedMessagesData = data;
             });
 
             // Profile progress & data
@@ -224,6 +223,7 @@ ApplicationWindow
             });
             setHandler("profileData", function (profile) {
                 profileData = profile;
+                app.userId = profile._id;
                 cachingProfile = false;
             });
 

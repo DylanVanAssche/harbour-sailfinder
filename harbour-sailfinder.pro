@@ -46,7 +46,6 @@ DISTFILES += \
     qml/pages/Matches.qml \
     qml/pages/MatchesDelegate.qml \
     qml/pages/MessagingBar.qml \
-    qml/pages/MessagingGifGallery.qml \
     qml/pages/MessagingHeader.qml \
     qml/pages/MessagingPage.qml \
     qml/pages/MessagingView.qml \
@@ -1219,4 +1218,7 @@ DISTFILES += \
     qml/pages/js/gif.js \
     rpm/NOARCH_harbour-sailfinder.yaml \
     rpm/harbour-sailfinder.yaml \
-    rpm/harbour-sailfinder.spec
+    rpm/harbour-sailfinder.spec \
+    qml/pages/GifGalleryPage.qml \
+    qml/pages/AboutMatchPage.qml \
+    qml/pages/js/updates.js

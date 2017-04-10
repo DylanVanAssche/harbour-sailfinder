@@ -28,11 +28,13 @@ class _Recommendations():
         self.recs = {}
         self.progress = 0.0
         self.progress_step = 0.0
+        self.size = constants.tinder.IMAGE_SIZE[0]
         logger.log_to_file.debug("Init Recommendations class")
         
-    def get(self): #OK
+    def get(self, size=0): #OK
         logger.log_to_file.debug("GETTING RECOMMENDATIONS", insert_line=True)
         self.progress = 0.0
+        self.size = constants.tinder.IMAGE_SIZE[size]
         sfos.asynchronous.notify("recsProgress", self.progress)
         self.recs = network.connection.send("/user/recs", {"limit":constants.tinder.RECS_LIMIT})
         try:
@@ -102,7 +104,7 @@ class _Recommendations():
                 try:
                     self.progress += (1.0/len(user["photos"]))*self.progress_step
                     sfos.asynchronous.notify("recsProgress", self.progress)
-                    image_data = network.connection.send("/" + current_user + "/640x640_" + photo["id"] + ".jpg", http_type=constants.http.TYPE["GET"], host=constants.tinder.IMAGE_HOST, raw=True)
+                    image_data = network.connection.send("/" + current_user + "/" + self.size + "_" + photo["id"] + ".jpg", http_type=constants.http.TYPE["GET"], host=constants.tinder.IMAGE_HOST, raw=True)
                     image_file = filemanager.File(current_user + "_" + photo["id"], constants.filemanager.extension["JPG"], constants.filemanager.path["RECS"])
                     image_file.write(image_data, True)
                     if image_data:
@@ -128,11 +130,13 @@ class _Matches():
         self.goingout = []
         self.progress = 0.0
         self.progress_step = 0.0
+        self.size = constants.tinder.IMAGE_SIZE[0]
         logger.log_to_file.debug("Init Matches class")
         
-    def get(self, last_activity_date=""): #OK
-        logger.log_to_file.debug("GETTING MATCHES ", insert_line=True)
+    def get(self, size=0): #OK
+        logger.log_to_file.debug("GETTING MATCHES", insert_line=True)
         self.progress = 0.0
+        self.size = constants.tinder.IMAGE_SIZE[size]
         sfos.asynchronous.notify("matchesProgress", self.progress)
         self.matches = updates.get()
         if isinstance(self.matches, dict):
@@ -141,36 +145,35 @@ class _Matches():
                 sfos.asynchronous.data("matchesData", self.matches["matches"])
                 return self.matches["matches"]
             else:
-                self._cache()  
+                self._cacheList()  
                 matches_file = filemanager.File("matches", constants.filemanager.extension["JSON"], constants.filemanager.path["MATCHES"])
                 matches_file.write(self.matches["matches"])
+                liked_msg_file = filemanager.File("liked_messages", constants.filemanager.extension["JSON"], constants.filemanager.path["MATCHES"]) # NEEDS TO BE REMOVED
+                liked_msg_file.write(self.matches["liked_messages"])
                 sfos.asynchronous.notify("matchesProgress", 100.0)
                 sfos.asynchronous.data("matchesData", self.matches["matches"])
+                sfos.asynchronous.data("lastActive", self.matches["last_activity_date"])
+                sfos.asynchronous.data("likedMessages", self.matches["liked_messages"])
                 return self.matches["matches"]  #Disable incremental updates until fixed!
         else:
             logger.log_to_file.warning("Matches data was not found in request")
             return False
-        
-        
-#Incremental updates handler to combine them with the history file. NEEDS FIXING!
-#        updates.get()["matches"]# Get last update
-#        updates_dir = filemanager.FileSystem()
-#        updates_list = updates_dir.list_files(constants.filemanager.path["UPDATES"], True) #Sort
-#        for index,file in enumerate(updates_list):
-#            sfos.asynchronous.notify("matchesProgress", ((index+1)/len(updates_list))*100.0)
-#            current_file = filemanager.File(file, constants.filemanager.extension["JSON"], constants.filemanager.path["UPDATES"])
-#            self.blocks += current_file.read()["blocks"]
-#            self.matches += current_file.read()["matches"]
-#        sfos.asynchronous.notify("blocksData", self.blocks)    
-#        sfos.asynchronous.notify("matchesData", self.matches)
-#        return self.matches
+            
+    def incremental(self, last_activity_date):
+        logger.log_to_file.debug("GETTING INCREMENTAL UPDATE", insert_line=True)
+        return updates.get(last_activity_date)
             
     def about(self, user_id): #OK
         logger.log_to_file.debug("GETTING ABOUT USER: " + user_id, insert_line=True)
-        self.about_user = network.connection.send("/user/"+ user_id, http_type=constants.http.TYPE["GET"])
-        about_file = filemanager.File(user_id, constants.filemanager.extension["JSON"])
+        about_file = filemanager.File(user_id, constants.filemanager.extension["JSON"], constants.filemanager.path["MATCHES"])
+        if about_file.exists(): # Read from cache if available
+            self.about_user = about_file.read()
+        else:
+            self.about_user = network.connection.send("/user/"+ user_id, http_type=constants.http.TYPE["GET"])
+            self.about_user = self.about_user["results"]
+        self._cacheUser() #Cache images
         about_file.write(self.about_user)
-        return self.about_user["results"]
+        return self.about_user
         
     def report(self, match_id, reason, explanation=""): #OK
         logger.log_to_file.debug("REPORTING USER: " + match_id, insert_line=True)
@@ -193,7 +196,23 @@ class _Matches():
         logger.log_to_file.debug("Unmatching match " + match_id + " failed")
         return False
         
-    def _cache(self):
+    def _cacheUser(self):
+        for photo_index, photo in enumerate(self.about_user["photos"]):
+            try:
+                image_file = filemanager.File(self.about_user["_id"] + "_" + photo["id"], constants.filemanager.extension["JPG"], constants.filemanager.path["MATCHES"])
+                if image_file.exists(): #Don't download images which are already cached
+                    photo["processedFiles"][0]["url"] = constants.filemanager.path["MATCHES"] + "/" + self.about_user["_id"] + "_" + photo["id"] + constants.filemanager.extension["JPG"]
+                else: 
+                    image_data = network.connection.send("/" + self.about_user["_id"] + "/" + self.size + "_" + photo["id"] + ".jpg", http_type=constants.http.TYPE["GET"], host=constants.tinder.IMAGE_HOST, raw=True)
+                    image_file.write(image_data, True)
+                    if image_data:
+                        photo["processedFiles"][0]["url"] = constants.filemanager.path["MATCHES"] + "/" + self.about_user["_id"] + "_" + photo["id"] + constants.filemanager.extension["JPG"]
+                    else:
+                        raise LookupError("Network error")
+            except:
+                logger.log_to_file.trace("Caching image: " + str(photo["id"]) + " for user: " + str(self.about_user["_id"]) + " failed")
+        
+    def _cacheList(self):
         self.progress_step = 100.0/(2*len(self.matches["matches"])) #2 times the size of the matches to download gifs if needed
         for user in self.matches["matches"]:
             current_user = user["person"]["_id"]
@@ -209,7 +228,7 @@ class _Matches():
                     if image_file.exists(): #Don't download images which are already cached
                         photo["processedFiles"][0]["url"] = constants.filemanager.path["MATCHES"] + "/" + current_user + "_" + photo["id"] + constants.filemanager.extension["JPG"]
                     else: 
-                        image_data = network.connection.send("/" + current_user + "/640x640_" + photo["id"] + ".jpg", http_type=constants.http.TYPE["GET"], host=constants.tinder.IMAGE_HOST, raw=True)
+                        image_data = network.connection.send("/" + current_user + "/" + self.size + "_" + photo["id"] + ".jpg", http_type=constants.http.TYPE["GET"], host=constants.tinder.IMAGE_HOST, raw=True)
                         image_file.write(image_data, True)
                         if image_data:
                             photo["processedFiles"][0]["url"] = constants.filemanager.path["MATCHES"] + "/" + current_user + "_" + photo["id"] + constants.filemanager.extension["JPG"]
@@ -261,7 +280,7 @@ class _Meta():
 """
 Updates:
     * Get our history
-    * Get our updates
+    * Get our incremental updates
 """        
 class _Updates():
     def __init__(self):
@@ -270,10 +289,9 @@ class _Updates():
     def get(self, last_activity_date=""): #OK
         updates = {}
         logger.log_to_file.debug("GETTING UPDATE DATA", insert_line=True)
-        cache_history_file = filemanager.File("history", constants.filemanager.extension["JSON"], working_dir=constants.filemanager.path["UPDATES"])
-        if cache_history_file.exists() and False:    #Disable incremental updates feature until we know how the last_acitivity_date works by adding "False".
+        if len(last_activity_date): #When a date is given, get the incremental updates from then until now
             logger.log_to_file.debug("Incremental update since: " + last_activity_date)
-            updates = network.connection.send("/updates", {"last_activity_date": last_activity_date})
+            updates = network.connection.send("/updates", {"last_activity_date": last_activity_date}, wait=False)
             updates_file = filemanager.File(last_activity_date[:len(last_activity_date)], constants.filemanager.extension["JSON"], constants.filemanager.path["UPDATES"])
         else:
             logger.log_to_file.debug("Full update of the account history")
@@ -281,58 +299,39 @@ class _Updates():
             updates_file = filemanager.File("history", constants.filemanager.extension["JSON"], constants.filemanager.path["UPDATES"])
         updates_file.write(updates)
         return updates
-        
-    def _merge(self):
-        logger.log_to_file.debug("Merging update data")
-        last_activity_dates = []
-        merge_file =  filemanager.File("history", constants.filemanager.extension["JSON"], constants.filemanager.path["UPDATES"])
-        merged_updates = merge_file.read()
-        updates_dir = filemanager.FileSystem()
-        print(updates_dir)
-        for file in updates_dir.list_files(constants.filemanager.path["UPDATES"]):
-            update_file = filemanager.File(file, constants.filemanager.extension["JSON"], constants.filemanager.path["UPDATES"])
-            item = update_file.read()
-            print(update_file.name)
-            if update_file.name != "history":
-                try:
-                    for key in item.keys():
-                        if key == "last_activity_date":
-                            last_activity_dates.append(datetime.datetime.strptime(item[key], "%Y-%m-%dT%H:%M:%S.%fZ"))
-                        else:
-                            for value in item[key]:
-                                merged_updates[key].append(value)
-                except:
-                    logger.log_to_file.error("Merging file: " + update_file.name + " key: " + key + " failed")
-            if len(last_activity_dates):
-                merged_updates["last_activity_date"] = max(last_activity_dates).isoformat() + "Z" #Return the latest last activity date as ISO string
-                testfile = filemanager.File("test", constants.filemanager.extension["JSON"], working_dir=constants.filemanager.path["XDG_CACHE_HOME"])
-                testfile.write(merged_updates)
-        return merged_updates
 
 """
 Message:
     * Send the message either text or a GIF
+    * Get a list of all liked messages
     * Like the message
     * Unlike the message
 """        
 class _Message():
     def __init__(self):
+        self.liked_msg = []
         logger.log_to_file.debug("Init Message class")
     
-    def send(self, match_id, message, gif_id="" ,gif=False): #OK
+    def send(self, match_id, message, gif_id="", gif=False): #OK
         logger.log_to_file.debug("SENDING MESSAGE", insert_line=True)
         if gif:
             return network.connection.send("/user/matches/" + match_id, {"type": "GIF", "message": message, "gif_id": gif_id})
         else:
             return network.connection.send("/user/matches/" + match_id, {"message": message})
             
+    def liked(self): #OK
+        logger.log_to_file.debug("GETTING LIKED MESSAGES", insert_line=True)
+        liked_msg_file = filemanager.File("liked_messages", constants.filemanager.extension["JSON"], constants.filemanager.path["MATCHES"])
+        self.liked_msg = liked_msg_file.read()
+        return self.liked_msg
+            
     def like(self, message_id): #OK
         logger.log_to_file.debug("LIKING MESSAGE", insert_line=True)
-        network.connection.send("/message/" + message_id + "/like")
+        return network.connection.send("/message/" + message_id + "/like")
             
-    def dislike(self, message_id): #OK
-        logger.log_to_file.debug("DISLIKING MESSAGE", insert_line=True)
-        network.connection.send("/message/" + message_id + "/like", http_type=constants.http.TYPE["DELETE"])
+    def unlike(self, message_id): #OK
+        logger.log_to_file.debug("UNLIKING MESSAGE", insert_line=True)
+        return network.connection.send("/message/" + message_id + "/like", http_type=constants.http.TYPE["DELETE"])
         
 """
 Profile:
@@ -347,11 +346,13 @@ class _Profile():
         self.photos = []
         self.location = {}
         self.progress = 0.0
+        self.size = constants.tinder.IMAGE_SIZE[0]
         logger.log_to_file.debug("Init Profile class")
     
-    def get(self, refresh=False): #OK
+    def get(self, refresh=False, size=0): #OK
         logger.log_to_file.debug("GETTING PROFILE", insert_line=True)
         self.progress = 0.0
+        self.size = constants.tinder.IMAGE_SIZE[size]
         sfos.asynchronous.notify("profileProgress", self.progress)
         profile_file = filemanager.File("profile", constants.filemanager.extension["JSON"], constants.filemanager.path["PROFILE"])
         if not profile_file.exists() or refresh==True:   
@@ -380,7 +381,7 @@ class _Profile():
         sfos.asynchronous.notify("profileProgress", 0.0)
         self.profile = network.connection.send("/profile", {"discoverable" : discoverable, "age_filter_min" : age_min, "age_filter_max" : age_max, "gender": gender, "gender_filter" : interested_in, "distance_filter" : distance, "bio": bio})
         sfos.asynchronous.notify("profileProgress", 50.0)
-        profile_file = filemanager.File("profile", constants.filemanager.extension["JSON"])
+        profile_file = filemanager.File("profile", constants.filemanager.extension["JSON"], constants.filemanager.path["PROFILE"])
         profile_file.write(self.profile)
         sfos.asynchronous.notify("profileProgress", 100.0)
         sfos.asynchronous.data("profileData", self.profile)
@@ -457,7 +458,7 @@ class _Profile():
                 if image_file.exists():
                     photo["processedFiles"][0]["url"] = constants.filemanager.path["PROFILE"] + "/" + self.profile["_id"] + "_" + photo["id"] + constants.filemanager.extension["JPG"]
                 else:
-                    image_data = network.connection.send("/" + self.profile["_id"] + "/640x640_" + photo["id"] + ".jpg", http_type=constants.http.TYPE["GET"], host=constants.tinder.IMAGE_HOST, raw=True)
+                    image_data = network.connection.send("/" + self.profile["_id"] + "/" + self.size + "_" + photo["id"] + ".jpg", http_type=constants.http.TYPE["GET"], host=constants.tinder.IMAGE_HOST, raw=True)
                     image_file.write(image_data, True)
                     if image_data:
                         photo["processedFiles"][0]["url"] = constants.filemanager.path["PROFILE"] + "/" + self.profile["_id"] + "_" + photo["id"] + constants.filemanager.extension["JPG"]

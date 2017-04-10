@@ -9,7 +9,7 @@ Created on Fri Jan  6 19:02:42 2017
 """
 
 #Sailfinder modules
-from sailfinder import filemanager, constants, logger
+import filemanager, constants, logger
 #Python modules
 import os
 try:
@@ -42,8 +42,11 @@ class _ConnMan(object):
         for item in self._files:
             myfile = filemanager.File(item, constants.filemanager.extension["NONE"], constants.filemanager.path["CONNMAN"], False)
             connman_data[item] = myfile.read()
-            if not len(connman_data[item]): #Connman returns empty fileObjects when offline, replace them
-                connman_data[item].append("")
+            try:
+                if not len(connman_data[item]): #Connman returns empty fileObjects when offline, replace them
+                    connman_data[item].append("")
+            except:
+                pass
         return connman_data
 
 """

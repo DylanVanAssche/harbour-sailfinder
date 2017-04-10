@@ -6,7 +6,9 @@ var userCounter = 0;
 
 function get() {
     app.loadingRecs = true;
-    python.call("app.recs.get", [], function(recs) {
+    app.coverBackgroundRecs = "../resources/images/cover-background.png";
+
+    python.call("app.recs.get", [settings.imageFormat], function(recs) {
         app.recsData = recs;
     })
 }
@@ -160,7 +162,6 @@ function superlike() {
             }
             checkMatching(action.match);
             next();
-            outOfSuperlikes = false;
         }
     })
 }
@@ -170,6 +171,7 @@ function checkMatching(match) {
         popupContent.avatar = app.recsData[userCounter].photos[0].processedFiles[0].url;
         popupContent.name = app.recsData[userCounter].name;
         popup.open = true;
+        app.refreshMatches(); // Request an update
     }
     else {
         popup.open = false;
@@ -183,7 +185,6 @@ function next() {
     }
     else {
         userCounter = 0;
-        app.coverBackgroundRecs = "../resources/images/cover-background.png"
         get();  // Get new users in the area
     }
 }

@@ -12,10 +12,14 @@ SilicaFlickable {
         target: app
         onCachingRecsChanged: app.recsData? Recs.load(): console.log("[ERROR] Invalid recommendations data: " + app.recsData)
         onCleanup: Recs.clear()
+        onRefreshRecs: Recs.get()
     }
 
     Connections {
         target: main
+
+       // onUpdateRequired: (discovery && !outOfLikes)? Recs.get(): undefined; // Profile changed? Update if possible
+
         onOutOfLikesChanged: {
             if(outOfLikes == true) {
                 parameters.wasOutOfLikes = true
@@ -40,7 +44,7 @@ SilicaFlickable {
             }
         }
 
-        onDiscoveryChanged: (discovery && !outOfLikes)? Recs.get(): app.headerRecs = qsTr("Undiscoverable") + "!"
+        onDiscoveryChanged: (discovery && !outOfLikes)? undefined: app.headerRecs = qsTr("Undiscoverable") + "!"; // Discovery enabled?
     }
 
     VerticalScrollDecorator {}
@@ -58,7 +62,7 @@ SilicaFlickable {
 
         ImageGridPlaceholder { show: !discovery; head: qsTr("Undiscoverable"); description: qsTr("Turn on discovery to swipe on people") + "." }
 
-        ImageGridPlaceholder { show: outOfUsers; head: qsTr("You're out of users") + "!"; description: qsTr("Change your search criteria") + "." }
+        ImageGridPlaceholder { show: outOfUsers; head: qsTr("You're out of users") + "!"; description: qsTr("There are no potential matches in your area, change your radius") + "." }
 
         Row {
             id: buttonRow

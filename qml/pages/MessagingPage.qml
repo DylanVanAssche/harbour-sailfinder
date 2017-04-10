@@ -18,8 +18,6 @@ Page {
 
     MessagingView { id: view }
 
-    MessagingGifGallery { id: gifGallery }
-
     MessagingBar { id: inputBar }
 
     // Placeholder when no messages are available

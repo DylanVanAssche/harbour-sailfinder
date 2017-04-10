@@ -20,7 +20,7 @@ Item {
         width: Theme.iconSizeLarge
         height: width
         anchors { right: parent.right; margins: Theme.paddingLarge; verticalCenter: parent.verticalCenter }
-        //onClicked: pageStack.push(Qt.resolvedUrl('AboutPage.qml'), {}) // Sailfinder V3.X
+        onClicked: pageStack.push(Qt.resolvedUrl('AboutMatchPage.qml'), { userId: userId, name: name })
 
         Image {
             width: parent.width

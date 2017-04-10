@@ -11,7 +11,8 @@ Dialog {
         settings.showInstagram = instagram.checked
         //settings.showSpotify = spotify.checked
         settings.showNotifications = notifications.checked
-        //settings.refreshInterval = refresh.currentIndex
+        settings.refreshInterval = refresh.currentIndex
+        settings.imageFormat = imageFormat.currentIndex
     }
 
     SilicaFlickable {
@@ -26,9 +27,8 @@ Dialog {
             spacing: Theme.paddingLarge
 
             DialogHeader { title: qsTr("Settings") }
-            RemorsePopup { id: remorse }
 
-            SectionHeader { text: qsTr("Recommendations") }
+            SectionHeader { text: qsTr("Recommendations & matches") }
             IconTextSwitch {
                 id: bio
                 text: qsTr("Biography")
@@ -91,22 +91,35 @@ Dialog {
                 icon.source: "../resources/images/icon-notifications.png"
                 icon.scale: Theme.iconSizeMedium/icon.width
                 checked: settings.showNotifications
-                description: "Sailfinder " + qsTr("will notify you when you can swipe again")//qsTr("will notify you when a new match, message, ... has been received.") //Sailfinder V3.X
+                description: "Sailfinder " + qsTr("will notify you when a new match, message, ... has been received.")
             }
 
-            /*ComboBox {
+            ComboBox {
                 id: refresh
                 width: parent.width
                 label: qsTr("Refresh interval")
                 menu: ContextMenu {
-                    MenuItem { text: "15 min" }
-                    MenuItem { text: "30 min" }
-                    MenuItem { text: "1 hour" }
-                    MenuItem { text: "3 hours" }
+                    MenuItem { text: "Quick" }
+                    MenuItem { text: "Normal" }
+                    MenuItem { text: "Long" }
                 }
                 currentIndex: settings.refreshInterval
                 description: qsTr("Time between every check for new notifications. This only works when Sailfinder runs on the homescreen.")
-            }*/
+            }
+
+            ComboBox {
+                id: imageFormat
+                width: parent.width
+                label: qsTr("Image size")
+                menu: ContextMenu {
+                    MenuItem { text: "640x640" }
+                    MenuItem { text: "320x320" }
+                    MenuItem { text: "172x172" }
+                    MenuItem { text: "84x84" }
+                }
+                currentIndex: settings.imageFormat
+                description: qsTr("Lowering the image size will lower the data usage of") + " Sailfinder " + qsTr("and improve the loading speed when you're using a slow connection.")
+            }
         }
     }
 }

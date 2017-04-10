@@ -54,7 +54,7 @@ class _Connection(object):
         * Create a new session when the 'NetworkType' has been changed (Mobile/WiFi)
         * Return True when connected or False and launch the connection dialog when disconnected when disconnected
     """    
-    def status(self): # RUN THIS FROM __INIT__ + UPDATE NETWORK STATE AFTER REFRESH
+    def status(self, dialog=True):
         connman_data = sfos.connman.read()
         if self._current_network != connman_data["NetworkType"][0]:
             self._session = requests.Session()
@@ -62,9 +62,9 @@ class _Connection(object):
             
         if connman_data["NetworkState"][0] == "connected":
             return True
-        else:
+        elif dialog:
             sfos.connection_manager.launch_connection_dialog()
-            return False
+        return False
             
     """
     Update session headers:
@@ -87,13 +87,18 @@ class _Connection(object):
         * host = constants.tinder.HOST -> Most requests are for Tinder
         * files = None -> Files to upload for example images
     """   
-    def send(self, url, payload=None, http_type=constants.http.TYPE["POST"], session=True, host=constants.tinder.HOST, files=None, raw=False):
+    def send(self, url, payload=None, http_type=constants.http.TYPE["POST"], session=True, host=constants.tinder.HOST, files=None, raw=False, wait=True):
         limit_execution = 50
         wait_since = time.clock()
+        
+        if not wait and not self.status(False): #Don't force the user to enable a netwerk connection when checking notifications
+            logger.log_to_file.debug("No connection + waiting is disabled = abort request")
+            return False
+            
         while(not self.status()): #Wait until network is available
             time.sleep(0.5)
             limit_execution += 1
-            if limit_execution > 50: #Limit calls to SFOS Connection Manager and logging
+            if limit_execution > 150: #Limit calls to SFOS Connection Manager and logging
                 logger.log_to_file.debug("Network unavailable: WiFi and cellular connection deactivated, already waited: " + str(round(time.clock() - wait_since,6)) + "s for a connection")
                 sfos.connection_manager.notify_connection_state(False)
         else:

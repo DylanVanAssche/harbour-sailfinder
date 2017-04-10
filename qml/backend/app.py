@@ -102,8 +102,8 @@ class Recommendations(object):
     def __init__(self):
         pass
     
-    def get(self):
-        return tinder.recs.get()
+    def get(self, size=0):
+        return tinder.recs.get(size)
     
     """
     Like a user and return True/False depending on succes
@@ -141,8 +141,8 @@ class Profile(object):
     def __init__(self):
         pass
     
-    def get(self, refresh=False):
-        return tinder.profile.get(refresh)
+    def get(self, refresh=False, size=0):
+        return tinder.profile.get(refresh, size)
         
     def set(self, discoverable, age_min, age_max, gender, interested_in, distance, bio):
         return tinder.profile.update(discoverable, age_min, age_max, gender, interested_in, distance, bio)
@@ -151,12 +151,30 @@ class Matches(object):
     def __init__(self):
         pass
     
-    def get(self, last_activity_date=""):
-        return tinder.matches.get(last_activity_date)
+    def get(self, size=0):
+        return tinder.matches.get(size)
+        
+    def incremental(self, last_activity_date):
+        return tinder.matches.incremental(last_activity_date)
+        
+    def last_active(self):
+        return tinder.matches.last_active()
+        
+    def about(self, user_id):
+        return tinder.matches.about(user_id)
         
     def gifs(self, search_word):
         return giphy.gifs.search(search_word)["data"]
         
+    def liked(self):
+        return tinder.message.liked()
+        
+    def like_msg(self, message_id):
+        return tinder.message.like(message_id)
+    
+    def unlike_msg(self, message_id):
+        return tinder.message.unlike(message_id)
+    
     def send(self, match_id, message, gif=False, gif_id=""):
         return tinder.message.send(match_id, message, gif_id , gif)
         

@@ -48,16 +48,6 @@ function getHeader(index)
     }
 }
 
-function getImageGridHeight(numberOfImages)
-{
-    if(numberOfImages === 2 || numberOfImages === 3) {
-        return 2*parent.width/3;
-    }
-    else {
-        return parent.width;
-    }
-}
-
 function init()
 {
     python.call("app.account.meta", [], function(meta) {
@@ -68,11 +58,12 @@ function init()
                 outOfLikes = true;
             }
             else if(parameters.wasOutOfLikes) {
-                notification.summary = qsTr("Swipes available") + "!";
-                notification.body = qsTr("You can swipe again") + ".";
-                notification.previewSummary = qsTr("Swipes available") + "!";
-                notification.previewBody = qsTr("You can swipe again") + ".";
-                notification.publish();
+                notificationSwipeAgain.close()
+                notificationSwipeAgain.summary = qsTr("Swipes available") + "!";
+                notificationSwipeAgain.body = qsTr("You can swipe again") + ".";
+                notificationSwipeAgain.previewSummary = qsTr("Swipes available") + "!";
+                notificationSwipeAgain.previewBody = qsTr("You can swipe again") + ".";
+                notificationSwipeAgain.publish();
                 parameters.wasOutOfLikes = false;
             }
 
@@ -83,7 +74,7 @@ function init()
             discovery = meta.user.discoverable;
 
             if(outOfLikes == false && discovery == true) {
-                python.call("app.recs.get"); // Get our recommendations
+                python.call("app.recs.get", [settings.imageFormat]); // Get our recommendations
             }
             else {
                 app.loadingRecs = false;
@@ -93,23 +84,27 @@ function init()
         catch(err){
             console.log("[ERROR] Reading meta data failed: " + err)
         }
-
-    })
-
-    python.call("app.profile.get", [true]); // Get our profile
-    python.call("app.matches.get", [getLastActive()]); // Get our matches
-    console.log("[INFO] LAST ACTIVE: " + parameters.last_activity_date);
-    var today = new Date();
-    parameters.last_activity_date = today.toISOString();
+    });
 }
 
 function getLastActive()
 {
-    if (parameters.last_activity_date.length == 0)
+    if (parameters.last_activity_date.length == 0) // In case no date has been set
     {
         var today = new Date();
         parameters.last_activity_date = today.toISOString();
     }
 
     return parameters.last_activity_date;
+}
+
+function parseInterval(interval) {
+    switch(interval) {
+    case 0:
+        return 2000;
+    case 1:
+        return 5000;
+    case 2:
+        return 10000;
+    }
 }

@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "js/util.js" as Util
+import "js/updates.js" as Updates
 
 Page {
     id: main
@@ -9,10 +10,10 @@ Page {
     property bool outOfLikes
     property bool outOfUsers
     property bool discovery: true
+    property bool updateRequired
     property var newLikesIn
-    ///property bool loadingSocial: true // Sailfinder V3.X
 
-    Component.onCompleted: Util.init()
+    Component.onCompleted: Util.init() // Getting recs ready
 
     OverlayMessage {
         message: qsTr("Account banned") + " :("
@@ -20,7 +21,7 @@ Page {
         visible: app.banned
     }
 
-    // Update location on launch
+    // Update location on change
     LocationManager {}
 
     SilicaFlickable {
@@ -79,6 +80,7 @@ Page {
         id: popup
         width: parent.width
         height: parent.height/2.5
+        visible: open? true: false
         modal: true // Only compatible with Sailfish OS 2.0.2.51 and higher
         dock: Dock.Top
 

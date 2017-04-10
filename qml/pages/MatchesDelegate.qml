@@ -35,13 +35,13 @@ ListItem {
         Image {
             width: Theme.iconSizeMedium; height: width
             anchors { verticalCenter: parent.verticalCenter }
-            source: "../resources/images/superlike.png"
+            source: "image://theme/icon-m-favorite-selected"
             visible: model.isSuperlike
             asynchronous: true
         }
     }
 
-    // Remorse timer when unmatching
+    // Remorse timer item when unmatching
     RemorseItem { id: remorse }
 
     // Animations after unmatching or adding matches
@@ -56,10 +56,16 @@ ListItem {
     // Menu
     menu: ContextMenu {
         MenuItem {
+            text: qsTr("About")
+            visible: !model.avatar.match("__internal_user__")
+            onClicked: pageStack.push(Qt.resolvedUrl('AboutMatchPage.qml'), { userId: model.id, name: model.name })
+        }
+        MenuItem {
             text: qsTr("Unmatch")
             onClicked: remorse.execute(matchDelegate, qsTr("Unmatching"), function() {
                 Matches.unmatch(model.matchId)
                 matchesModel.remove(index)
+                refreshing = true // Block UI until refresh is completed
             });
         }
         MenuItem {

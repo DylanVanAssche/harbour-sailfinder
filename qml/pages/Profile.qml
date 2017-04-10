@@ -5,13 +5,18 @@ import "js/profile.js" as Profile
 SilicaFlickable {
     width: parent.width; height: parent.height
     contentHeight: profileColumn.height
-    Component.onCompleted: Profile.get(false)
-
-    property bool updateRequired
+    Component.onCompleted: Profile.get(false) // Getting profile
 
     Connections {
         target: swipeview
-        onCurrentIndexChanged: updateRequired? Profile.set(): undefined
+        onCurrentIndexChanged: {
+            if(updateRequired) {
+                Profile.set()
+                if(discovery) {
+                    app.refreshRecs()
+                }
+            }
+        }
     }
 
     Connections {
@@ -31,12 +36,26 @@ SilicaFlickable {
 
         ImageGrid { id: avatars }
 
-        TextArea { //Bio max 500 characters
-            id: bio
+        Row {
             width: parent.width
-            label: qsTr("Biography")
-            placeholderText: label
-            onTextChanged: updateRequired = true
+            anchors { left: parent.left; right: parent.right; rightMargin: Theme.horizontalPageMargin }
+            spacing: Theme.paddingMedium
+
+            TextArea { //Bio max 500 characters
+                id: bio
+                width: parent.width - Theme.iconSizeSmall - Theme.paddingMedium - Theme.horizontalPageMargin
+                label: qsTr("Biography")
+                placeholderText: label
+                onTextChanged: updateRequired = true
+            }
+
+            Image { // Show edit pencil next to bio to show user this field is editable
+                anchors { verticalCenter: bio.verticalCenter }
+                width: Theme.iconSizeSmall
+                height: width
+                source: "image://theme/icon-s-edit"
+                asynchronous: true
+            }
         }
 
         // Sailfinder V3.X: external accounts support (FB, Instagram, Spotify)
@@ -56,7 +75,7 @@ SilicaFlickable {
             icon.source: "../resources/images/icon-recs.png"
             icon.scale: Theme.iconSizeMedium/icon.width // Scale icons according to the screen sizes
             checked: false
-            busy: app.loadingRecs
+            busy: app.loadingRecs || app.cachingRecs
             enabled: !busy
             onCheckedChanged: updateRequired = true
             description: qsTr("Disable discovery to hide your profile for other people. This has no effect on your current matches.")
@@ -69,7 +88,7 @@ SilicaFlickable {
                 id: gender
                 width: parent.width / 2
                 label: qsTr("My gender")
-                enabled: discoverable.checked
+                enabled: discoverable.checked && discoverable.enabled
                 currentIndex: -1
                 onCurrentIndexChanged: updateRequired = true
 
@@ -83,7 +102,7 @@ SilicaFlickable {
                 id: interestedIn
                 width: parent.width / 2
                 label: qsTr("Interested in")
-                enabled: discoverable.checked
+                enabled: discoverable.checked && discoverable.enabled
                 currentIndex: -1
                 onCurrentIndexChanged: updateRequired = true
 
@@ -102,8 +121,8 @@ SilicaFlickable {
             maximumValue: 100
             value: 0
             stepSize: 1
-            enabled: discoverable.checked
-            opacity: discoverable.checked? 1.0: 0.25
+            enabled: discoverable.checked && discoverable.enabled
+            opacity: enabled? 1.0: 0.25
             label: qsTr("Minimum age")
             valueText: sliderValue
             onValueChanged: {
@@ -122,8 +141,8 @@ SilicaFlickable {
             maximumValue: 100
             value: 0
             stepSize: 1
-            enabled: discoverable.checked
-            opacity: discoverable.checked? 1.0: 0.25
+            enabled: discoverable.checked && discoverable.enabled
+            opacity: enabled? 1.0: 0.25
             label: qsTr("Maximum age")
             valueText: sliderValue
             onValueChanged: {
@@ -143,8 +162,8 @@ SilicaFlickable {
             value: 0
             onValueChanged: updateRequired = true
             stepSize: 1
-            enabled: discoverable.checked
-            opacity: discoverable.checked? 1.0: 0.25
+            enabled: discoverable.checked && discoverable.enabled
+            opacity: enabled? 1.0: 0.25
             label: qsTr("Search radius")
             valueText: sliderValue + " " + qsTr("km")
         }

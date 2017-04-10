@@ -1,6 +1,7 @@
 import QtQuick 2.2
 import QtQuick.Window 2.0
 import Sailfish.Silica 1.0
+import "js/messages.js" as Messages
 
 SilicaListView {
     anchors { top: headerBar.bottom; left: parent.left; right: parent.right; bottom: inputBar.top }
@@ -36,34 +37,28 @@ SilicaListView {
             antialiasing: true
         }
 
-        /*IconButton { // Sailfinder V3.X
-            anchors.left: layout.right
-            anchors.leftMargin: Theme.paddingMedium
-            anchors.verticalCenter: layout.verticalCenter
-            icon.source: "../images/message_dislike.png"
-            visible: item.alignRight
-            opacity: 0.5
-            onClicked:
-            {
-                if(icon.source.match("dislike.png"))
-                {
-                    icon.source = "../images/message_like.png"
-                    opacity = 1.0
-                    python.call('api.like_message',[true, model._id], function(like, message_id) {});
-                    console.log("[INFO] Message " + model._id + " liked")
+        IconButton { // Like/Unlike button for messages
+            anchors { left: layout.right; verticalCenter: parent.verticalCenter }
+            visible: item.alignRight // Only like messages from other users
+            icon.source: model.liked? "../resources/images/icon-liked.png": "../resources/images/icon-notliked.png"
+            icon.scale: Theme.iconSizeSmall/icon.width
+            opacity: model.liked? 1.0: 0.5
+            onClicked: {
+                if(!model.liked) { // model.liked is the opposite of the action we need to do
+                    console.log("LIKING MSG: " + model.id)
+                    Messages.like(model.id) // Takes some time until Tinder update his data after this
                 }
-                else if(icon.source.match("like.png"))
-                {
-                    icon.source = "../images/message_dislike.png"
-                    opacity = 0.5
-                    python.call('api.like_message',[false, model._id], function(like, message_id) {});
-                    console.log("[INFO] Message: " + model._id + " disliked")
+                else {
+                    console.log("UNLIKING MSG: " + model.id)
+                    Messages.unlike(model.id)
                 }
+                messagesModel.setProperty(model.index, "liked", !model.liked) // Update model
             }
+
             Behavior on opacity {
                 FadeAnimation {}
             }
-        }*/
+        }
 
         Column {
             id: layout
@@ -71,7 +66,7 @@ SilicaListView {
             spacing: Theme.paddingSmall
 
             Text {
-                width: messagePage.width*0.8 //Math.min(page.width*0.8, contentWidth)
+                width: messagePage.width*0.8
                 anchors { left: (item.alignRight? parent.left: undefined); right: (!item.alignRight? parent.right: undefined)}
                 color: Theme.primaryColor
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -96,11 +91,24 @@ SilicaListView {
                 }
             }
 
-            Label {
-                id: timestamp
-                anchors.right: parent.right
-                font.pixelSize: Theme.fontSizeTiny
-                text: model.createdDate
+            Row {
+                width: timestamp.width + (iconLiked.visible? Theme.paddingLarge + iconLiked.width: 0)
+                anchors { right: parent.right }
+                spacing: Theme.paddingLarge
+
+                Label {
+                    id: timestamp
+                    font.pixelSize: Theme.fontSizeTiny
+                    text: model.createdDate
+                }
+
+                Image {
+                    id: iconLiked
+                    width: Theme.iconSizeSmall
+                    height: width
+                    visible: model.liked && !item.alignRight
+                    source: "../resources/images/icon-liked.png"
+                }
             }
         }
     }

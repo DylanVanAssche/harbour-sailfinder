@@ -21,6 +21,7 @@ class _Tinder(object):
         self.HOST = "https://api.gotinder.com"
         self.IMAGE_UPLOAD_HOST = "https://imageupload.gotinder.com"
         self.IMAGE_HOST = "http://images.gotinder.com"
+        self.IMAGE_SIZE = ["640x640", "320x320", "172x172", "84x84"]
         self.HEADERS = {"User-Agent": "Tinder/4.6.1 (iPhone; iOS 9.0.1; Scale/2.00)", "os_version": "90000000001", "app-version": "371", "platform": "ios", "Content-type": "application/json; charset=utf-8"}
         #self.HEADERS = {"User-Agent": "Tinder Android Version 4.5.5", "os_version": "23", "app-version": "854", "platform": "android", "Content-type": "application/json; charset=utf-8"}        
         self.RECS_LIMIT = 10
@@ -101,7 +102,7 @@ class _FileManager(object):
 class _Sailfinder():
     def __init__(self):
         self.name = "harbour-sailfinder"
-        self.version = "3.0-1"
+        self.version = "3.1-8"
 
 filemanager = _FileManager()
 http = _HTTP()

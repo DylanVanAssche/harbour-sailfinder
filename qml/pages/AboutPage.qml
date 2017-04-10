@@ -29,6 +29,7 @@ Page {
 
             SectionHeader { text: qsTr("Powered by") }
             GlassButton { link: "http://fontawesome.io/"; iconSource: "../resources/images/icon-fontawesome.png"; iconText: "FontAwesome icons"; itemScale: 0.75 }
+            GlassButton { link: "https://be.linkedin.com/in/sam-goedgezelschap-06a516106"; iconSource: "../resources/images/icon-linkedin.png"; iconText: "Sam Goedgezelschap"; itemScale: 0.75 }
             GlassButton { link: "https://github.com/paomedia/small-n-flat/"; iconSource: "../resources/images/icon-github.png"; iconText: "Paomedia icons"; itemScale: 0.75 }
             GlassButton { link: "http://gitlab.unique-conception.org/thebootroo/mitakuuluu-ui-ng"; iconSource: "../resources/images/icon-gitlab.png"; iconText: "mitakuuluu-ui-ng"; itemScale: 0.75 }
         }

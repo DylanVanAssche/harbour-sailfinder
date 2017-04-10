@@ -4,14 +4,14 @@ Sailfinder Profile handles all the interaction in the profile UI
 
 
 function set() {
+    discovery = discoverable.checked;
     app.loadingProfile = true;
     python.call("app.profile.set", [discoverable.checked, minAge.value, maxAge.value, gender.currentIndex, interestedIn.currentIndex-1, Math.round(distance.value/1.609344), bio.text]);
-    discovery = discoverable.checked;
 }
 
 function get(refresh) {
     app.loadingProfile = true;
-    python.call("app.profile.get", [refresh]);
+    python.call("app.profile.get", [refresh, settings.imageFormat]);
 }
 
 function load() {

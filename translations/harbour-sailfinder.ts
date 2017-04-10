@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>AboutMatchPage</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Biography</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AboutPage</name>
     <message>
         <source>About</source>
@@ -52,41 +67,6 @@
     </message>
 </context>
 <context>
-    <name>ExternalAccountsPage</name>
-    <message>
-        <source>Report</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SPAM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>sends you SPAM or other content that you don&apos;t want.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Inappropriate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>is inappropriate or offensive against you.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Other</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>did something that you would like to report.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Explanation</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>FirstPage</name>
     <message>
         <source>Login</source>
@@ -110,6 +90,21 @@
     </message>
     <message>
         <source>Your Facebook email will be stored unencrypted on your device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GifGalleryPage</name>
+    <message>
+        <source>Search for GIFs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GIF gallery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Powered by GIPHY</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -165,6 +160,10 @@
         <source>Report</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MatchesPopup</name>
@@ -181,21 +180,6 @@
     </message>
     <message>
         <source>Hi </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Just now</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Powered by GIPHY</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>MessagingGifGallery</name>
-    <message>
-        <source>Search for GIFs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -339,7 +323,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Change your search criteria</source>
+        <source>There are no potential matches in your area, change your radius</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -401,10 +385,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Recommendations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Biography</source>
         <translation type="unfinished"></translation>
     </message>
@@ -441,7 +421,31 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>will notify you when you can swipe again</source>
+        <source>Image size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lowering the image size will lower the data usage of</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recommendations &amp; matches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>will notify you when a new match, message, ... has been received.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh interval</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time between every check for new notifications. This only works when Sailfinder runs on the homescreen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>and improve the loading speed when you&apos;re using a slow connection.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -572,6 +576,10 @@
         <source>Just now</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>GIF content blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>profile</name>
@@ -584,6 +592,33 @@
     <name>recs</name>
     <message>
         <source>Recommendations</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>updates</name>
+    <message>
+        <source>New liked message(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New match(es)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New message(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>new match(es)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>new message(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>new message(s) liked by your match(es)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
