@@ -45,8 +45,9 @@ https://www.transifex.com/dylanvanassche/harbour-sailfinder/
 
 ## Screenshots
 
-![Screenshot 1](https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot1.png) <br>
-![Screenshot 2](https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot2.png)
+<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot1.jpg" alt="Screenshot 1" style="width: 49.7%;"/>
+<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot2.jpg" alt="Screenshot 2" style="width: 49.7%;"/>
 <br>
-![Screenshot 3](https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot3.png) <br>
-![Screenshot 4](https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot4.png)
+<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot3.jpg" alt="Screenshot 3" style="width: 49.7%;"/>
+<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot4.jpg" alt="Screenshot 4" style="width: 49.7%;"/>
+<br>
