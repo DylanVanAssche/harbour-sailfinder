@@ -1,6 +1,6 @@
 # harbour-sailfinder
 
-<center>![Store banner](https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/banner.png)</center><br>
+<center><img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/banner.png" alt="Banner"/></center><br>
 
 Sailfinder is an unofficial Tinder client for Sailfish OS.
 This unofficial client has almost the same features as the official Android/iOS client.
