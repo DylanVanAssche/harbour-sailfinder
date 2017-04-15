@@ -32,8 +32,6 @@ Item {
         itemCount: 1
         timestamp: new Date("yyyy-MM-dd hh:mm:ss")
         replacesId: 0
-        onClicked: console.log("Clicked")
-        onClosed: console.log("Closed, reason: " + reason)
     }
 }
 

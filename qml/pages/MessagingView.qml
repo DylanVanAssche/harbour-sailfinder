@@ -45,11 +45,9 @@ SilicaListView {
             opacity: model.liked? 1.0: 0.5
             onClicked: {
                 if(!model.liked) { // model.liked is the opposite of the action we need to do
-                    console.log("LIKING MSG: " + model.id)
                     Messages.like(model.id) // Takes some time until Tinder update his data after this
                 }
                 else {
-                    console.log("UNLIKING MSG: " + model.id)
                     Messages.unlike(model.id)
                 }
                 messagesModel.setProperty(model.index, "liked", !model.liked) // Update model

@@ -140,10 +140,10 @@ ApplicationWindow
             addImportPath(Qt.resolvedUrl("./backend/sailfinder")); //Add import path for our backend module 'sailfinder'
             importModule("platform", function() {   //Add the right import path depending on the architecture of the processor
                 if (evaluate("platform.machine()") == "armv7l") {
-                    console.log("[INFO] ARM processor detected")
+                    console.info("[INFO] ARM processor detected")
                     addImportPath(Qt.resolvedUrl("./backend/lib/armv7l/"));
                 } else {
-                    console.log("[INFO] x86 processor detected")
+                    console.info("[INFO] x86 processor detected")
                     addImportPath(Qt.resolvedUrl("./backend/lib/i486/"));
                 }
 
@@ -210,7 +210,7 @@ ApplicationWindow
             setHandler("lastActive", function (date) {
                 parameters.last_activity_date = date; // Update last activity date
                 incrementalUpdateTimer.start() // Date is updated, start timer
-                console.log("[INFO] Updated LAST ACTIVE: " + parameters.last_activity_date);
+                console.info("[INFO] Updated LAST ACTIVE: " + parameters.last_activity_date);
             });
             setHandler("likedMessages", function (data) {
                 likedMessagesData = data;
@@ -234,8 +234,8 @@ ApplicationWindow
             }); // Sailfinder V3.X
             setHandler("socialData", function (social) { socialData = social; cachingSocial = true });*/
         }
-        onError: console.log("Error: %1".arg(traceback));
-        onReceived: console.log("Message: " + JSON.stringify(data));
+        onError: console.error("[ERROR] %1".arg(traceback));
+        onReceived: console.info("[INFO] Message: " + JSON.stringify(data));
     }
 }
 

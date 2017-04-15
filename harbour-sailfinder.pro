@@ -30,7 +30,8 @@ SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
 # Enable translations support
 CONFIG += sailfishapp_i18n
-TRANSLATIONS += translations/harbour-sailfinder-nl_NL.ts
+TRANSLATIONS += translations/harbour-sailfinder-nl_NL.ts \
+    translations/harbour-sailfinder-tr.ts
 
 DISTFILES += \
     qml/pages/AboutPage.qml \
@@ -41,7 +42,6 @@ DISTFILES += \
     qml/pages/GlassButton.qml \
     qml/pages/GlassButtonEdit.qml \
     qml/pages/ImageGrid.qml \
-    qml/pages/LoginProgress.qml \
     qml/pages/MainPage.qml \
     qml/pages/Matches.qml \
     qml/pages/MatchesDelegate.qml \

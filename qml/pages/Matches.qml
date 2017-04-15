@@ -15,8 +15,7 @@ Item {
 
     Connections {
         target: app
-        onCachingMatchesChanged: app.matchesData? Matches.load(): console.log("[ERROR] Invalid matches data: " + app.matchesData)
-        onLoadingMatchesChanged: !app.loadingMatches && !matchesView.count? app.headerMatches = qsTr("Matches"): undefined
+        onCachingMatchesChanged: app.matchesData? Matches.load(): console.error("[ERROR] Invalid matches data: " + app.matchesData)
         onCleanup: Matches.clear()
         onRefreshMatches: {
             refreshing = true;
@@ -29,7 +28,6 @@ Item {
         width: parent.width; height: parent.height
         model: ListModel { id: matchesModel }
         opacity: count && !refreshing? 1.0: 0.0
-        onOpacityChanged: count>0 && matchesView.opacity == 1.0? app.headerMatches = count + " " + qsTr("matches"): app.headerMatches = qsTr("Matches")
         delegate: MatchesDelegate {}
 
         Behavior on opacity {

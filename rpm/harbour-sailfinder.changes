@@ -1,9 +1,10 @@
-* Fri Apr 14 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-8
+* Sun Apr 16 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-9
 - [MINOR BUGFIX] Matches popup visible when turning the device (Github issue #101)
 - [MINOR BUGFIX] Profile cache fixed on update
 - [MINOR BUGFIX] ConnMan status read crash fixed
 - [MINOR BUGFIX] Never discover when discovery was switched off in Profile
 - [MINOR BUGFIX] Busy discovery indicator in Profile fixed
+- [MINOR BUGFIX] Graying out the logout and delete account button correctly
 - [IMPROVEMENT] Reload recommendations when discovery criteria are changed (Github issue #96)
 - [IMPROVEMENT] Redesigned GIF gallery to make it easier to upload GIFs and send messages (Github issue #98)
 - [IMPROVEMENT] Rewritten ImageGrid with a proper GridLayout (Github issue #84)
@@ -15,7 +16,10 @@
 - [NEW] Like and unlike messages (Github issue #70)
 - [NEW] See if matches have liked your message or not
 - [NEW] View your match his/her profile by tapping on his/her avatar (Github issue #93-1)
+- [REMOVE] Obselete code removed
 - [LANGUAGES] Updated translations
+- [LANGUAGES] Several fixes in the translations
+- [LANGUAGES] Added translation information in the about page
 - [STORE] Updated screenshots
 
 * Sun Mar 12 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.0-9

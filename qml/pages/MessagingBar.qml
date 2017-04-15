@@ -26,7 +26,7 @@ Row {
     TextArea {
         id: inputBox
         width: parent.width - submit.width - showGifGallery.width
-        placeholderText: qsTr("Hi ") + name + "!"
+        placeholderText: qsTr("Hi") + " " + name + "!"
     }
 
     IconButton {

@@ -14,16 +14,17 @@ Name:       harbour-sailfinder
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailfinder
 Version:    3.1
-Release:    8
+Release:    9
 Group:      Qt/Qt
 License:    GPLv3
 URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-sailfinder.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
+Requires:   python3-base >= 3.3.0
 Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.3.0
-Requires:   nemo-qml-plugin-configuration-qt5 >= 0.0.1
-Requires:   nemo-qml-plugin-notifications-qt5 >= 0.0.1
+Requires:   nemo-qml-plugin-configuration-qt5 >= 0.1.0
+Requires:   nemo-qml-plugin-notifications-qt5 >= 1.0.0
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)

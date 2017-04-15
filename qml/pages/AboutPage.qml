@@ -26,6 +26,8 @@ Page {
             GlassButton { link: "https://github.com/modulebaan"; iconSource: "../resources/images/icon-github.png"; iconText: "Dylan Van Assche"; itemScale: 0.75 }
             GlassButton { link: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XTDV5P8JQTHT4"; iconSource: "../resources/images/icon-paypal.png"; iconText: qsTr("Donate with Paypal"); itemScale: 0.75 }
             GlassButton { link: "https://github.com/modulebaan/harbour-sailfinder"; iconSource: "../resources/images/icon-code.png"; iconText: qsTr("Source code"); itemScale: 0.75 }
+            TextLabel { labelText: "Sailfinder " + qsTr("can be translated into your language but for that we need your help! You can translate this app on") + " Transifex:" }
+            GlassButton { link: "https://www.transifex.com/dylanvanassche/harbour-sailfinder/"; iconSource: "../resources/images/icon-translate.png"; iconText: "Transifex " + qsTr("project"); itemScale: 0.75 }
 
             SectionHeader { text: qsTr("Powered by") }
             GlassButton { link: "http://fontawesome.io/"; iconSource: "../resources/images/icon-fontawesome.png"; iconText: "FontAwesome icons"; itemScale: 0.75 }

@@ -58,6 +58,14 @@
         <source>This application is released under GPLv3. The source code and the license is available in the Github repo of</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>can be translated into your language but for that we need your help! You can translate this app on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>project</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AccountHeader</name>
@@ -130,19 +138,11 @@
 <context>
     <name>Matches</name>
     <message>
-        <source>matches</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No matches</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Loading</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Matches</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -179,11 +179,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Hi </source>
+        <source>Just now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Just now</source>
+        <source>Hi</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -389,15 +389,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show the biography.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Job</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the job and it&apos;s link to it&apos;s Facebook page.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -405,15 +397,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show his/her Instagram account and photos.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>School</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the school and it&apos;s link to it&apos;s Facebook page.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -446,6 +430,22 @@
     </message>
     <message>
         <source>and improve the loading speed when you&apos;re using a slow connection.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the biography</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the school and it&apos;s link to it&apos;s Facebook page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the job and it&apos;s link to it&apos;s Facebook page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show his/her Instagram account and photos</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -555,6 +555,10 @@
     </message>
     <message>
         <source>other reason</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>matches</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

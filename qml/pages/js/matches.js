@@ -16,6 +16,7 @@ function load() {
                                 });
         }
         app.loadingMatches = false;
+        updateHeaderMain() // Update header after we're done
     }
     catch(err) {
         console.log("[ERROR] Loading matches UI failed due: " + err);
@@ -87,7 +88,7 @@ function about(user_id) {
             }
         }
         bio.text = aboutData.bio;
-        header = createHeader(aboutData);
+        header = createHeaderAbout(aboutData);
 
         if (typeof(aboutData.instagram) != 'undefined') {
             instagram.iconText = aboutData.instagram.username;
@@ -144,10 +145,19 @@ function about(user_id) {
     });
 }
 
-function createHeader(aboutData)
+function createHeaderAbout(aboutData)
 {
     var userHeader = aboutData.name + " (" + convertAge(aboutData.birth_date) +") " + convertGender(aboutData.gender) + " - " + Math.round(aboutData.distance_mi*1.609344) + "km";
     return userHeader;
+}
+
+function updateHeaderMain() { //Update the header after new data has been received
+    if(matchesView.count) {
+        app.headerMatches = matchesView.count + " " + qsTr("matches");
+    }
+    else {
+        app.headerMatches = qsTr("Matches");
+    }
 }
 
 function convertAge(date) {

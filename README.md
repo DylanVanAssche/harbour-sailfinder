@@ -26,6 +26,7 @@ Sailfinder is available in the official Jolla Store and on [Openrepos.net](https
 - Logout
 - Delete account
 - Create account
+- Local cache for pictures, data, ... to respond faster
 
 ## To do
 - Upload pictures from local drive
@@ -35,6 +36,7 @@ Sailfinder is available in the official Jolla Store and on [Openrepos.net](https
 - Photo optimizer
 - Mutual friends and interests
 - Tinder Social
+- Highlight new matches, messages, ...
 - Update job and school
 
 ## Translations
@@ -43,10 +45,14 @@ In case the language isn't available you can always request it and I will add it
 
 https://www.transifex.com/dylanvanassche/harbour-sailfinder/
 
-## Screenshots
+## Powered by
+- [Requests](https://github.com/kennethreitz/requests)
+- [RoboBrowser](https://github.com/jmcarp/robobrowser)
+- [Six](https://github.com/benjaminp/six)
+- [Werkzeug](https://github.com/pallets/werkzeug)
+- [BeautifullSoup4](https://www.crummy.com/software/BeautifulSoup)
 
-<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot2.jpg" alt="Screenshot 2" style="width: 49.7%;"/>
-<br>
-<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot3.jpg" alt="Screenshot 3" style="width: 49.7%;"/>
-<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot4.jpg" alt="Screenshot 4" style="width: 49.7%;"/>
-<br>
+## Screenshots
+<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot2.jpg" alt="Screenshot 2" style="width: 32%;"/>
+<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot3.jpg" alt="Screenshot 3" style="width: 32%;"/>
+<img src="https://raw.githubusercontent.com/modulebaan/harbour-sailfinder/master/store/screenshot4.jpg" alt="Screenshot 4" style="width: 32%;"/>

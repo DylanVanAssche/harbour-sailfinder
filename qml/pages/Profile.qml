@@ -21,7 +21,7 @@ SilicaFlickable {
 
     Connections {
         target: app
-        onCachingProfileChanged: app.profileData? Profile.load(): console.log("[ERROR] Invalid profile data: " + app.profileData)
+        onCachingProfileChanged: app.profileData? Profile.load(): console.error("[ERROR] Invalid profile data: " + app.profileData)
         onCleanup: Profile.clear()
     }
 
@@ -178,7 +178,7 @@ SilicaFlickable {
                 width: parent.width/2 - parent.spacing/2
                 color: "red"
                 text: qsTr("Logout")
-                enabled: !app.loadingRecs
+                enabled: discoverable.enabled
                 onClicked: remorse.execute(qsTr("Logging out"), function(){
                     app.cleanup()
                     Profile.logout()
@@ -188,7 +188,7 @@ SilicaFlickable {
             Button {
                 width: parent.width/2 - parent.spacing/2
                 color: "red"
-                enabled: !app.loadingRecs
+                enabled: discoverable.enabled
                 text: qsTr("Delete account")
                 onClicked: remorse.execute("Deleting account", function(){
                     app.cleanup()

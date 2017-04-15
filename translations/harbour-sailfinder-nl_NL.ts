@@ -58,6 +58,14 @@
         <source>This application is released under GPLv3. The source code and the license is available in the Github repo of</source>
         <translation>Deze applicatie is uitgegeven onder de GPLv3 licentie, De broncode en licentie is beschikbaar in het Github repository van</translation>
     </message>
+    <message>
+        <source>can be translated into your language but for that we need your help! You can translate this app on</source>
+        <translation>kan vertaald worden in jou taal maar daarvoor hebben we jou hulp nodig! Je kan deze app vertalen op</translation>
+    </message>
+    <message>
+        <source>project</source>
+        <translation>project</translation>
+    </message>
 </context>
 <context>
     <name>AccountHeader</name>
@@ -130,20 +138,12 @@
 <context>
     <name>Matches</name>
     <message>
-        <source>matches</source>
-        <translation>matches</translation>
-    </message>
-    <message>
         <source>No matches</source>
         <translation>Geen matches</translation>
     </message>
     <message>
         <source>Loading</source>
         <translation>Laden</translation>
-    </message>
-    <message>
-        <source>Matches</source>
-        <translation>Matches</translation>
     </message>
 </context>
 <context>
@@ -179,12 +179,12 @@
         <translation>GIF</translation>
     </message>
     <message>
-        <source>Hi </source>
-        <translation>Hey</translation>
-    </message>
-    <message>
         <source>Just now</source>
         <translation>Net</translation>
+    </message>
+    <message>
+        <source>Hi</source>
+        <translation>Hey</translation>
     </message>
 </context>
 <context>
@@ -389,32 +389,16 @@
         <translation>Biografie</translation>
     </message>
     <message>
-        <source>Show the biography.</source>
-        <translation>Toon de biografie.</translation>
-    </message>
-    <message>
         <source>Job</source>
         <translation>Job</translation>
-    </message>
-    <message>
-        <source>Show the job and it&apos;s link to it&apos;s Facebook page.</source>
-        <translation>Toon de job en de link naar zijn Facebook pagina.</translation>
     </message>
     <message>
         <source>Instagram</source>
         <translation>Instagram</translation>
     </message>
     <message>
-        <source>Show his/her Instagram account and photos.</source>
-        <translation>Toon hem/haar Instagram account en foto&apos;s</translation>
-    </message>
-    <message>
         <source>School</source>
         <translation>School</translation>
-    </message>
-    <message>
-        <source>Show the school and it&apos;s link to it&apos;s Facebook page.</source>
-        <translation>Toon de school en de link naar de bijhorende Facebook pagina.</translation>
     </message>
     <message>
         <source>Notifications</source>
@@ -426,7 +410,7 @@
     </message>
     <message>
         <source>Lowering the image size will lower the data usage of</source>
-        <translation>Verlagen de foto grootte zal het datagebruik verlagen van</translation>
+        <translation>Verlagen van de foto afmetingen zal het datagebruik verlagen van</translation>
     </message>
     <message>
         <source>Recommendations &amp; matches</source>
@@ -434,7 +418,7 @@
     </message>
     <message>
         <source>will notify you when a new match, message, ... has been received.</source>
-        <translation>zal je op de hoogte brengen wanneer je een nieuwe match, bericht ontvangt.</translation>
+        <translation>zal je op de hoogte brengen wanneer je een nieuwe match, bericht, ... ontvangt.</translation>
     </message>
     <message>
         <source>Refresh interval</source>
@@ -447,6 +431,22 @@
     <message>
         <source>and improve the loading speed when you&apos;re using a slow connection.</source>
         <translation>en verbeterd de laadsnelheid wanneer je een trage verbinding gebruikt.</translation>
+    </message>
+    <message>
+        <source>Show the biography</source>
+        <translation>Toon de biografie</translation>
+    </message>
+    <message>
+        <source>Show the school and it&apos;s link to it&apos;s Facebook page</source>
+        <translation>Toon de school en de link naar de bijhorende Facebook pagina</translation>
+    </message>
+    <message>
+        <source>Show the job and it&apos;s link to it&apos;s Facebook page</source>
+        <translation>Toon de job en de link naar zijn Facebook pagina</translation>
+    </message>
+    <message>
+        <source>Show his/her Instagram account and photos</source>
+        <translation>Toon hem/haar Instagram account en foto&apos;s</translation>
     </message>
 </context>
 <context>
@@ -556,6 +556,10 @@
     <message>
         <source>other reason</source>
         <translation>andere rede</translation>
+    </message>
+    <message>
+        <source>matches</source>
+        <translation type="unfinished">matches</translation>
     </message>
 </context>
 <context>

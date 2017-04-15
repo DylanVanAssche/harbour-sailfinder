@@ -1,7 +1,6 @@
 function get(override) {
     if((!cachingMatches && !cachingRecs && !cachingProfile) || override) { // Skip when downloading data
         python.call("app.matches.incremental", [parameters.last_activity_date], function(update) {
-            console.log(JSON.stringify(update))
             if(update) {
                 console.log("[DEBUG] Liked msg: " + JSON.stringify(update.liked_messages) + " matches: " + JSON.stringify(update.matches) + " groups: " + JSON.stringify(update.squads))
                 parameters.last_activity_date = update.last_activity_date; // Update last activity date

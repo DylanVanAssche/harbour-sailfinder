@@ -35,7 +35,7 @@ Dialog {
                 icon.source: "../resources/images/icon-bio.png"
                 icon.scale: Theme.iconSizeMedium/icon.width // Scale icons according to the screen sizes
                 checked: settings.showBio
-                description: qsTr("Show the biography.")
+                description: qsTr("Show the biography") + "."
             }
 
             IconTextSwitch {
@@ -44,7 +44,7 @@ Dialog {
                 icon.source: "../resources/images/icon-school.png"
                 icon.scale: Theme.iconSizeMedium/icon.width
                 checked: settings.showSchool
-                description: qsTr("Show the school and it's link to it's Facebook page.")
+                description: qsTr("Show the school and it's link to it's Facebook page") + "."
             }
 
             IconTextSwitch {
@@ -53,7 +53,7 @@ Dialog {
                 icon.source: "../resources/images/icon-job.png"
                 icon.scale: Theme.iconSizeMedium/icon.width
                 checked: settings.showJob
-                description: qsTr("Show the job and it's link to it's Facebook page.")
+                description: qsTr("Show the job and it's link to it's Facebook page") + "."
             }
 
             /*IconTextSwitch {  // Sailfinder V3.X
@@ -71,7 +71,7 @@ Dialog {
                 icon.source: "../resources/images/icon-instagram.png"
                 icon.scale: Theme.iconSizeMedium/icon.width
                 checked: settings.showInstagram
-                description: qsTr("Show his/her Instagram account and photos.")
+                description: qsTr("Show his/her Instagram account and photos") + "."
             }
 
             /*IconTextSwitch { // Sailfinder V3.X
