@@ -2,7 +2,13 @@
  _with Python Requests_
 
 Inspired by <a href="https://gist.github.com/rtt/10403467">this</a> Github Gist.
-
+Currently several new API endpoints are available but they aren't described here yet.
+For example:
+- Direct image upload
+- Facebook image upload
+- Spotify integration
+- Instagram integration
+- Update schools & jobs
 
 ### API Details
 
@@ -142,8 +148,37 @@ Response:
 }
 ```
 
-### Reporting a user
+### Meta data
+
+Request the current app meta data like number of superlikes, can like and app tutorials.
+The HTTP request type matters a lot, otherwise you get an error.
+
+```python
+meta = session.get(TINDER_HOST + '/meta')
 ```
+
+Response:
+```json
+{
+  "client_resources": {...},
+  "globals": {...},
+  "travel": {...},
+  "groups": {...},
+  "products": {...},
+  "notifications": {...},
+  "purchases": [],
+  "rating": {...},
+  "status": {...},
+  "tutorials": {...},
+	"user": { ... },
+	"versions": { ... }
+}
+```
+
+Updates interval is also listed in the meta data. This defines how fast you may poll the /updates endpoint for incremental updates (no full history update).
+
+### Reporting a user
+```python
 report = session.post(TINDER_HOST + '/report/{user_id}', data=json.dumps({"cause": cause}))
 ```
 
@@ -164,15 +199,15 @@ Parameter info:
 </table>
 
 
-### Message sending
+### Send message
 
 Send a message to a match. Note you'll get a HTTP 500 back if you try to send a message to someone who isn't a match!
 
-```
+```python
 send_message = session.post(TINDER_HOST + '/user/matches/{match_id}', data=json.dumps({"message": message}))
 ```
 
-response:
+Response:
 ```json
 {
 	"_id":"53467235483cb56c475cc1d6",
@@ -185,8 +220,24 @@ response:
 }
 ```
 
+### Like/Unlike message
+
+Like or unlike a message from a match, unliking only possible when the message has been liked by you in the past.
+
+```python
+like_message = session.post(TINDER_HOST + '/message/{message_id}/like')
+unlike_message = session.delete(TINDER_HOST + '/message/{message_id}/like')
+```
+
+Response:
+```
+A 201 or 204 HTTP response, no JSON content is returned.
+```
+
 ### Updating your location
-> curl 'https://api.gotindaer.com/user/ping --data '{"lat": latitude, "lon": longitude}'
+```python
+location = session.post(TINDER_HOST + '/user/ping', data=json.dumps({"lat": latitude, "lon": longitude}))
+```
 
 ```json
 {
@@ -195,10 +246,29 @@ response:
 }
 ```
 
-### Get "updates"
-```bash
-> curl 'https://api.gotindaer.com/updates'
+### Get updates
+
+Updates contain several things such as:
+- Matches + messages
+- Unmatched users
+- Liked messages
+
+The incremental updates (with a supplied ISO string date) are used to check for notifications, update local databases, ...
+
+```python
+updates = session.post(TINDER_HOST + '/updates', data=json.dumps({"last_activity_date": date}))
 ```
+
+Parameter info:
+
+<table>
+  <tbody>
+  <tr>
+    <td>date</td>
+    <td>**string**: Empty will return the whole account history, when an ISO string date is supplied only the updates from that date are returned</td>
+  </tr>
+  </tbody>
+</table>
 
 Response:
 ```json
@@ -233,9 +303,39 @@ Response:
 }
 ```
 
-### To 'like' or 'pass' a User
-```bash
+### Get information about an user
+
+Returns all the information known about an user based on their user_id.
+The HTTP request type matters a lot, otherwise you get an error.
+
+```python
+about = session.get(TINDER_HOST + '/user/{user_id}')
+```
+
+Response:
+```
+The same as when you request /recs and look at the recommendation it's JSON.
+```
+
+### Unmatch
+
+Unmatching based on the match_id, the other user will receive the match_id through /updates in "blocks" to let the client know that they unmatched.
+
+```python
+unmatch = session.delete(TINDER_HOST + '/user/matches/{match_id}')
+```
+
+Response:
+```
+A 202 or 204 HTTP response, no JSON content is returned.
+```
+
+### To 'like', 'pass' or superlike a User
+```python
 > curl https://api.gotinder.com/{like|pass}/{_id}
+like = session.get(TINDER_HOST + '/like/{user_id}')
+superlike = session.post(TINDER_HOST + '/like/{user_id}' + '/super')
+pass = session.get(TINDER_HOST + '/pass/{user_id}')
 ```
 
 Response:
@@ -247,9 +347,20 @@ Response:
 
 
 ### Recommendations
-```bash
-> curl https://api.gotinder.com/user/recs
+```python
+like = session.post(TINDER_HOST + '/recs', , data=json.dumps({"limit": limit})
 ```
+
+Parameter info:
+
+<table>
+  <tbody>
+  <tr>
+    <td>limit</td>
+    <td>**integer**: 10 seems to be the normal limit</td>
+  </tr>
+  </tbody>
+</table>
 
 ```json
 {

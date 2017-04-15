@@ -5,6 +5,7 @@
 - [MINOR BUGFIX] Never discover when discovery was switched off in Profile
 - [MINOR BUGFIX] Busy discovery indicator in Profile fixed
 - [MINOR BUGFIX] Graying out the logout and delete account button correctly
+- [MINOR BUGFIX] Update about user cache when out of date (Github issue #108)
 - [IMPROVEMENT] Reload recommendations when discovery criteria are changed (Github issue #96)
 - [IMPROVEMENT] Redesigned GIF gallery to make it easier to upload GIFs and send messages (Github issue #98)
 - [IMPROVEMENT] Rewritten ImageGrid with a proper GridLayout (Github issue #84)

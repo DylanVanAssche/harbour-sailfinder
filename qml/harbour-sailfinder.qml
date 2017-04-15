@@ -12,7 +12,7 @@ ApplicationWindow
     initialPage: Component { FirstPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: Orientation.All
-    _defaultPageOrientations: Orientation.All
+    _defaultPageOrientations: Orientation.All    
     onCleanup: { // Reset to initial state, except 'pythonReady' since it's already loaded
         authenticatingText = qsTr("Authenticating") + "..."
         headerRecs = qsTr("Recommendations")

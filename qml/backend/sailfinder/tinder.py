@@ -166,7 +166,7 @@ class _Matches():
     def about(self, user_id): #OK
         logger.log_to_file.debug("GETTING ABOUT USER: " + user_id, insert_line=True)
         about_file = filemanager.File(user_id, constants.filemanager.extension["JSON"], constants.filemanager.path["MATCHES"])
-        if about_file.exists(): # Read from cache if available
+        if about_file.exists() and not about_file.aged(): # Read from cache if available and not out of date
             self.about_user = about_file.read()
         else:
             self.about_user = network.connection.send("/user/"+ user_id, http_type=constants.http.TYPE["GET"])

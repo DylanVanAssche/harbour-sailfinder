@@ -109,9 +109,9 @@ class File(object):
         try:
             old_working_dir = os.getcwd()
             os.chdir(self.working_dir)
-            created = os.path.getctime(self.name + self.extension)
+            modified = os.path.getmtime(self.name + self.extension)
             logger.log_to_file.debug("Getting last modified from file: " + self.working_dir + "/" + self.name + self.extension + " OK")
-            if time.time() - float(created) > age:
+            if time.time() - float(modified) > age:
                 return True
             else:
                 return False
