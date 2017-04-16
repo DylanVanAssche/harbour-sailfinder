@@ -91,16 +91,19 @@ class _Connection(object):
         limit_execution = 50
         wait_since = time.clock()
         
-        if not wait and not self.status(False): #Don't force the user to enable a netwerk connection when checking notifications
-            logger.log_to_file.debug("No connection + waiting is disabled = abort request")
-            return False
-            
-        while(not self.status()): #Wait until network is available
-            time.sleep(0.5)
-            limit_execution += 1
-            if limit_execution > 150: #Limit calls to SFOS Connection Manager and logging
-                logger.log_to_file.debug("Network unavailable: WiFi and cellular connection deactivated, already waited: " + str(round(time.clock() - wait_since,6)) + "s for a connection")
+        if not self.status(False): #Don't force the user to enable a netwerk connection when checking notifications
+            if not wait:
+                logger.log_to_file.debug("No connection + waiting is disabled = abort request")
+                return False
+            else:
                 sfos.connection_manager.notify_connection_state(False)
+                sfos.connection_manager.launch_connection_dialog()
+            
+        while(not self.status(False)): #Wait until network is available
+            time.sleep(1.0)
+            limit_execution += 1
+            if limit_execution > 90: #Limit calls to SFOS Connection Manager and logging
+                logger.log_to_file.debug("Network unavailable: WiFi and cellular connection deactivated, already waited: " + str(round(time.clock() - wait_since,6)) + "s for a connection")
         else:
             logger.log_to_file.debug("Network available, processing request after waiting: " + str(round(time.clock() - wait_since, 6)) + "s for a connection")
             sfos.connection_manager.notify_connection_state(True)

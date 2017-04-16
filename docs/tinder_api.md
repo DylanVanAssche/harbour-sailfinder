@@ -87,7 +87,7 @@ Parameter info:
   <tbody>
   <tr>
     <td>facebook_token</td>
-    <td>**string**: Facebook token from the OAuth dialog</td>
+    <td>__string__: Facebook token from the OAuth dialog</td>
   </tr>
   </tbody>
 </table>
@@ -115,24 +115,24 @@ Parameter info:
   <tbody>
   <tr>
     <td>discoverable</td>
-    <td>**true**:Other users can swipe on you<br>**false**: nobody can see you except for your matches</td>
+    <td>__true__:Other users can swipe on you<br>__false__: nobody can see you except for your matches</td>
   </tr>
     <tr>
       <td>gender</td>
-      <td>**0**: I'm a male<br>
-      **1**: I'm a female</td>
+      <td>__0__: I'm a male<br>
+      __1__: I'm a female</td>
     </tr>
     <tr>
       <td>age_filter_min</td>
-      <td>**integer**: minimum age recommendations</td>
+      <td>__integer__: minimum age recommendations</td>
     </tr>
     <tr>
       <td>age_filter_max</td>
-      <td>**integer**: maximum age recommendations</td>
+      <td>__integer__: maximum age recommendations</td>
     </tr>
     <tr>
     	<td>distance_filter</td>
-    	<td>**integer**: search distance in miles (0 - 160 km)</td>
+    	<td>__integer__: search distance in miles (0 - 160 km)</td>
     </tr>
   </tbody>
 </table>
@@ -188,12 +188,12 @@ Parameter info:
   <tbody>
   <tr>
     <td>id</td>
-    <td>**string**: Tinder user ID</td>
+    <td>__string__: Tinder user ID</td>
   </tr>
   <tr>
     <td>cause</td>
-    <td>**1**: Reason is SPAM<br>
-    **2**: Reason is inappropriate/offensive</td></td>
+    <td>__1__: Reason is SPAM<br>
+    __2__: Reason is inappropriate/offensive</td></td>
   </tr>
   </tbody>
 </table>
@@ -265,7 +265,7 @@ Parameter info:
   <tbody>
   <tr>
     <td>date</td>
-    <td>**string**: Empty will return the whole account history, when an ISO string date is supplied only the updates from that date are returned</td>
+    <td>__string__: Empty will return the whole account history, when an ISO string date is supplied only the updates from that date are returned</td>
   </tr>
   </tbody>
 </table>
@@ -357,7 +357,7 @@ Parameter info:
   <tbody>
   <tr>
     <td>limit</td>
-    <td>**integer**: 10 seems to be the normal limit</td>
+    <td>__integer__: 10 seems to be the normal limit</td>
   </tr>
   </tbody>
 </table>

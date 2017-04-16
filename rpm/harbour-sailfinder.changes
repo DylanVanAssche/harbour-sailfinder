@@ -1,4 +1,4 @@
-* Sun Apr 16 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-9
+* Sun Apr 16 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-10
 - [MINOR BUGFIX] Matches popup visible when turning the device (Github issue #101)
 - [MINOR BUGFIX] Profile cache fixed on update
 - [MINOR BUGFIX] ConnMan status read crash fixed
@@ -11,6 +11,8 @@
 - [IMPROVEMENT] Rewritten ImageGrid with a proper GridLayout (Github issue #84)
 - [IMPROVEMENT] Changed the like, dislike and superlike button to a new design
 - [IMPROVEMENT] All types of notifications can now be disabled
+- [IMPROVEMENT] Lower CPU usage while waiting for network
+- [IMPROVEMENT] Lower API calls to the Sailfish OS network dialog
 - [NEW] Dynamic updates which download automatically new matches, messages, ... (Github issues #99, #94, #89, #88, #93-2)
 - [NEW] Notifications are showed when the app is running (Github issue #35)
 - [NEW] User will be notified when GIF has been blocked by Tinder, not all content is allowed

@@ -14,7 +14,7 @@ Name:       harbour-sailfinder
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailfinder
 Version:    3.1
-Release:    9
+Release:    10
 Group:      Qt/Qt
 License:    GPLv3
 URL:        http://example.org/
