@@ -355,7 +355,7 @@ class _Profile():
         self.size = constants.tinder.IMAGE_SIZE[size]
         sfos.asynchronous.notify("profileProgress", self.progress)
         profile_file = filemanager.File("profile", constants.filemanager.extension["JSON"], constants.filemanager.path["PROFILE"])
-        if not profile_file.exists() or refresh==True:   
+        if not profile_file.exists() or profile_file.aged() or refresh==True:   
             logger.log_to_file.debug("No profile data is found or refresh is requested")
             self.profile = network.connection.send("/profile", http_type=constants.http.TYPE["GET"])
             if isinstance(self.profile, dict):

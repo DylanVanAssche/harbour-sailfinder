@@ -12,7 +12,7 @@ SilicaFlickable {
         target: app
         onCachingRecsChanged: app.recsData? Recs.load(): console.error("[ERROR] Invalid recommendations data: " + app.recsData)
         onCleanup: Recs.clear()
-        onRefreshRecs: Recs.get()
+        onRefreshRecs: outOfLikes? undefined: Recs.get()
     }
 
     Connections {

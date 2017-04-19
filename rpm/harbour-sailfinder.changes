@@ -1,3 +1,10 @@
+* Wed Apr 19 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-12
+- [MINOR BUGFIX] Profile is now updated when changed from other client, if the cached version is older then 30 minutes (Github issue #117)
+
+* Mon Apr 17 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-11
+- [MINOR BUGFIX] Minimum age value is now updated correctly (Github issue #115)
+- [MINOR BUGFIX] Cancel auto discovery when out of likes when changing the search criteria in Profile (Github issue #116)
+
 * Sun Apr 16 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-10
 - [MINOR BUGFIX] Matches popup visible when turning the device (Github issue #101)
 - [MINOR BUGFIX] Profile cache fixed on update

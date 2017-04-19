@@ -29,8 +29,8 @@ function load() {
         bio.text = app.profileData.bio;
         discoverable.checked = app.profileData.discoverable;
         distance.value = Math.round(app.profileData.distance_filter*1.609344); //Convert to km
+        maxAge.value = app.profileData.age_filter_max; // Update first the maximum value otherwise our filter will block the minimum age update
         minAge.value = app.profileData.age_filter_min;
-        maxAge.value = app.profileData.age_filter_max;
         gender.currentIndex = app.profileData.gender;
         interestedIn.currentIndex = app.profileData.gender_filter+1; //Convert Tinder filter to contextmenu
         app.headerProfile = app.profileData.name + " (" + convertAge(app.profileData.birth_date) +") " + convertGender(app.profileData.gender);
