@@ -42,6 +42,14 @@ class _Tinder(object):
         except:
             logger.log_to_file.trace("Tinder token not found in JSON data")
             return False
+            
+    def register(self, phone_number):
+        logger.log_to_file.debug("Registering phone number: " + str(phone_number))
+        return network.connection.send("/sendtoken", {"phone_number": str(phone_number)})
+        
+    def verify(self, code):
+        logger.log_to_file.debug("Validating SMS code: " + str(code))
+        return network.connection.send("/validate", {"token": str(code)})
 
 class _Facebook(object):
     def __init__(self):

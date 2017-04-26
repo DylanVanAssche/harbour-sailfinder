@@ -3,6 +3,7 @@ import QtQuick.Window 2.0
 import Sailfish.Silica 1.0
 import "js/messages.js" as Messages
 
+// Rewrite for fix Github issue Nokius
 Row {
     anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
 

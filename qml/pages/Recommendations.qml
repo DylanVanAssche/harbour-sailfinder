@@ -13,6 +13,7 @@ SilicaFlickable {
         onCachingRecsChanged: app.recsData? Recs.load(): console.error("[ERROR] Invalid recommendations data: " + app.recsData)
         onCleanup: Recs.clear()
         onRefreshRecs: outOfLikes? undefined: Recs.get()
+        onForceSwipeviewIndex: swipeview.currentIndex = swipeIndex // Due to some unknown bug in QT5.6 it's impossible to listen to this signal from MainPage.qml
     }
 
     Connections {

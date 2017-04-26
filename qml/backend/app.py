@@ -67,8 +67,23 @@ class Account(object):
                 return 1    #FB login failed
         tinder_token = authenticate.tinder.login(fb_token)
         if not tinder_token:
-            return 2    #Tinder login failed           
-        return 4 # All good!
+            return 2    #Tinder login failed
+        result = profile.get(refresh=True)
+        if result and "banned" in result:
+            return 4    #Phone verification requested
+        return 5 # All good!
+        
+    def verify(self, code):
+        result = authenticate.tinder.verify(code)
+        if result:
+            return True
+        return False
+        
+    def register(self, phone_number):
+        result = authenticate.tinder.register(phone_number)
+        if result:
+            return True
+        return False
             
     def logout(self):
         cache.clearAuth()

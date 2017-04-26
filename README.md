@@ -26,10 +26,11 @@ Sailfinder is available in the official Jolla Store and on [Openrepos.net](https
 - Logout
 - Delete account
 - Create account
+- SMS verification
 - Local cache for pictures, data, ... to respond faster
 
 ## To do
-- Upload pictures from local drive
+- Upload pictures from local storage
 - Upload Facebook pictures
 - Spotify songs and albums
 - Connect Instagram account

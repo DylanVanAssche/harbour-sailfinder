@@ -80,7 +80,7 @@ Page {
         id: popup
         width: parent.width
         height: parent.height/2.5
-        visible: open? true: false
+        visible: open && !app.banned? true: false
         modal: true // Only compatible with Sailfish OS 2.0.2.51 and higher
         dock: Dock.Top
 

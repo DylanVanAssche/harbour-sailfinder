@@ -12,7 +12,7 @@ Created on Thu Jan  5 19:03:49 2017
 import network, logger, constants, filemanager, sfos, giphy
 
 #Python modules
-import datetime
+#import datetime
 
 """
 Recommendations:

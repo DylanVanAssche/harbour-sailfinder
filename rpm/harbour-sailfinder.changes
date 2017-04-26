@@ -1,3 +1,9 @@
+* Mon Apr 24 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-14
+- [MINOR BUGFIX] Open Sailfinder on the right tab when clicked on a notification (Github issue #119)
+
+* Sat Apr 22 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-13
+- [IMPROVEMENT] Added SMS verification for new users (Github issue #118)
+
 * Wed Apr 19 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-12
 - [MINOR BUGFIX] Profile is now updated when changed from other client, if the cached version is older then 30 minutes (Github issue #117)
 

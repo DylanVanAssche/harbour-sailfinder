@@ -100,6 +100,30 @@
         <source>Authenticating</source>
         <translation type="unfinished">Kimlik doğrulama</translation>
     </message>
+    <message>
+        <source>Phonenumber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter your received SMS code below</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Verify your account by entering your phone number in international format below</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>+[country][number]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GifGalleryPage</name>
@@ -469,6 +493,14 @@
     </message>
     <message>
         <source>Login failed, check the logfiles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMS code rejected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Phone number rejected</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -5,14 +5,14 @@ import "js/profile.js" as Profile
 SilicaFlickable {
     width: parent.width; height: parent.height
     contentHeight: profileColumn.height
-    Component.onCompleted: Profile.get(false) // Getting profile
+    Component.onCompleted: Profile.get(true) // Getting profile
 
     Connections {
         target: swipeview
         onCurrentIndexChanged: {
-            if(updateRequired) {
+            if(updateRequired) { // Update profile when user changed something
                 Profile.set()
-                if(discovery) {
+                if(discovery) { // When discovery options are changed, refresh our recs
                     app.refreshRecs()
                 }
             }

@@ -50,6 +50,7 @@ ApplicationWindow
     signal cleanup()
     signal refreshMatches()
     signal refreshRecs()
+    signal forceSwipeviewIndex(int swipeIndex)
 
     // Globals
     readonly property string version: "V3.1";
@@ -97,11 +98,11 @@ ApplicationWindow
 
     // Notifications & toaster init
     Toaster { id: toaster }
-    NotificationManager { id: notificationSwipeAgain }
-    NotificationManager { id: notificationLiked }
-    NotificationManager { id: notificationMatches }
-    NotificationManager { id: notificationMessages }
-    //NotificationManager { id: notificationSocial } //Sailfinder V3.X
+    NotificationManager { id: notificationSwipeAgain; onActivateApp: {app.activate(); forceSwipeviewIndex(0) }}
+    NotificationManager { id: notificationLiked; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
+    NotificationManager { id: notificationMatches; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
+    NotificationManager { id: notificationMessages; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
+    //NotificationManager { id: notificationSocial; onActivateApp: {app.activate(); forceSwipeviewIndex(3) } } //Sailfinder V3.X
 
     // App settings
     ConfigurationGroup {

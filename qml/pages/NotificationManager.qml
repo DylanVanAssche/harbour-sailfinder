@@ -8,6 +8,9 @@ Item {
     property string body
     property string previewSummary
     property string previewBody
+
+    signal activateApp()
+
     function publish()
     {
         if(settings.showNotifications) {
@@ -32,6 +35,7 @@ Item {
         itemCount: 1
         timestamp: new Date("yyyy-MM-dd hh:mm:ss")
         replacesId: 0
+        onClosed: activateApp()
     }
 }
 

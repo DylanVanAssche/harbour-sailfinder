@@ -100,6 +100,30 @@
         <source>Your Facebook email will be stored unencrypted on your device.</source>
         <translation>Jouw Facebook e-mail zal opgeslagen worden op je device als tekst.</translation>
     </message>
+    <message>
+        <source>Phonenumber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter your received SMS code below</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Verify your account by entering your phone number in international format below</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>+[country][number]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GifGalleryPage</name>
@@ -470,6 +494,14 @@
     <message>
         <source>Connection timeout, check your network connection</source>
         <translation>Connectie timeout, controleer je netwerk verbinding</translation>
+    </message>
+    <message>
+        <source>SMS code rejected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Phone number rejected</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

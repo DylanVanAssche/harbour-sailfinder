@@ -90,6 +90,7 @@ class _Connection(object):
     def send(self, url, payload=None, http_type=constants.http.TYPE["POST"], session=True, host=constants.tinder.HOST, files=None, raw=False, wait=True):
         limit_execution = 50
         wait_since = time.clock()
+        logger.log_to_file.debug("Processing request: " + host + url)
         
         if not self.status(False): #Don't force the user to enable a netwerk connection when checking notifications
             if not wait:
