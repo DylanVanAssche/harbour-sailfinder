@@ -42,7 +42,12 @@ function load() {
                 }
             }
             userAvatars.images = avatarList;
-            bio.text = app.recsData[userCounter].bio;
+            if (typeof(app.recsData[userCounter].bio) != 'undefined') {
+                bio.text = app.recsData[userCounter].bio;
+            }
+            else {
+                bio.text = "";
+            }
             app.headerRecs = createHeader();
             app.coverBackgroundRecs = app.recsData[userCounter].photos[0].processedFiles[0].url;
 
