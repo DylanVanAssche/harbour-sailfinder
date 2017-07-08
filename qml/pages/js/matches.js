@@ -11,7 +11,7 @@ function load() {
                                     id: app.matchesData[userCounter].person._id,
                                     matchId: app.matchesData[userCounter]._id,
                                     lastSeen: convertLastSeen(app.matchesData[userCounter].last_activity_date),
-                                    avatar: app.matchesData[userCounter].person.photos[0].processedFiles[0].url,
+                                    avatar: app.matchesData[userCounter].person.photos[0].processedFiles[0].url, // returns empty when no picture #126
                                     isSuperlike: app.matchesData[userCounter].is_super_like
                                 });
         }
