@@ -6,7 +6,7 @@
     <message id="sailfinder-login-header">
         <source>Login</source>
         <extracomment>Header on the login screen</extracomment>
-        <translation>Login</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-oops">
         <source>Oops!</source>
@@ -26,7 +26,7 @@
     <name>CoverPage</name>
     <message>
         <source>My Cover</source>
-        <translation type="unfinished"></translation>
+        <translation>Mein Cover</translation>
     </message>
 </context>
 </TS>

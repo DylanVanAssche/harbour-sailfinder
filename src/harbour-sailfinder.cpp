@@ -28,26 +28,24 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
+#ifdef QT_QML_DEBUG
+#include <QtQuick>
+#endif
 
-CoverBackground {
-    Label {
-        id: label
-        anchors.centerIn: parent
-        text: qsTr("My Cover")
-    }
+#include <sailfishapp.h>
 
-    CoverActionList {
-        id: coverAction
 
-        CoverAction {
-            iconSource: "image://theme/icon-cover-next"
-        }
+int main(int argc, char *argv[])
+{
+    // SailfishApp::main() will display "qml/harbour-sailfinder.qml", if you need more
+    // control over initialization, you can use:
+    //
+    //   - SailfishApp::application(int, char *[]) to get the QGuiApplication *
+    //   - SailfishApp::createView() to get a new QQuickView * instance
+    //   - SailfishApp::pathTo(QString) to get a QUrl to a resource file
+    //   - SailfishApp::pathToMainQml() to get a QUrl to the main QML file
+    //
+    // To display the view, call "show()" (will show fullscreen on device).
 
-        CoverAction {
-            iconSource: "image://theme/icon-cover-pause"
-        }
-    }
+    return SailfishApp::main(argc, argv);
 }
-

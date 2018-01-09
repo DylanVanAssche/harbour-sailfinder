@@ -1,242 +1,45 @@
+/*
+  Copyright (C) 2013 Jolla Ltd.
+  Contact: Thomas Perl <thomas.perl@jollamobile.com>
+  All rights reserved.
+
+  You may use this file under the terms of BSD license as follows:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Jolla Ltd nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR
+  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import io.thp.pyotherside 1.3
-import org.nemomobile.configuration 1.0
 import "pages"
-import "./pages/js/util.js" as Util
-import "./pages/js/updates.js" as Updates
 
 ApplicationWindow
 {
     id: app
     initialPage: Component { FirstPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
-    allowedOrientations: Orientation.All
-    _defaultPageOrientations: Orientation.All    
-    onCleanup: { // Reset to initial state, except 'pythonReady' since it's already loaded
-        authenticatingText = qsTr("Authenticating") + "..."
-        headerRecs = qsTr("Recommendations")
-        headerMatches = qsTr("Matches")
-        headerProfile = qsTr("Profile")
-        headerSocial = "" //qsTr("Social") // Sailfinder V3.X
-        cover = { background: "../resources/images/cover-background.png", text: "Sailfinder" }
-        coverText = "Sailfinder"
-        coverBackground = "../resources/images/cover-background.png"
-        coverBackgroundRecs = "../resources/images/cover-background.png"
-        coverBackgroundMatches = "../resources/images/cover-background.png"
-        coverBackgroundProfile = "../resources/images/cover-background.png"
-        coverBackgroundSocial = "../resources/images/cover-background.png"
-        loadingMatches = true
-        cachingMatches = true
-        loadingRecs = true
-        cachingRecs = true
-        loadingProfile = true
-        cachingProfile = true
-        //loadingSocial = true // Sailfinder V3.X
-        //cachingSocial = true
-        recsData = {}
-        matchesData = {}
-        likedMessagesData = {}
-        blocksData = {}
-        profileData = {}
-        //socialData = {} // Sailfinder V3.X
-        numberOfMatches = 0
-        authenticatingProgress = 0
-        banned = false
-        parameters.wasOutOfLikes = false
-        parameters.last_activity_date = ""
-    }
-    // Signals
-    signal cleanup()
-    signal refreshMatches()
-    signal refreshRecs()
-    signal forceSwipeviewIndex(int swipeIndex)
+    allowedOrientations: defaultAllowedOrientations
 
-    // Globals
-    readonly property string version: "V3.1";
-    property string userId
-    property string authenticatingText: qsTr("Authenticating") + "..."
-    property string headerRecs: qsTr("Recommendations")
-    property string headerMatches: qsTr("Matches")
-    property string headerProfile: qsTr("Profile")
-    property string headerSocial: "" //qsTr("Social") // Sailfinder V3.X
-    property string coverText: "Sailfinder"
-    property string coverBackground: "../resources/images/cover-background.png"
-    property string coverBackgroundRecs: "../resources/images/cover-background.png"
-    property string coverBackgroundMatches: "../resources/images/cover-background.png"
-    property string coverBackgroundProfile: "../resources/images/cover-background.png"
-    property string coverBackgroundSocial: "../resources/images/cover-background.png"
-    property bool loadingRecs: true //On launch we need to load and cache them all
-    property bool cachingRecs: true
-    property bool loadingMatches: true
-    property bool cachingMatches: true
-    property bool loadingProfile: true
-    property bool cachingProfile: true
-    //property bool loadingSocial: true // Sailfinder V3.X
-    //property bool cachingSocial: true
-    property int numberOfMatches
-    property int authenticatingProgress
-    property bool banned
-    property bool pythonReady
-    property bool returnToLogin
-    property var recsData
-    property var matchesData
-    property var likedMessagesData
-    property var blocksData
-    property var profileData
-    //property var socialData // Sailfinder V3.X
-
-    // Check for new data/notifications
-    Timer {
-        id: incrementalUpdateTimer
-        interval: Util.parseInterval(settings.refreshInterval)
-        running: false
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: Updates.get(false)
-    }
-
-    // Notifications & toaster init
-    Toaster { id: toaster }
-    NotificationManager { id: notificationSwipeAgain; onActivateApp: {app.activate(); forceSwipeviewIndex(0) }}
-    NotificationManager { id: notificationLiked; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
-    NotificationManager { id: notificationMatches; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
-    NotificationManager { id: notificationMessages; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
-    //NotificationManager { id: notificationSocial; onActivateApp: {app.activate(); forceSwipeviewIndex(3) } } //Sailfinder V3.X
-
-    // App settings
-    ConfigurationGroup {
-        id: settings
-        path: "/apps/harbour-sailfinder/settings"
-
-        property bool saveEmail: true
-        property bool showBio: true
-        property bool showSchool: true
-        property bool showJob: true
-        property bool showFriends: true
-        property bool showInstagram: true
-        property bool showSpotify: true
-        property bool showNotifications: true
-        property bool logging: false
-        property int refreshInterval: 1 //Normal refresh interval
-        property int imageFormat: 1 //320x320 image size
-    }
-
-    // App rememberd parameters
-    ConfigurationGroup {
-        id: parameters
-        path: "/apps/harbour-sailfinder/parameters"
-
-        property bool wasOutOfLikes //Only show notification when we were out of likes, not on every launch
-        property string last_activity_date
-        property string facebookEmail
-    }
-
-    Python {
-        id: python
-        property bool _networkWasLost
-
-        Component.onCompleted: {
-            addImportPath(Qt.resolvedUrl("./backend")); //Add the import path for our QML/Python bridge 'app.py'
-            addImportPath(Qt.resolvedUrl("./backend/sailfinder")); //Add import path for our backend module 'sailfinder'
-            importModule("platform", function() {   //Add the right import path depending on the architecture of the processor
-                if (evaluate("platform.machine()") == "armv7l") {
-                    console.info("[INFO] ARM processor detected")
-                    addImportPath(Qt.resolvedUrl("./backend/lib/armv7l/"));
-                } else {
-                    console.info("[INFO] x86 processor detected")
-                    addImportPath(Qt.resolvedUrl("./backend/lib/i486/"));
-                }
-
-                importModule("app", function() {}); // Import "app" after we imported our platform specific modules
-                call("app.cache.clearMeta") // Empty cache
-                call("app.cache.clearLogger")
-                call("app.cache.clearRecs")
-                pythonReady = true
-            });
-
-            //Notify user of the current network state
-            setHandler("network", function (status) {
-                if(!status)
-                {
-                    toaster.previewBody = qsTr("Network down") + "!"
-                    toaster.publish()
-                    _networkWasLost = true
-                }
-                else if (_networkWasLost) {
-                    toaster.previewBody = qsTr("Network recovered") + "!"
-                    toaster.publish()
-                    _networkWasLost = false
-                }
-            });
-
-            //Notify user of the login progress
-            setHandler("loginProgress", function (progress) {
-                if(progress <= 50) {
-                    authenticatingText = qsTr("Facebook") + " - " + Math.round(progress) + "%"
-                }
-                else {
-                    authenticatingText = qsTr("Tinder") + " - " + Math.round(progress) + "%"
-                }
-                authenticatingProgress = progress
-            });
-            setHandler("returnToLogin", function (result) {
-                if(result)
-                {
-                    pageStack.clear()
-                    returnToLogin = true //Enforce an Auth reload
-                    pageStack.push(Qt.resolvedUrl("pages/FirstPage.qml"))
-                }
-            });
-
-            // Recommendations progress & data
-            setHandler("recsProgress", function (progress) {
-                headerRecs = qsTr("Discovering") + " - " + Math.round(progress) + "%";
-                cachingRecs = true;
-            });
-            setHandler("recsData", function (recs) {
-                recsData = recs;
-                cachingRecs = false;
-            });
-
-            // Matches progress & data
-            setHandler("matchesProgress", function (progress) {
-                headerMatches = qsTr("Refreshing") + " - " + Math.round(progress) + "%";
-                cachingMatches = true;
-            });
-            setHandler("matchesData", function (data) {
-                matchesData = data;
-                cachingMatches = false;
-            });
-            setHandler("lastActive", function (date) {
-                parameters.last_activity_date = date; // Update last activity date
-                incrementalUpdateTimer.start() // Date is updated, start timer
-                console.info("[INFO] Updated LAST ACTIVE: " + parameters.last_activity_date);
-            });
-            setHandler("likedMessages", function (data) {
-                likedMessagesData = data;
-            });
-
-            // Profile progress & data
-            setHandler("profileProgress", function (progress) {
-                headerProfile = qsTr("Refreshing") + " - " + Math.round(progress) + "%";
-                cachingProfile = true;
-            });
-            setHandler("profileData", function (profile) {
-                profileData = profile;
-                app.userId = profile._id;
-                cachingProfile = false;
-            });
-
-            // Social progress & data
-            /*setHandler("socialProgress", function (progress) {
-                headerSocial = qsTr("Refreshing") + " - " + Math.round(progress) + "%";
-                cachingSocial = true;
-            }); // Sailfinder V3.X
-            setHandler("socialData", function (social) { socialData = social; cachingSocial = true });*/
-        }
-        onError: console.error("[ERROR] %1".arg(traceback));
-        onReceived: console.info("[INFO] Message: " + JSON.stringify(data));
-    }
+    readonly property string fbAuthUrl: "https://www.facebook.com/login.php?skip_api_login=1&api_key=464891386855067&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fv2.8%2Fdialog%2Foauth%3Fchannel%3Dhttps%253A%252F%252Fstaticxx.facebook.com%252Fconnect%252Fxd_arbiter%252Fr%252FlY4eZXm_YWu.js%253Fversion%253D42%2523cb%253Dff93d650476534%2526domain%253Dtinder.com%2526origin%253Dhttps%25253A%25252F%25252Ftinder.com%25252Ff30775c0d5a2d48%2526relation%253Dopener%26redirect_uri%3Dhttps%253A%252F%252Fstaticxx.facebook.com%252Fconnect%252Fxd_arbiter%252Fr%252FlY4eZXm_YWu.js%253Fversion%253D42%2523cb%253Df20472322e9714%2526domain%253Dtinder.com%2526origin%253Dhttps%25253A%25252F%25252Ftinder.com%25252Ff30775c0d5a2d48%2526relation%253Dopener%2526frame%253Df1b408914e2b544%26display%3Dpopup%26scope%3Duser_birthday%252Cuser_photos%252Cuser_education_history%252Cemail%252Cuser_relationship_details%252Cuser_friends%252Cuser_work_history%252Cuser_likes%26response_type%3Dtoken%252Csigned_request%26domain%3Dtinder.com%26origin%3D1%26client_id%3D464891386855067%26ret%3Dlogin%26sdk%3Djoey%26logger_id%3D3c819d58-066f-d4f9-a74f-75baac9ccd8f&cancel_url=https%3A%2F%2Fstaticxx.facebook.com%2Fconnect%2Fxd_arbiter%2Fr%2FlY4eZXm_YWu.js%3Fversion%3D42%23cb%3Df20472322e9714%26domain%3Dtinder.com%26origin%3Dhttps%253A%252F%252Ftinder.com%252Ff30775c0d5a2d48%26relation%3Dopener%26frame%3Df1b408914e2b544%26error%3Daccess_denied%26error_code%3D200%26error_description%3DPermissions%2Berror%26error_reason%3Duser_denied%26e2e%3D%257B%257D&display=popup&locale=en_GB&logger_id=3c819d58-066f-d4f9-a74f-75baac9ccd8f"
+    readonly property string userAgent: "Mozilla/5.0 (Linux; Android 8.0.0; Nexus 6P Build/OPR6.170623.013) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.116 Mobile Safari/537.36"
 }
 
