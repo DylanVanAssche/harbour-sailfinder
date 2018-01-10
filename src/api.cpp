@@ -19,6 +19,9 @@
 
 API::API(QObject *parent) : QObject(parent)
 {
+    // Set authenticated to false at init
+    this->setAuthenticated(false);
+
     // Initiate a new QNetworkAccessManager with cache
     QNAM = new QNetworkAccessManager(this);
     QNetworkConfigurationManager QNAMConfig;
@@ -32,6 +35,21 @@ API::API(QObject *parent) : QObject(parent)
     connect(QNAM, SIGNAL(networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)), this, SLOT(networkAccessible(QNetworkAccessManager::NetworkAccessibility)));
     connect(QNAM, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
     connect(QNAM, SIGNAL(finished(QNetworkReply*)), this, SLOT(finished(QNetworkReply*)));
+
+    // Start Location services
+    updateCounter = 0;
+    positionSource = QGeoPositionInfoSource::createDefaultSource(this);
+    if (positionSource) {
+        qDebug() << "Positioning enabled, waiting for fix...";
+        connect(positionSource, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SLOT(positionUpdated(QGeoPositionInfo)));
+        positionSource->startUpdates();
+    }
+    else {
+        qCritical() << "Positioning not available";
+        //: Error shown to the user when an Positioning error occurs. The users could disabled GPS or an other error may be occured.
+        //% "Positioning unavailable, check if location services are enabled"
+        emit this->errorOccurred(qtTrId("sailfinder-positioning-error"));
+    }
 }
 
 /**
@@ -89,7 +107,13 @@ QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
     return request;
 }
 
-void API::authenticate(QString fbToken)
+/**
+ * @class API
+ * @brief Authenticate the user with the API
+ * @details Retrieve the API token for the user based on it's Facebook access token
+ * @param fbToken
+ */
+void API::login(QString fbToken)
 {
     // Build URL
     QUrl url(QString(AUTH_FACEBOOK_ENDPOINT));
@@ -102,6 +126,75 @@ void API::authenticate(QString fbToken)
 
     // Prepare & do request
     QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+}
+
+/**
+ * @class API
+ * @brief Meta data
+ * @details Retrieve the meta data of the account, this can be used for several purposes. Also this endpoint is perfectly to test the validity of the API token.
+ * @param latitude, longitude
+ */
+void API::getMeta(int latitude, int longitude)
+{
+    // Build URL
+    QUrl url(QString(META_ENDPOINT));
+    QUrlQuery parameters;
+
+    // Build POST payload
+    QVariantMap data;
+    data["lat"] = latitude;
+    data["lon"] = longitude;
+    data["force_fetch_resources"] = true;
+    QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+    // Prepare & do request
+    QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+}
+
+/**
+ * @class API
+ * @brief Parse the positioning
+ * @details Handler to parse the positioning signals from QGeoPositionInfoSource
+ * @param info
+ */
+void API::positionUpdated(const QGeoPositionInfo &info)
+{
+    QGeoCoordinate geoCoordinate = info.coordinate();
+    qDebug() << "Position update received:" << info;
+    updateCounter++;
+
+    // Enough accuracy, stop updates
+    if (info.hasAttribute(QGeoPositionInfo::HorizontalAccuracy) && info.hasAttribute(QGeoPositionInfo::VerticalAccuracy)) {
+        if (info.attribute(QGeoPositionInfo::HorizontalAccuracy) < 1000 && info.attribute(QGeoPositionInfo::VerticalAccuracy) < 1000) {
+            qDebug() << "Position fix OK, updating on API";
+            // Only perform request when API is ready
+            if(this->authenticated()) {
+                this->getMeta(geoCoordinate.latitude(), geoCoordinate.longitude());
+                positionSource->stopUpdates();
+            }
+        }
+    }
+    // Position fix takes too long
+    else if(updateCounter > 15 && this->authenticated()) {
+        qWarning() << "No accurate fix aquired, using the best available location";
+        this->getMeta(geoCoordinate.latitude(), geoCoordinate.longitude());
+        positionSource->stopUpdates();
+    }
+    // Wait for next position information
+    else {
+        qWarning() << "Position fix not accurate enough yet";
+    }
+}
+
+bool API::authenticated() const
+{
+    return m_authenticated;
+}
+
+void API::setAuthenticated(bool authenticated)
+{
+    m_authenticated = authenticated;
+    emit this->authenticatedChanged();
 }
 
 /**
@@ -145,7 +238,7 @@ void API::sslErrors(QNetworkReply* reply, QList<QSslError> sslError)
  */
 void API::finished (QNetworkReply *reply)
 {
-    qInfo() << "Request finished:" << reply->url();
+    qInfo() << "Request finished:" << reply->url().toString();
     if(!this->networkEnabled()) {
         qCritical() << "Network inaccesible, can't retrieve API request!";
     }
@@ -182,7 +275,6 @@ void API::finished (QNetworkReply *reply)
 
         // Get the data from the request
         QString replyData = (QString)reply->readAll();
-        qDebug() << "Data:" << replyData;
 
         // Try to parse the data as JSON
         QJsonParseError parseError;
@@ -193,12 +285,16 @@ void API::finished (QNetworkReply *reply)
             QJsonObject jsonObject = jsonData.object();
 
             // Parse data in the right C++ model or database
-            if(reply->url().toString().contains("/auth/login/facebook", Qt::CaseInsensitive)) {
-                qDebug() << "Tinder authentication data received";
-                this->parseAuthentication(jsonObject);
+            if(reply->url().toString().contains("/v2/auth/login/facebook", Qt::CaseInsensitive)) {
+                qDebug() << "Tinder login data received";
+                this->parseLogin(jsonObject);
+            }
+            else if(reply->url().toString().contains("/v2/meta", Qt::CaseInsensitive)) {
+                qDebug() << "Tinder meta data received";
+                this->parseMeta(jsonObject);
             }
             else {
-                qWarning() << "Received unhandeled API endpoint: " << reply->url();
+                qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
             }
         }
         else {
@@ -213,11 +309,22 @@ void API::finished (QNetworkReply *reply)
     this->setBusy(false);
 }
 
-void API::parseAuthentication(QJsonObject json)
+void API::parseLogin(QJsonObject json)
 {
     QJsonObject data = json["data"].toObject();
     this->setToken(data["api_token"].toString());
     this->setIsNewUser(data["is_new_user"].toBool());
+    this->setAuthenticated(this->token().length() > 0);
+}
+
+void API::parseMeta(QJsonObject json)
+{
+
+}
+
+void API::parseProfile(QJsonObject json)
+{
+
 }
 
 QString API::token() const

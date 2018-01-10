@@ -24,7 +24,7 @@ Page {
     onFbTokenChanged: {
         if(fbToken.length > 0) {
             tinderLogin.visible = true
-            api.authenticate(fbToken)
+            api.login(fbToken)
         }
         else {
             tinderLogin.visible = false

@@ -35,5 +35,10 @@
         <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-positioning-error">
+        <source>Positioning unavailable, check if location services are enabled</source>
+        <extracomment>Error shown to the user when an Positioning error occurs. The users could disabled GPS or an other error may be occured.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
