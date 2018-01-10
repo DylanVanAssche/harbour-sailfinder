@@ -1,3 +1,43 @@
 <RCC>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file>images/account-logo.png</file>
+        <file>images/cover-background.png</file>
+        <file>images/cover-logo.png</file>
+        <file>images/dislike.png</file>
+        <file>images/icon-addimage.png</file>
+        <file>images/icon-bio.png</file>
+        <file>images/icon-code.png</file>
+        <file>images/icon-edit.png</file>
+        <file>images/icon-fontawesome.png</file>
+        <file>images/icon-friends.png</file>
+        <file>images/icon-giphy.png</file>
+        <file>images/icon-github.png</file>
+        <file>images/icon-gitlab.png</file>
+        <file>images/icon-instagram.png</file>
+        <file>images/icon-job.png</file>
+        <file>images/icon-liked.png</file>
+        <file>images/icon-linkedin.png</file>
+        <file>images/icon-location.png</file>
+        <file>images/icon-matches.png</file>
+        <file>images/icon-more.png</file>
+        <file>images/icon-noimage.png</file>
+        <file>images/icon-notifications.png</file>
+        <file>images/icon-notliked.png</file>
+        <file>images/icon-paypal.png</file>
+        <file>images/icon-profile.png</file>
+        <file>images/icon-recs.png</file>
+        <file>images/icon-refresh.png</file>
+        <file>images/icon-school.png</file>
+        <file>images/icon-search.png</file>
+        <file>images/icon-send.png</file>
+        <file>images/icon-share.png</file>
+        <file>images/icon-social.png</file>
+        <file>images/icon-spotify.png</file>
+        <file>images/icon-translate.png</file>
+        <file>images/image-placeholder.png</file>
+        <file>images/launcher-logo.png</file>
+        <file>images/like.png</file>
+        <file>images/sources.txt</file>
+        <file>images/superlike.png</file>
+    </qresource>
 </RCC>

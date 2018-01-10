@@ -14,14 +14,31 @@
 *   You should have received a copy of the GNU General Public License
 *   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef LOGGER_H
+#define LOGGER_H
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
+#include <QtGlobal>
+#include <QtDebug>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
+#include <QtCore/QDebug>
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QIODevice>
 
-CoverBackground {
-    Label {
-        anchors.centerIn: parent
-        text: "Sailfinder"
-    }
-}
+#include "os.h"
 
+#define LINE_LENGTH 100
+
+static bool clearLog = true;
+static QString name;
+static QString version;
+static QString compileDate;
+static QString compileTime;
+static QString logpath;
+void handler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+bool enableLogger(bool enabled);
+
+#endif // LOGGER_H
