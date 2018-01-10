@@ -26,8 +26,12 @@
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QVariantMap>
 
 #include "os.h"
+#define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
+#define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
 
 class API : public QObject
 {
@@ -38,27 +42,39 @@ class API : public QObject
 public:
     explicit API(QObject *parent = 0);
     ~API();
-    Q_INVOKABLE authenticate(QString fbToken);
+    Q_INVOKABLE void authenticate(QString fbToken);
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
     void setNetworkEnabled(bool networkEnabled);
     bool busy() const;
     void setBusy(bool busy);
+    bool isNewUser() const;
+    void setIsNewUser(bool isNewUser);
 
 signals:
     void busyChanged();
     void tokenChanged();
+    void isNewUserChanged();
+    void networkEnabledChanged();
     void errorOccurred(const QString &text);
     void authenticationRequested(const QString &text);
 
 public slots:
+    void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
+    void sslErrors(QNetworkReply* reply, QList<QSslError> sslError);
+    void finished(QNetworkReply *reply);
+
+private:
     QString m_token;
+    bool m_isNewUser;
     bool m_busy;
     bool m_networkEnabled;
     QNetworkAccessManager* QNAM;
     QNetworkDiskCache* QNAMCache;
     OS SFOS;
+    QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters);
+    void parseAuthentication(QJsonObject json);
 };
 
 #endif // API_H

@@ -29,6 +29,7 @@
 
 #include "logger.h"
 #include "os.h"
+#include "api.h"
 
 int main(int argc, char *argv[])
 {
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
         qApp->setApplicationVersion(QString(APP_VERSION));
 
         // Set application version and enable logging
-        enableLogger(true);
+        enableLogger(false);
 
         // Enable default translations
         QTranslator *translator = new QTranslator(qApp);
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
         }
 
         // Register custom QML modules
-
+        qmlRegisterType<API>("Harbour.Sailfinder.API", 1, 0, "API");
 
         // Start the application.
         view->setSource(SailfishApp::pathTo("qml/harbour-sailfinder.qml"));

@@ -21,9 +21,25 @@ import QtWebKit 3.0
 
 Page {
     property string fbToken
-    property string tinderToken
-    onFbTokenChanged: fbToken.length > 0? tinderLogin.visible = true: tinderLogin.visible = false
-    onTinderTokenChanged: tinderToken.length > 0? pageStack.push(Qt.resolvedUrl("../pages/MainPage.qml")): undefined
+    onFbTokenChanged: {
+        if(fbToken.length > 0) {
+            tinderLogin.visible = true
+            api.authenticate(fbToken)
+        }
+        else {
+            tinderLogin.visible = false
+        }
+    }
+
+    Connections {
+        target: api
+        onTokenChanged: {
+            if(api.token.length > 0) {
+                console.debug("Tinder token successfully retrieved")
+                pageStack.replace(Qt.resolvedUrl("../pages/MainPage.qml"))
+            }
+        }
+    }
 
     SilicaFlickable {
         anchors.fill: parent
@@ -57,7 +73,7 @@ Page {
             experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
             experimental.customLayoutWidth: parent.width / _devicePixelRatio
             experimental.overview: true
-            experimental.userAgent: app.userAgent
+            experimental.userAgent: app.fbUserAgent
             experimental.onMessageReceived: {
                 var msg = JSON.parse(message.data);
                 switch(msg.type) {

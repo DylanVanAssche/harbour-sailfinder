@@ -51,9 +51,57 @@ API::~API()
     }
 }
 
-API::authenticate(QString fbToken)
+/**
+ * @class API
+ * @brief Prepare HTTP request
+ * @details Tinder API requires the same headers every time so writing them once is easier to maintain.
+ * @param url
+ * @param parameters
+ * @return QNetworkRequest
+ */
+QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
 {
+    // Set busy state
+    this->setBusy(true);
 
+    // Add default URL parameters
+    parameters.addQueryItem("locale", "en-GB");
+    url.setQuery(parameters);
+
+    // Create QNetworkRequest
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
+    request.setRawHeader("accept", "*/*");
+    request.setRawHeader("accept-language", "en-GB,en-US;q=0.9,en;q=0.8");
+    request.setRawHeader("app-version", "1000000");
+    request.setRawHeader("connection", "keep-alive");
+    request.setRawHeader("dnt", "1");
+    request.setRawHeader("host", "api.gotinder.com");
+    request.setRawHeader("origin", "https://tinder.com");
+    request.setRawHeader("platform", "web");
+    request.setRawHeader("referer", "https://tinder.com");
+    if(url.toString() != AUTH_FACEBOOK_ENDPOINT) {
+        request.setRawHeader("x-auth-token", this->token().toLocal8Bit());
+    }
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
+    return request;
+}
+
+void API::authenticate(QString fbToken)
+{
+    // Build URL
+    QUrl url(QString(AUTH_FACEBOOK_ENDPOINT));
+    QUrlQuery parameters;
+
+    // Build POST payload
+    QVariantMap data;
+    data["token"] = fbToken;
+    QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+    // Prepare & do request
+    QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
 }
 
 /**
@@ -91,7 +139,7 @@ void API::sslErrors(QNetworkReply* reply, QList<QSslError> sslError)
 /**
  * @class API
  * @brief Handling HTTP replies.
- * @details Handles the iRail HTTP JSON replies, dispatches them to the right JSON parser
+ * @details Handles the Tinder HTTP JSON replies, dispatches them to the right JSON parser
  * and updates the API data with the help of the JSON parsers.
  * @param reply
  */
@@ -134,6 +182,7 @@ void API::finished (QNetworkReply *reply)
 
         // Get the data from the request
         QString replyData = (QString)reply->readAll();
+        qDebug() << "Data:" << replyData;
 
         // Try to parse the data as JSON
         QJsonParseError parseError;
@@ -144,8 +193,12 @@ void API::finished (QNetworkReply *reply)
             QJsonObject jsonObject = jsonData.object();
 
             // Parse data in the right C++ model or database
-            if(reply->url().toString().contains("auth", Qt::CaseInsensitive)) {
+            if(reply->url().toString().contains("/auth/login/facebook", Qt::CaseInsensitive)) {
                 qDebug() << "Tinder authentication data received";
+                this->parseAuthentication(jsonObject);
+            }
+            else {
+                qWarning() << "Received unhandeled API endpoint: " << reply->url();
             }
         }
         else {
@@ -160,6 +213,12 @@ void API::finished (QNetworkReply *reply)
     this->setBusy(false);
 }
 
+void API::parseAuthentication(QJsonObject json)
+{
+    QJsonObject data = json["data"].toObject();
+    this->setToken(data["api_token"].toString());
+    this->setIsNewUser(data["is_new_user"].toBool());
+}
 
 QString API::token() const
 {
@@ -169,6 +228,7 @@ QString API::token() const
 void API::setToken(const QString &token)
 {
     m_token = token;
+    this->tokenChanged();
 }
 
 bool API::networkEnabled() const
@@ -179,6 +239,7 @@ bool API::networkEnabled() const
 void API::setNetworkEnabled(bool networkEnabled)
 {
     m_networkEnabled = networkEnabled;
+    this->networkEnabledChanged();
 }
 
 bool API::busy() const
@@ -189,4 +250,16 @@ bool API::busy() const
 void API::setBusy(bool busy)
 {
     m_busy = busy;
+    this->busyChanged();
+}
+
+bool API::isNewUser() const
+{
+    return m_isNewUser;
+}
+
+void API::setIsNewUser(bool isNewUser)
+{
+    m_isNewUser = isNewUser;
+    emit this->isNewUserChanged();
 }
