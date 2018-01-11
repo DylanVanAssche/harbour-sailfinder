@@ -34,12 +34,15 @@ QT_NO_WARNING_OUTPUT
 
 SOURCES += src/harbour-sailfinder.cpp \
     src/api.cpp \
-    #src/models/user.cpp \
-    #src/models/recommendation.cpp \
-    #src/models/match.cpp \
-    #src/models/person.cpp
+    src/models/person.cpp \
+    src/models/photo.cpp \
+    src/models/job.cpp \
+    src/models/school.cpp \
+    src/models/friend.cpp \
+    src/models/interest.cpp \
     src/logger.cpp \
-    src/os.cpp
+    src/os.cpp \
+    src/models/enum.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/cover/CoverPage.qml \
@@ -69,9 +72,12 @@ TRANSLATIONS += translations/harbour-sailfinder-de.ts
 
 HEADERS += \
     src/api.h \
-    #src/models/user.h \
-    #src/models/recommendation.h \
-    #src/models/match.h \
-    #src/models/person.h
+    src/models/person.h \
+    src/models/photo.h \
+    src/models/job.h \
+    src/models/school.h \
+    src/models/friend.h \
+    src/models/interest.h \
     src/logger.h \
-    src/os.h
+    src/os.h \
+    src/models/enum.h
