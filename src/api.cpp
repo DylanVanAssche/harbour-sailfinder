@@ -37,7 +37,7 @@ API::API(QObject *parent) : QObject(parent)
     connect(QNAM, SIGNAL(finished(QNetworkReply*)), this, SLOT(finished(QNetworkReply*)));
 
     // Start Location services
-    updateCounter = 0;
+    positionUpdateCounter = 0;
     positionSource = QGeoPositionInfoSource::createDefaultSource(this);
     if (positionSource) {
         qDebug() << "Positioning enabled, waiting for fix...";
@@ -160,30 +160,74 @@ void API::getMeta(int latitude, int longitude)
 void API::positionUpdated(const QGeoPositionInfo &info)
 {
     QGeoCoordinate geoCoordinate = info.coordinate();
-    qDebug() << "Position update received:" << info;
-    updateCounter++;
+    positionUpdateCounter++;
 
     // Enough accuracy, stop updates
     if (info.hasAttribute(QGeoPositionInfo::HorizontalAccuracy) && info.hasAttribute(QGeoPositionInfo::VerticalAccuracy)) {
         if (info.attribute(QGeoPositionInfo::HorizontalAccuracy) < 1000 && info.attribute(QGeoPositionInfo::VerticalAccuracy) < 1000) {
-            qDebug() << "Position fix OK, updating on API";
+            qDebug() << "Position fix OK";
             // Only perform request when API is ready
             if(this->authenticated()) {
+                qDebug() << "Authenticated, updating on API and stopping location services";
                 this->getMeta(geoCoordinate.latitude(), geoCoordinate.longitude());
                 positionSource->stopUpdates();
             }
         }
     }
     // Position fix takes too long
-    else if(updateCounter > 15 && this->authenticated()) {
+    else if(positionUpdateCounter > POSITION_MAX_UPDATE && this->authenticated()) {
         qWarning() << "No accurate fix aquired, using the best available location";
         this->getMeta(geoCoordinate.latitude(), geoCoordinate.longitude());
         positionSource->stopUpdates();
     }
     // Wait for next position information
     else {
-        qWarning() << "Position fix not accurate enough yet";
+        qWarning() << "Position fix not accurate enough yet" << positionUpdateCounter << "/" << POSITION_MAX_UPDATE ;
     }
+}
+
+bool API::canShowCommonConnections() const
+{
+    return m_canShowCommonConnections;
+}
+
+void API::setCanShowCommonConnections(bool canShowCommonConnections)
+{
+    m_canShowCommonConnections = canShowCommonConnections;
+    emit this->canShowCommonConnectionsChanged();
+}
+
+bool API::canAddPhotosFromFacebook() const
+{
+    return m_canAddPhotosFromFacebook;
+}
+
+void API::setCanAddPhotosFromFacebook(bool canAddPhotosFromFacebook)
+{
+    m_canAddPhotosFromFacebook = canAddPhotosFromFacebook;
+    emit this->canAddPhotosFromFacebookChanged();
+}
+
+bool API::canEditSchools() const
+{
+    return m_canEditSchools;
+}
+
+void API::setCanEditSchools(bool canEditSchools)
+{
+    m_canEditSchools = canEditSchools;
+    emit this->canEditSchoolsChanged();
+}
+
+bool API::canEditJobs() const
+{
+    return m_canEditJobs;
+}
+
+void API::setCanEditJobs(bool canEditJobs)
+{
+    m_canEditJobs = canEditJobs;
+    emit this->canEditJobsChanged();
 }
 
 bool API::authenticated() const
@@ -293,6 +337,14 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder meta data received";
                 this->parseMeta(jsonObject);
             }
+            else if(reply->url().toString().contains("/updates", Qt::CaseInsensitive)) {
+                qDebug() << "Tinder updates data received";
+                this->parseUpdates(jsonObject);
+            }
+            else if(reply->url().toString().contains("/v2/profile", Qt::CaseInsensitive)) {
+                qDebug() << "Tinder profile data received";
+                this->parseProfile(jsonObject);
+            }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
             }
@@ -319,12 +371,21 @@ void API::parseLogin(QJsonObject json)
 
 void API::parseMeta(QJsonObject json)
 {
+    QJsonObject data = json["data"].toObject();
+    this->setCanEditJobs(data["can_edit_jobs"].toBool());
+    this->setCanEditSchools(data["can_edit_schools"].toBool());
+    this->setCanAddPhotosFromFacebook(data["can_add_photos_from_facebook"].toBool());
+    this->setCanShowCommonConnections(data["can_show_common_connections"].toBool());
+}
+
+void API::parseUpdates(QJsonObject json)
+{
 
 }
 
 void API::parseProfile(QJsonObject json)
 {
-
+ // USER OBJECTS NEEDED
 }
 
 QString API::token() const
