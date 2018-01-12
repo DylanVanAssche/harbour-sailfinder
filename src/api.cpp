@@ -136,19 +136,45 @@ void API::login(QString fbToken)
  */
 void API::getMeta(int latitude, int longitude)
 {
-    // Build URL
-    QUrl url(QString(META_ENDPOINT));
-    QUrlQuery parameters;
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(META_ENDPOINT));
+        QUrlQuery parameters;
 
-    // Build POST payload
-    QVariantMap data;
-    data["lat"] = latitude;
-    data["lon"] = longitude;
-    data["force_fetch_resources"] = true;
-    QJsonDocument payload = QJsonDocument::fromVariant(data);
+        // Build POST payload
+        QVariantMap data;
+        data["lat"] = latitude;
+        data["lon"] = longitude;
+        data["force_fetch_resources"] = true;
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
 
-    // Prepare & do request
-    QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        // Prepare & do request
+        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve meta data";
+    }
+}
+
+/**
+ * @class API
+ * @brief profile data
+ * @details Retrieve the profile data of the account which contains information about the user and it's settings
+ */
+void API::getProfile()
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(PROFILE_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("include","user,plus_control,boost,travel,tutorials,notifications,purchase,products,likes,super_likes,facebook,instagram,spotify,select");
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve meta data";
+    }
 }
 
 /**
@@ -184,6 +210,16 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     else {
         qWarning() << "Position fix not accurate enough yet" << positionUpdateCounter << "/" << POSITION_MAX_UPDATE ;
     }
+}
+
+bool API::canLike() const
+{
+    return m_canLike;
+}
+
+void API::setCanLike(bool canLike)
+{
+    m_canLike = canLike;
 }
 
 bool API::canShowCommonConnections() const
@@ -229,6 +265,18 @@ void API::setCanEditJobs(bool canEditJobs)
     m_canEditJobs = canEditJobs;
     emit this->canEditJobsChanged();
 }
+
+User *API::profile() const
+{
+    return m_profile;
+}
+
+void API::setProfile(User *profile)
+{
+    m_profile = profile;
+    emit this->profileChanged();
+}
+
 
 bool API::authenticated() const
 {
@@ -363,19 +411,19 @@ void API::finished (QNetworkReply *reply)
 
 void API::parseLogin(QJsonObject json)
 {
-    QJsonObject data = json["data"].toObject();
-    this->setToken(data["api_token"].toString());
-    this->setIsNewUser(data["is_new_user"].toBool());
+    QJsonObject login = json["data"].toObject();
+    this->setToken(login["api_token"].toString());
+    this->setIsNewUser(login["is_new_user"].toBool());
     this->setAuthenticated(this->token().length() > 0);
 }
 
 void API::parseMeta(QJsonObject json)
 {
-    QJsonObject data = json["data"].toObject();
-    this->setCanEditJobs(data["can_edit_jobs"].toBool());
-    this->setCanEditSchools(data["can_edit_schools"].toBool());
-    this->setCanAddPhotosFromFacebook(data["can_add_photos_from_facebook"].toBool());
-    this->setCanShowCommonConnections(data["can_show_common_connections"].toBool());
+    QJsonObject meta = json["data"].toObject();
+    this->setCanEditJobs(meta["can_edit_jobs"].toBool());
+    this->setCanEditSchools(meta["can_edit_schools"].toBool());
+    this->setCanAddPhotosFromFacebook(meta["can_add_photos_from_facebook"].toBool());
+    this->setCanShowCommonConnections(meta["can_show_common_connections"].toBool());
 }
 
 void API::parseUpdates(QJsonObject json)
@@ -385,7 +433,84 @@ void API::parseUpdates(QJsonObject json)
 
 void API::parseProfile(QJsonObject json)
 {
- // USER OBJECTS NEEDED
+    QJsonObject user = json["data"].toObject()["user"].toObject();
+    QJsonObject likes = json["data"].toObject()["likes"].toObject();
+    QList<Photo *> photoList;
+    QList<School *> schoolList;
+    QList<Job *> jobList;
+    bool canLike = likes["likes_remaining"].toInt() > 0;
+    int ageMin = user["age_filter_min"].toInt();
+    int ageMax = user["age_filter_max"].toInt();
+    QString bio = user["bio"].toString();
+    QDateTime birthDate = QDateTime::fromString(user["birth_date"].toString(), Qt::ISODate);
+    int distanceMax = user["distance_filter"].toInt();
+    bool discoverable = user["discoverable"].toBool();
+    Sailfinder::Gender gender = Sailfinder::Gender::Female;
+    if(user["gender"].toInt() == 0) { // Default female, change if needed
+        gender = Sailfinder::Gender::Male;
+    }
+
+    Sailfinder::Gender interestedIn = Sailfinder::Gender::Female;
+    if(user["interested_in"].toArray().count() > 1) { // Both genders
+        interestedIn = Sailfinder::Gender::All;
+    }
+    else if(user["interested_in"].toArray().at(0) == 0) { // Change to male only
+        interestedIn = Sailfinder::Gender::Male;
+    }
+    QString name = user["name"].toString();
+    QString id = user["_id"].toString();
+    double latitude = user["pos"].toObject()["lat"].toDouble();
+    double longitude = user["pos"].toObject()["lon"].toDouble();
+    QGeoCoordinate position;
+    position.setLatitude(latitude);
+    position.setLongitude(longitude);
+
+    foreach(QJsonValue item, user["photos"].toArray()) {
+        QJsonObject photo = item.toObject();
+        photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
+    }
+
+    foreach(QJsonValue item, user["schools"].toArray()) {
+        QJsonObject school = item.toObject();
+        // Name is needed but ID might be missing sometimes!
+        if(school.value("id") != QJsonValue::Undefined) {
+            schoolList.append(new School(school["id"].toString(), school["name"].toString()));
+        }
+        else {
+            qWarning() << "School id is missing";
+            schoolList.append(new School(school["name"].toString()));
+        }
+    }
+
+    foreach(QJsonValue item, user["jobs"].toArray()) {
+        QJsonObject job = item.toObject();
+        // Name is needed but ID might be missing sometimes!
+        if(job.value("id") != QJsonValue::Undefined) {
+            jobList.append(new Job(job["id"].toString(), job["name"].toString()));
+        }
+        else {
+            qWarning() << "Job id is missing";
+            jobList.append(new Job(job["name"].toString()));
+        }
+    }
+
+    qDebug() << "Profile data:";
+    qDebug() << "\tName:" << name;
+    qDebug() << "\tBirthdate:" << birthDate;
+    qDebug() << "\tBio:" << bio;
+    qDebug() << "\tAge min:" << ageMin;
+    qDebug() << "\tAge max:" << ageMax;
+    qDebug() << "\tDistance max:" << distanceMax;
+    qDebug() << "\tInterested in:" << (int)(interestedIn);
+    qDebug() << "\tPosition:" << position;
+    qDebug() << "\tDiscoverable:" << discoverable;
+    qDebug() << "\tPhotos:" << photoList;
+    qDebug() << "\tSchools:" << schoolList;
+    qDebug() << "\tJobs:" << jobList;
+    qDebug() << "\tCan like:" << canLike;
+
+    this->setCanLike(canLike);
+    this->setProfile(new User(id, name, birthDate, gender, bio, schoolList, jobList, photoList, ageMin, ageMax, distanceMax, interestedIn, position, discoverable));
 }
 
 QString API::token() const

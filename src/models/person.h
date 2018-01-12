@@ -13,7 +13,6 @@ class Person : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QDateTime birthDate READ birthDate NOTIFY birthDateChanged)
-    Q_PROPERTY(int distance READ distance NOTIFY distanceChanged)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(Sailfinder::Gender gender READ gender NOTIFY genderChanged)
     Q_PROPERTY(QString id READ id NOTIFY idChanged)
@@ -33,8 +32,6 @@ public:
     ~Person();
     QDateTime birthDate() const;
     void setBirthDate(const QDateTime &birthDate);
-    int distance() const;
-    void setDistance(int distance);
     QString name() const;
     void setName(const QString &name);
     Sailfinder::Gender gender() const;
@@ -52,7 +49,6 @@ public:
 
 signals:
     void birthDateChanged();
-    void distanceChanged();
     void nameChanged();
     void genderChanged();
     void idChanged();
@@ -63,7 +59,6 @@ signals:
 
 private:
     QDateTime m_birthDate;
-    int m_distance;
     QString m_name;
     Sailfinder::Gender m_gender;
     QString m_id;

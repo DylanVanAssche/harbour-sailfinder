@@ -19,6 +19,14 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Page {
+    Connections {
+        target: api
+        Component.onCompleted: api.getProfile();
+        onProfileChanged: {
+            console.debug("Tinder profile in QML")
+        }
+    }
+
     Label {
         anchors.centerIn: parent
         text: "MAINPAGE"

@@ -46,16 +46,7 @@ QDateTime Person::birthDate() const
 void Person::setBirthDate(const QDateTime &birthDate)
 {
     m_birthDate = birthDate;
-}
-
-int Person::distance() const
-{
-    return m_distance;
-}
-
-void Person::setDistance(int distance)
-{
-    m_distance = distance;
+    emit this->birthDateChanged();
 }
 
 QString Person::name() const
@@ -66,6 +57,7 @@ QString Person::name() const
 void Person::setName(const QString &name)
 {
     m_name = name;
+    emit this->nameChanged();
 }
 
 Sailfinder::Gender Person::gender() const
@@ -76,6 +68,7 @@ Sailfinder::Gender Person::gender() const
 void Person::setGender(const Sailfinder::Gender &gender)
 {
     m_gender = gender;
+    emit this->genderChanged();
 }
 
 QString Person::id() const
@@ -86,6 +79,7 @@ QString Person::id() const
 void Person::setId(const QString &id)
 {
     m_id = id;
+    emit this->idChanged();
 }
 
 QString Person::bio() const
@@ -96,6 +90,7 @@ QString Person::bio() const
 void Person::setBio(const QString &bio)
 {
     m_bio = bio;
+    emit this->bioChanged();
 }
 
 QList<Photo *> Person::photos() const
@@ -106,6 +101,7 @@ QList<Photo *> Person::photos() const
 void Person::setPhotos(const QList<Photo *> &photos)
 {
     m_photos = photos;
+    emit this->photosChanged();
 }
 
 QList<Job *> Person::jobs() const
@@ -116,6 +112,7 @@ QList<Job *> Person::jobs() const
 void Person::setJobs(const QList<Job *> &jobs)
 {
     m_jobs = jobs;
+    emit this->jobsChanged();
 }
 
 QList<School *> Person::schools() const
@@ -126,4 +123,5 @@ QList<School *> Person::schools() const
 void Person::setSchools(const QList<School *> &schools)
 {
     m_schools = schools;
+    emit this->schoolsChanged();
 }

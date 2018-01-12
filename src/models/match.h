@@ -7,12 +7,29 @@
 class Match : public Person
 {
     Q_OBJECT
+    Q_PROPERTY(int distance READ distance NOTIFY distanceChanged)
+
 public:
-    explicit Match();
+    explicit Match(QObject *parent = 0);
+    explicit Match(QString id,
+                   QString name,
+                   QDateTime birthDate,
+                   Sailfinder::Gender gender,
+                   QString bio,
+                   int distance,
+                   QList<School *> schools,
+                   QList<Job *> jobs,
+                   QList<Photo *> photos
+                   );
+
+    int distance() const;
+    void setDistance(int distance);
 
 signals:
+    void distanceChanged();
 
-public slots:
+private:
+    int m_distance;
 };
 
 #endif // MATCH_H

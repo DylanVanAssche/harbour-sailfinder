@@ -28,10 +28,14 @@
 #include <QtCore/QString>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QVariantMap>
+#include <QtCore/QList>
 #include <QtPositioning/QGeoSatelliteInfoSource>
 #include <QtPositioning/QGeoPositionInfoSource>
 
 #include "os.h"
+#include "models/user.h"
+#include "models/photo.h"
+
 #define POSITION_MAX_UPDATE 10
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
@@ -54,12 +58,15 @@ class API : public QObject
     Q_PROPERTY(bool canEditSchools READ canEditSchools NOTIFY canEditSchoolsChanged)
     Q_PROPERTY(bool canAddPhotosFromFacebook READ canAddPhotosFromFacebook NOTIFY canAddPhotosFromFacebookChanged)
     Q_PROPERTY(bool canShowCommonConnections READ canShowCommonConnections NOTIFY canShowCommonConnectionsChanged)
+    Q_PROPERTY(bool canLike READ canLike NOTIFY canLikeChanged)
+    Q_PROPERTY(User* profile READ profile NOTIFY profileChanged)
 
 public:
     explicit API(QObject *parent = 0);
     ~API();
     Q_INVOKABLE void login(QString fbToken);
     Q_INVOKABLE void getMeta(int latitude, int longitude);
+    Q_INVOKABLE void getProfile();
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -78,6 +85,10 @@ public:
     void setCanAddPhotosFromFacebook(bool canAddPhotosFromFacebook);
     bool canShowCommonConnections() const;
     void setCanShowCommonConnections(bool canShowCommonConnections);
+    User *profile() const;
+    void setProfile(User *profile);
+    bool canLike() const;
+    void setCanLike(bool canLike);
 
 signals:
     void busyChanged();
@@ -87,6 +98,8 @@ signals:
     void canEditSchoolsChanged();
     void canAddPhotosFromFacebookChanged();
     void canShowCommonConnectionsChanged();
+    void canLikeChanged();
+    void profileChanged();
     void networkEnabledChanged();
     void authenticatedChanged();
     void errorOccurred(const QString &text);
@@ -106,8 +119,10 @@ private:
     bool m_canEditSchools;
     bool m_canAddPhotosFromFacebook;
     bool m_canShowCommonConnections;
+    bool m_canLike;
     bool m_busy;
     bool m_networkEnabled;
+    User* m_profile;
     int positionUpdateCounter;
     QGeoPositionInfoSource* positionSource;
     QNetworkAccessManager* QNAM;

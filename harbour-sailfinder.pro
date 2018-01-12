@@ -38,11 +38,12 @@ SOURCES += src/harbour-sailfinder.cpp \
     src/models/photo.cpp \
     src/models/job.cpp \
     src/models/school.cpp \
-    src/models/friend.cpp \
-    src/models/interest.cpp \
     src/logger.cpp \
     src/os.cpp \
-    src/models/enum.cpp
+    src/models/enum.cpp \
+    src/models/match.cpp \
+    src/models/recommendation.cpp \
+    src/models/user.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/cover/CoverPage.qml \
@@ -76,8 +77,9 @@ HEADERS += \
     src/models/photo.h \
     src/models/job.h \
     src/models/school.h \
-    src/models/friend.h \
-    src/models/interest.h \
     src/logger.h \
     src/os.h \
-    src/models/enum.h
+    src/models/enum.h \
+    src/models/match.h \
+    src/models/recommendation.h \
+    src/models/user.h

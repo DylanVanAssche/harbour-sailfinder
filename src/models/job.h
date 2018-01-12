@@ -13,7 +13,7 @@ class Job : public QObject
 public:
     explicit Job(QObject *parent = 0);
     explicit Job(QString id, QString name);
-
+    explicit Job(QString name);
     QString id() const;
     void setId(const QString &id);
     QString name() const;

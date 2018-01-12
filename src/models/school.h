@@ -13,6 +13,7 @@ class School : public QObject
 public:
     explicit School(QObject *parent = 0);
     explicit School(QString id, QString name);
+    explicit School(QString name);
     QString id() const;
     void setId(const QString &id);
     QString name() const;

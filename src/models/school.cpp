@@ -11,6 +11,12 @@ School::School(QString id, QString name)
     this->setName(name);
 }
 
+School::School(QString name)
+{
+    this->setId("");
+    this->setName(name);
+}
+
 QString School::id() const
 {
     return m_id;

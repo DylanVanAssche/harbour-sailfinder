@@ -11,6 +11,12 @@ Job::Job(QString id, QString name)
     this->setName(name);
 }
 
+Job::Job(QString name)
+{
+    this->setId("");
+    this->setName(name);
+}
+
 QString Job::id() const
 {
     return m_id;
