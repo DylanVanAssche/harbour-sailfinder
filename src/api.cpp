@@ -107,6 +107,27 @@ QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
     return request;
 }
 
+void API::getMatches(bool withMessages)
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(MATCHES_ENDPOINT));
+        QUrlQuery parameters;
+        if(withMessages) {
+            parameters.addQueryItem("message", "1");
+        }
+        else {
+            parameters.addQueryItem("message", "0");
+        }
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve recommendations data";
+    }
+}
+
 /**
  * @class API
  * @brief Authenticate the user with the API
@@ -173,7 +194,52 @@ void API::getProfile()
         QNAM->get(this->prepareRequest(url, parameters));
     }
     else {
-        qWarning() << "Not authenticated, can't retrieve meta data";
+        qWarning() << "Not authenticated, can't retrieve profile data";
+    }
+}
+
+void API::getRecommendations()
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(RECS_ENDPOINT));
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve recommendations data";
+    }
+}
+
+void API::getMatchesWithMessages()
+{
+    this->getMatches(true);
+}
+
+void API::getMatchesWithoutMessages()
+{
+    this->getMatches(false);
+}
+
+void API::getUpdates(QDateTime lastActivityDate)
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(UPDATES_ENDPOINT));
+        QUrlQuery parameters;
+
+        // Build POST payload
+        QVariantMap data;
+        data["last_activity_date"] = lastActivityDate.toString(Qt::ISODate);
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+        // Prepare & do request
+        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve updates data";
     }
 }
 
@@ -185,31 +251,51 @@ void API::getProfile()
  */
 void API::positionUpdated(const QGeoPositionInfo &info)
 {
-    QGeoCoordinate geoCoordinate = info.coordinate();
+    QGeoCoordinate position = info.coordinate();
     positionUpdateCounter++;
 
     // Enough accuracy, stop updates
     if (info.hasAttribute(QGeoPositionInfo::HorizontalAccuracy) && info.hasAttribute(QGeoPositionInfo::VerticalAccuracy)) {
         if (info.attribute(QGeoPositionInfo::HorizontalAccuracy) < 1000 && info.attribute(QGeoPositionInfo::VerticalAccuracy) < 1000) {
-            qDebug() << "Position fix OK";
+            qDebug() << "Position fix OK:" << position;
             // Only perform request when API is ready
             if(this->authenticated()) {
                 qDebug() << "Authenticated, updating on API and stopping location services";
-                this->getMeta(geoCoordinate.latitude(), geoCoordinate.longitude());
+                this->getMeta(position.latitude(), position.longitude());
                 positionSource->stopUpdates();
             }
         }
     }
     // Position fix takes too long
     else if(positionUpdateCounter > POSITION_MAX_UPDATE && this->authenticated()) {
-        qWarning() << "No accurate fix aquired, using the best available location";
-        this->getMeta(geoCoordinate.latitude(), geoCoordinate.longitude());
+        qWarning() << "No accurate fix aquired, using the best available location:" << position;
+        this->getMeta(position.latitude(), position.longitude());
         positionSource->stopUpdates();
     }
     // Wait for next position information
     else {
         qWarning() << "Position fix not accurate enough yet" << positionUpdateCounter << "/" << POSITION_MAX_UPDATE ;
     }
+}
+
+int API::persistentPollInterval() const
+{
+    return m_persistentPollInterval;
+}
+
+void API::setPersistentPollInterval(int persistentPollInterval)
+{
+    m_persistentPollInterval = persistentPollInterval;
+}
+
+int API::standardPollInterval() const
+{
+    return m_standardPollInterval;
+}
+
+void API::setStandardPollInterval(int standardPollInterval)
+{
+    m_standardPollInterval = standardPollInterval;
 }
 
 bool API::canLike() const
@@ -377,21 +463,29 @@ void API::finished (QNetworkReply *reply)
             QJsonObject jsonObject = jsonData.object();
 
             // Parse data in the right C++ model or database
-            if(reply->url().toString().contains("/v2/auth/login/facebook", Qt::CaseInsensitive)) {
+            if(reply->url().toString().contains(AUTH_FACEBOOK_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder login data received";
                 this->parseLogin(jsonObject);
             }
-            else if(reply->url().toString().contains("/v2/meta", Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(META_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder meta data received";
                 this->parseMeta(jsonObject);
             }
-            else if(reply->url().toString().contains("/updates", Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(UPDATES_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder updates data received";
                 this->parseUpdates(jsonObject);
             }
-            else if(reply->url().toString().contains("/v2/profile", Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(PROFILE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder profile data received";
                 this->parseProfile(jsonObject);
+            }
+            else if(reply->url().toString().contains(RECS_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder recommendations data received";
+                this->parseRecommendations(jsonObject);
+            }
+            else if(reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder matches data received";
+                this->parseMatches(jsonObject);
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
@@ -415,6 +509,10 @@ void API::parseLogin(QJsonObject json)
     this->setToken(login["api_token"].toString());
     this->setIsNewUser(login["is_new_user"].toBool());
     this->setAuthenticated(this->token().length() > 0);
+
+    qDebug() << "Login data:";
+    qDebug() << "\tToken:" << this->token();
+    qDebug() << "\tisNewUser" << this->isNewUser();
 }
 
 void API::parseMeta(QJsonObject json)
@@ -424,11 +522,24 @@ void API::parseMeta(QJsonObject json)
     this->setCanEditSchools(meta["can_edit_schools"].toBool());
     this->setCanAddPhotosFromFacebook(meta["can_add_photos_from_facebook"].toBool());
     this->setCanShowCommonConnections(meta["can_show_common_connections"].toBool());
+
+    qDebug() << "Meta data:";
+    qDebug() << "\tCan edit jobs:" << this->canEditJobs();
+    qDebug() << "\tCan edit schools:" << this->canEditSchools();
+    qDebug() << "\tCan add photos from Facebook:" << this->canAddPhotosFromFacebook();
+    qDebug() << "\tCan show common connections:" << this->canShowCommonConnections();
 }
 
 void API::parseUpdates(QJsonObject json)
 {
+    // WE SHOULD HERE DO SOME DATABASE MAGIC TOGETHER WITH /MATCHES STUFF
+    QJsonObject pollingData = json["poll_interval"].toObject();
+    this->setStandardPollInterval(pollingData["standard"].toInt());
+    this->setPersistentPollInterval(pollingData["persistent"].toInt());
 
+    qDebug() << "Updates data:";
+    qDebug() << "\tPolling interval standard:" << this->standardPollInterval();
+    qDebug() << "\tPolling interval persitent:" << this->persistentPollInterval();
 }
 
 void API::parseProfile(QJsonObject json)
@@ -500,6 +611,7 @@ void API::parseProfile(QJsonObject json)
     qDebug() << "\tBio:" << bio;
     qDebug() << "\tAge min:" << ageMin;
     qDebug() << "\tAge max:" << ageMax;
+    qDebug() << "\tGender:" << (int)(gender);
     qDebug() << "\tDistance max:" << distanceMax;
     qDebug() << "\tInterested in:" << (int)(interestedIn);
     qDebug() << "\tPosition:" << position;
@@ -511,6 +623,77 @@ void API::parseProfile(QJsonObject json)
 
     this->setCanLike(canLike);
     this->setProfile(new User(id, name, birthDate, gender, bio, schoolList, jobList, photoList, ageMin, ageMax, distanceMax, interestedIn, position, discoverable));
+}
+
+void API::parseRecommendations(QJsonObject json)
+{
+    QList<Recommendation *> recsList;
+    foreach(QJsonValue item, json["results"].toArray()) {
+        QList<Photo *> photoList;
+        QList<School *> schoolList;
+        QList<Job *> jobList;
+        QJsonObject recommendation = item.toObject()["user"].toObject();
+        int distance = recommendation["distance_mi"].toInt();
+        QString contentHash = recommendation["content_hash"].toString();
+        int sNumber = recommendation["s_number"].toInt();
+        Sailfinder::Gender gender = Sailfinder::Gender::Female;
+        if(recommendation["gender"].toInt() == 0) { // Default female, change if needed
+            gender = Sailfinder::Gender::Male;
+        }
+        QString id = recommendation["_id"].toString();
+        QString bio = recommendation["bio"].toString();
+        QDateTime birthDate = QDateTime::fromString(recommendation["birth_date"].toString(), Qt::ISODate);
+        QString name = recommendation["name"].toString();
+        foreach(QJsonValue item, recommendation["photos"].toArray()) {
+            QJsonObject photo = item.toObject();
+            photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
+        }
+
+        foreach(QJsonValue item, recommendation["schools"].toArray()) {
+            QJsonObject school = item.toObject();
+            // Name is needed but ID might be missing sometimes!
+            if(school.value("id") != QJsonValue::Undefined) {
+                schoolList.append(new School(school["id"].toString(), school["name"].toString()));
+            }
+            else {
+                qWarning() << "School id is missing";
+                schoolList.append(new School(school["name"].toString()));
+            }
+        }
+
+        foreach(QJsonValue item, recommendation["jobs"].toArray()) {
+            QJsonObject job = item.toObject();
+            // Name is needed but ID might be missing sometimes!
+            if(job.value("id") != QJsonValue::Undefined) {
+                jobList.append(new Job(job["id"].toString(), job["name"].toString()));
+            }
+            else {
+                qWarning() << "Job id is missing";
+                jobList.append(new Job(job["name"].toString()));
+            }
+        }
+
+        recsList.append(new Recommendation(id, name, birthDate, gender, bio, schoolList, jobList, photoList, contentHash, sNumber, distance));
+
+        qDebug() << "Recommendation data:";
+        qDebug() << "\tName:" << name;
+        qDebug() << "\tBirthdate:" << birthDate;
+        qDebug() << "\tBio:" << bio;
+        qDebug() << "\tDistance:" << distance;
+        qDebug() << "\tPhotos:" << photoList;
+        qDebug() << "\tSchools:" << schoolList;
+        qDebug() << "\tJobs:" << jobList;
+        qDebug() << "\tContentHash:" << contentHash;
+        qDebug() << "\tSNumber:" << sNumber;
+        qDebug() << "\tGender:" << (int)(gender);
+    }
+    // SET HERE THE QABSTRACTLISTMODEL CONTAINING OUR QLIST
+}
+
+void API::parseMatches(QJsonObject json)
+{
+    // WE SHOULD HERE DO SOME DATABASE MAGIC TOGETHER WITH /UPDATES STUFF
+    qDebug() << "Matches data received";
 }
 
 QString API::token() const

@@ -19,9 +19,18 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Page {
+    onStatusChanged: status===PageStatus.Active? getData(): undefined
+
+    function getData() {
+        api.getRecommendations();
+        api.getProfile();
+        api.getUpdates(new Date("2017-07-07T16:58:55.217Z"));
+        api.getMatchesWithMessages();
+        api.getMatchesWithoutMessages();
+    }
+
     Connections {
         target: api
-        Component.onCompleted: api.getProfile();
         onProfileChanged: {
             console.debug("Tinder profile in QML")
         }

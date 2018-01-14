@@ -35,6 +35,7 @@
 #include "os.h"
 #include "models/user.h"
 #include "models/photo.h"
+#include "models/recommendation.h"
 
 #define POSITION_MAX_UPDATE 10
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
@@ -60,6 +61,8 @@ class API : public QObject
     Q_PROPERTY(bool canShowCommonConnections READ canShowCommonConnections NOTIFY canShowCommonConnectionsChanged)
     Q_PROPERTY(bool canLike READ canLike NOTIFY canLikeChanged)
     Q_PROPERTY(User* profile READ profile NOTIFY profileChanged)
+    Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
+    Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
 
 public:
     explicit API(QObject *parent = 0);
@@ -67,6 +70,10 @@ public:
     Q_INVOKABLE void login(QString fbToken);
     Q_INVOKABLE void getMeta(int latitude, int longitude);
     Q_INVOKABLE void getProfile();
+    Q_INVOKABLE void getRecommendations();
+    Q_INVOKABLE void getMatchesWithMessages();
+    Q_INVOKABLE void getMatchesWithoutMessages();
+    Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -89,6 +96,10 @@ public:
     void setProfile(User *profile);
     bool canLike() const;
     void setCanLike(bool canLike);
+    int standardPollInterval() const;
+    void setStandardPollInterval(int standardPollInterval);
+    int persistentPollInterval() const;
+    void setPersistentPollInterval(int persistentPollInterval);
 
 signals:
     void busyChanged();
@@ -100,6 +111,8 @@ signals:
     void canShowCommonConnectionsChanged();
     void canLikeChanged();
     void profileChanged();
+    void standardPollIntervalChanged();
+    void persistentPollIntervalChanged();
     void networkEnabledChanged();
     void authenticatedChanged();
     void errorOccurred(const QString &text);
@@ -123,6 +136,8 @@ private:
     bool m_busy;
     bool m_networkEnabled;
     User* m_profile;
+    int m_standardPollInterval;
+    int m_persistentPollInterval;
     int positionUpdateCounter;
     QGeoPositionInfoSource* positionSource;
     QNetworkAccessManager* QNAM;
@@ -130,10 +145,13 @@ private:
     QGeoPositionInfoSource *source;
     OS SFOS;
     QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters);
+    void getMatches(bool withMessages);
     void parseLogin(QJsonObject json);
     void parseMeta(QJsonObject json);
     void parseUpdates(QJsonObject json);
     void parseProfile(QJsonObject json);
+    void parseRecommendations(QJsonObject json);
+    void parseMatches(QJsonObject json);
 };
 
 #endif // API_H
