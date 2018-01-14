@@ -22,7 +22,8 @@ CONFIG += sailfishapp
 
 QT += core \
     network \
-    positioning
+    positioning \
+    sql
 
 # OS module notification support
 PKGCONFIG += nemonotifications-qt5
@@ -31,6 +32,8 @@ QT += dbus
 # Disable debug and warning messages while releasing for security reasons
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT \
 QT_NO_WARNING_OUTPUT
+
+RESOURCES += qml/resources/resources.qrc
 
 SOURCES += src/harbour-sailfinder.cpp \
     src/api.cpp \
@@ -43,7 +46,8 @@ SOURCES += src/harbour-sailfinder.cpp \
     src/models/enum.cpp \
     src/models/match.cpp \
     src/models/recommendation.cpp \
-    src/models/user.cpp
+    src/models/user.cpp \
+    src/models/message.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/cover/CoverPage.qml \
@@ -82,4 +86,5 @@ HEADERS += \
     src/models/enum.h \
     src/models/match.h \
     src/models/recommendation.h \
-    src/models/user.h
+    src/models/user.h \
+    src/models/message.h

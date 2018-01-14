@@ -9,16 +9,6 @@
         <extracomment>Header on the login screen</extracomment>
         <translation type="unfinished"></translation>
     </message>
-    <message id="sailfinder-oops">
-        <location filename="../qml/pages/FirstPage.qml" line="104"/>
-        <source>Oops!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="sailfinder-error">
-        <location filename="../qml/pages/FirstPage.qml" line="106"/>
-        <source>Something went wrong, please try again later</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message id="sailfinder-positioning-error">
         <location filename="../src/api.cpp" line="51"/>
         <source>Positioning unavailable, check if location services are enabled</source>

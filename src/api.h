@@ -36,6 +36,7 @@
 #include "models/user.h"
 #include "models/photo.h"
 #include "models/recommendation.h"
+#include "models/match.h"
 
 #define POSITION_MAX_UPDATE 10
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"

@@ -8,14 +8,6 @@
         <extracomment>Header on the login screen</extracomment>
         <translation>Login</translation>
     </message>
-    <message id="sailfinder-oops">
-        <source>Oops!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="sailfinder-error">
-        <source>Something went wrong, please try again later</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message id="berail-ssl-error">
         <source>SSL error, please check your device is running with the correct date and time</source>
         <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>

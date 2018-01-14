@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
 
         // Register custom QML modules
         qmlRegisterType<API>("Harbour.Sailfinder.API", 1, 0, "API");
+        qmlRegisterType<OS>("Harbour.Sailfinder.SFOS", 1, 0, "SFOS");
 
         // Start the application.
         view->setSource(SailfishApp::pathTo("qml/harbour-sailfinder.qml"));

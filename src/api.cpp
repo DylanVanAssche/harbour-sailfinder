@@ -532,7 +532,7 @@ void API::parseMeta(QJsonObject json)
 
 void API::parseUpdates(QJsonObject json)
 {
-    // WE SHOULD HERE DO SOME DATABASE MAGIC TOGETHER WITH /MATCHES STUFF
+    // TODO: Parse the update data and update the models for matches, send notifications, ...
     QJsonObject pollingData = json["poll_interval"].toObject();
     this->setStandardPollInterval(pollingData["standard"].toInt());
     this->setPersistentPollInterval(pollingData["persistent"].toInt());
@@ -692,7 +692,28 @@ void API::parseRecommendations(QJsonObject json)
 
 void API::parseMatches(QJsonObject json)
 {
-    // WE SHOULD HERE DO SOME DATABASE MAGIC TOGETHER WITH /UPDATES STUFF
+    QList<Match *> matchesList;
+    QJsonObject matchesData = json["data"].toObject();
+    foreach(QJsonValue item, matchesData["matches"].toArray()) {
+        QList<Photo *> photoList;
+        QJsonObject match = item.toObject();
+        QJsonObject person = match["person"].toObject();
+
+        // Match related data
+        QString matchId = match["_id"].toString();
+
+        // Person with who the user matched with data
+        QString name = person["name"].toString();
+        QString id = person["_id"].toString();
+        QString bio = person["bio"].toString();
+        QDateTime birthDate = QDateTime::fromString(person["birth_date"].toString(), Qt::ISODate);
+
+        foreach(QJsonValue item, person["photos"].toArray()) {
+            QJsonObject photo = item.toObject();
+            photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
+        }
+    }
+
     qDebug() << "Matches data received";
 }
 
