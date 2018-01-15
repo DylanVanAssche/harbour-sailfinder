@@ -34,6 +34,7 @@ public:
                   QGeoCoordinate position,
                   bool discoverable
                   );
+    ~User();
 
     int ageMin() const;
     void setAgeMin(int ageMin);
@@ -47,6 +48,10 @@ public:
     void setPosition(const QGeoCoordinate &position);
     bool discoverable() const;
     void setDiscoverable(bool discoverable);
+    QList<School *> schools() const;
+    void setSchools(const QList<School *> &schools);
+    QList<Job *> jobs() const;
+    void setJobs(const QList<Job *> &jobs);
 
 signals:
     void ageMinChanged();
@@ -55,6 +60,8 @@ signals:
     void interestedInChanged();
     void positionChanged();
     void discoverableChanged();
+    void jobsChanged();
+    void schoolsChanged();
 
 private:
     int m_ageMin;
@@ -63,6 +70,8 @@ private:
     bool m_discoverable;
     Sailfinder::Gender m_interestedIn;
     QGeoCoordinate m_position;
+    QList<School *> m_schools;
+    QList<Job *> m_jobs;
 };
 
 #endif // USER_H

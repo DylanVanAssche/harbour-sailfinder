@@ -8,7 +8,6 @@
 class Match : public Person
 {
     Q_OBJECT
-    Q_PROPERTY(int distance READ distance NOTIFY distanceChanged)
     Q_PROPERTY(QString matchId READ matchId NOTIFY matchIdChanged)
     Q_PROPERTY(bool isSuperlike READ isSuperlike NOTIFY isSuperlikeChanged)
     Q_PROPERTY(bool isDead READ isDead NOTIFY isDeadChanged)
@@ -21,16 +20,11 @@ public:
                    QDateTime birthDate,
                    Sailfinder::Gender gender,
                    QString bio,
-                   int distance,
-                   QList<School *> schools,
-                   QList<Job *> jobs,
                    QList<Photo *> photos,
                    QString matchId,
                    bool isSuperlike,
                    bool isDead
                    );
-    int distance() const;
-    void setDistance(int distance);
     QString matchId() const;
     void setMatchId(const QString &matchId);
     bool isSuperlike() const;
@@ -39,13 +33,11 @@ public:
     void setIsDead(bool value);
 
 signals:
-    void distanceChanged();
     void matchIdChanged();
     void isSuperlikeChanged();
     void isDeadChanged();
 
 private:
-    int m_distance;
     QString m_matchId;
     bool m_isSuperlike;
     bool m_isDead;

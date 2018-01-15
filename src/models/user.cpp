@@ -23,6 +23,27 @@ User::User(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gen
     this->setDiscoverable(discoverable);
 }
 
+User::~User()
+{
+    if(!this->photos().isEmpty()) {
+        foreach(Photo* item, this->photos()) {
+            item->deleteLater();
+        }
+    }
+
+    if(!this->jobs().isEmpty()) {
+        foreach(Job* item, this->jobs()) {
+            item->deleteLater();
+        }
+    }
+
+    if(!this->schools().isEmpty()) {
+        foreach(School* item, this->schools()) {
+            item->deleteLater();
+        }
+    }
+}
+
 int User::ageMin() const
 {
     return m_ageMin;
@@ -87,4 +108,24 @@ void User::setDiscoverable(bool discoverable)
 {
     m_discoverable = discoverable;
     emit this->discoverableChanged();
+}
+
+QList<School *> User::schools() const
+{
+    return m_schools;
+}
+
+void User::setSchools(const QList<School *> &schools)
+{
+    m_schools = schools;
+}
+
+QList<Job *> User::jobs() const
+{
+    return m_jobs;
+}
+
+void User::setJobs(const QList<Job *> &jobs)
+{
+    m_jobs = jobs;
 }

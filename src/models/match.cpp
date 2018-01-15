@@ -5,31 +5,17 @@ Match::Match(QObject *parent) : Person(parent)
 
 }
 
-Match::Match(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gender, QString bio, int distance, QList<School *> schools, QList<Job *> jobs, QList<Photo *> photos, QString matchId, bool isSuperlike, bool isDead)
+Match::Match(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gender, QString bio, QList<Photo *> photos, QString matchId, bool isSuperlike, bool isDead)
 {
     this->setId(id);
     this->setName(name);
     this->setBirthDate(birthDate);
     this->setGender(gender);
     this->setBio(bio);
-    this->setDistance(distance);
-    this->setSchools(schools);
-    this->setJobs(jobs);
     this->setPhotos(photos);
     this->setMatchId(matchId);
     this->setIsSuperlike(isSuperlike);
     this->setIsDead(isDead);
-}
-
-int Match::distance() const
-{
-    return m_distance;
-}
-
-void Match::setDistance(int distance)
-{
-    m_distance = distance;
-    emit this->distanceChanged();
 }
 
 QString Match::matchId() const

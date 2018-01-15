@@ -25,8 +25,6 @@ public:
                     QDateTime birthDate,
                     Sailfinder::Gender gender,
                     QString bio,
-                    QList<School *> schools,
-                    QList<Job *> jobs,
                     QList<Photo *> photos
                     );
     ~Person();
@@ -42,10 +40,6 @@ public:
     void setBio(const QString &bio);
     QList<Photo *> photos() const;
     void setPhotos(const QList<Photo *> &photos);
-    QList<Job *> jobs() const;
-    void setJobs(const QList<Job *> &jobs);
-    QList<School *> schools() const;
-    void setSchools(const QList<School *> &schools);
 
 signals:
     void birthDateChanged();
@@ -54,8 +48,6 @@ signals:
     void idChanged();
     void bioChanged();
     void photosChanged();
-    void jobsChanged();
-    void schoolsChanged();
 
 private:
     QDateTime m_birthDate;
@@ -64,8 +56,6 @@ private:
     QString m_id;
     QString m_bio;
     QList<Photo *> m_photos;
-    QList<Job *> m_jobs;
-    QList<School *> m_schools;
 };
 
 #endif // PERSON_H

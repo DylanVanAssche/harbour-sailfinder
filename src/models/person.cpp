@@ -5,15 +5,13 @@ Person::Person(QObject *parent) : QObject(parent)
 
 }
 
-Person::Person(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gender, QString bio, QList<School *> schools, QList<Job *> jobs, QList<Photo *> photos)
+Person::Person(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gender, QString bio, QList<Photo *> photos)
 {
     this->setId(id);
     this->setName(name);
     this->setBirthDate(birthDate);
     this->setGender(gender);
     this->setBio(bio);
-    this->setSchools(schools);
-    this->setJobs(jobs);
     this->setPhotos(photos);
 }
 
@@ -21,18 +19,6 @@ Person::~Person()
 {
     if(!this->photos().isEmpty()) {
         foreach(Photo* item, this->photos()) {
-            item->deleteLater();
-        }
-    }
-
-    if(!this->jobs().isEmpty()) {
-        foreach(Job* item, this->jobs()) {
-            item->deleteLater();
-        }
-    }
-
-    if(!this->schools().isEmpty()) {
-        foreach(School* item, this->schools()) {
             item->deleteLater();
         }
     }
@@ -102,26 +88,4 @@ void Person::setPhotos(const QList<Photo *> &photos)
 {
     m_photos = photos;
     emit this->photosChanged();
-}
-
-QList<Job *> Person::jobs() const
-{
-    return m_jobs;
-}
-
-void Person::setJobs(const QList<Job *> &jobs)
-{
-    m_jobs = jobs;
-    emit this->jobsChanged();
-}
-
-QList<School *> Person::schools() const
-{
-    return m_schools;
-}
-
-void Person::setSchools(const QList<School *> &schools)
-{
-    m_schools = schools;
-    emit this->schoolsChanged();
 }

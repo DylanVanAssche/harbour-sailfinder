@@ -32,5 +32,13 @@
         <extracomment>Error shown to the user when an Positioning error occurs. The users could disabled GPS or an other error may be occured.</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-oops">
+        <source>Oops!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-error">
+        <source>Something went wrong, please try again later</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

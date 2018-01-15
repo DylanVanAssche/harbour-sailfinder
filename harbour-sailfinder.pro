@@ -20,6 +20,9 @@ TARGET = harbour-sailfinder
 
 CONFIG += sailfishapp
 
+# Disable warnings
+CONFIG += warn_off
+
 QT += core \
     network \
     positioning \

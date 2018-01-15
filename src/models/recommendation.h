@@ -25,6 +25,7 @@ public:
                             int sNumber,
                             int distance
                             );
+    ~Recommendation();
 
     QString contentHash() const;
     void setContentHash(const QString &contentHash);
@@ -32,16 +33,24 @@ public:
     void setSNumber(int sNumber);
     int distance() const;
     void setDistance(int distance);
+    QList<School *> schools() const;
+    void setSchools(const QList<School *> &schools);
+    QList<Job *> jobs() const;
+    void setJobs(const QList<Job *> &jobs);
 
 signals:
     void contentHashChanged();
     void sNumberChanged();
     void distanceChanged();
+    void jobsChanged();
+    void schoolsChanged();
 
 private:
     QString m_contentHash;
     int m_sNumber;
     int m_distance;
+    QList<School *> m_schools;
+    QList<Job *> m_jobs;
 };
 
 #endif // RECOMMENDATION_H

@@ -243,6 +243,56 @@ void API::getUpdates(QDateTime lastActivityDate)
     }
 }
 
+void API::likeUser(QString userId)
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(LIKE_ENDPOINT) + "/" + userId);
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve like data";
+    }
+}
+
+void API::passUser(QString userId)
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(PASS_ENDPOINT) + "/" + userId);
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve pass data";
+    }
+}
+
+void API::superlikeUser(QString userId)
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(LIKE_ENDPOINT) + "/" + userId + QString(SUPERLIKE_ENDPOINT));
+        QUrlQuery parameters;
+
+        // Build POST payload
+        // Empty POST data for this endpoint but it's required to use HTTP POST request
+        QVariantMap data;
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+        // Prepare & do request
+        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve superlike data";
+    }
+}
+
 /**
  * @class API
  * @brief Parse the positioning
@@ -276,6 +326,16 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     else {
         qWarning() << "Position fix not accurate enough yet" << positionUpdateCounter << "/" << POSITION_MAX_UPDATE ;
     }
+}
+
+bool API::canSuperlike() const
+{
+    return m_canSuperlike;
+}
+
+void API::setCanSuperlike(bool canSuperlike)
+{
+    m_canSuperlike = canSuperlike;
 }
 
 int API::persistentPollInterval() const
@@ -487,6 +547,21 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder matches data received";
                 this->parseMatches(jsonObject);
             }
+            else if(reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder like data received";
+                qDebug() << replyData;
+                this->parseLike(jsonObject);
+            }
+            else if(reply->url().toString().contains(PASS_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder pass data received";
+                qDebug() << replyData;
+                this->parsePass(jsonObject);
+            }
+            else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder superlike data received";
+                qDebug() << replyData;
+                this->parseSuperlike(jsonObject);
+            }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
             }
@@ -517,7 +592,7 @@ void API::parseLogin(QJsonObject json)
 
 void API::parseMeta(QJsonObject json)
 {
-    QJsonObject meta = json["data"].toObject();
+    QJsonObject meta = json["data"].toObject()["profile"].toObject();
     this->setCanEditJobs(meta["can_edit_jobs"].toBool());
     this->setCanEditSchools(meta["can_edit_schools"].toBool());
     this->setCanAddPhotosFromFacebook(meta["can_add_photos_from_facebook"].toBool());
@@ -546,10 +621,12 @@ void API::parseProfile(QJsonObject json)
 {
     QJsonObject user = json["data"].toObject()["user"].toObject();
     QJsonObject likes = json["data"].toObject()["likes"].toObject();
+    QJsonObject superlikes = json["data"].toObject()["superlikes"].toObject();
     QList<Photo *> photoList;
     QList<School *> schoolList;
     QList<Job *> jobList;
     bool canLike = likes["likes_remaining"].toInt() > 0;
+    bool canSuperlike = superlikes["remaining"].toInt() > 0;
     int ageMin = user["age_filter_min"].toInt();
     int ageMax = user["age_filter_max"].toInt();
     QString bio = user["bio"].toString();
@@ -620,8 +697,10 @@ void API::parseProfile(QJsonObject json)
     qDebug() << "\tSchools:" << schoolList;
     qDebug() << "\tJobs:" << jobList;
     qDebug() << "\tCan like:" << canLike;
+    qDebug() << "\tCan superlike:" << canSuperlike;
 
     this->setCanLike(canLike);
+    this->setCanSuperlike(canSuperlike);
     this->setProfile(new User(id, name, birthDate, gender, bio, schoolList, jobList, photoList, ageMin, ageMax, distanceMax, interestedIn, position, discoverable));
 }
 
@@ -677,6 +756,7 @@ void API::parseRecommendations(QJsonObject json)
 
         qDebug() << "Recommendation data:";
         qDebug() << "\tName:" << name;
+        qDebug() << "\tID:" << id;
         qDebug() << "\tBirthdate:" << birthDate;
         qDebug() << "\tBio:" << bio;
         qDebug() << "\tDistance:" << distance;
@@ -696,25 +776,106 @@ void API::parseMatches(QJsonObject json)
     QJsonObject matchesData = json["data"].toObject();
     foreach(QJsonValue item, matchesData["matches"].toArray()) {
         QList<Photo *> photoList;
+        QList<Message *> messageList;
         QJsonObject match = item.toObject();
         QJsonObject person = match["person"].toObject();
 
         // Match related data
         QString matchId = match["_id"].toString();
+        bool isDead = match["dead"].toBool();
+        bool isSuperlike = match["is_super_like"].toBool();
+
+        foreach(QJsonValue item, match["messages"].toArray()) {
+            QJsonObject message = item.toObject();
+            messageList.append(new Message(message["_id"].toString(),
+                               message["match_id"].toString(),
+                    message["message"].toString(),
+                    QDateTime::fromString(message["sent_date"].toString(), Qt::ISODate),
+                    message["from"].toString(),
+                    message["to"].toString()));
+        }
 
         // Person with who the user matched with data
         QString name = person["name"].toString();
         QString id = person["_id"].toString();
         QString bio = person["bio"].toString();
         QDateTime birthDate = QDateTime::fromString(person["birth_date"].toString(), Qt::ISODate);
+        Sailfinder::Gender gender = Sailfinder::Gender::Female;
+        if(person["gender"].toInt() == 0) { // Default female, change if needed
+            gender = Sailfinder::Gender::Male;
+        }
 
         foreach(QJsonValue item, person["photos"].toArray()) {
             QJsonObject photo = item.toObject();
             photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
         }
+
+        matchesList.append(new Match(id, name, birthDate, gender, bio, photoList, matchId, isSuperlike, isDead));
+        qDebug() << "Match data:";
+        qDebug() << "\tName:" << name;
+        qDebug() << "\tGender:" << (int)(gender);
+        qDebug() << "\tbirthDate:" << birthDate;
+        qDebug() << "\tBio:" << bio;
+        qDebug() << "\tPhotos:" << photoList;
+        qDebug() << "\tMatch ID:" << matchId;
+        qDebug() << "\tSuperlike:" << isSuperlike;
+        qDebug() << "\tDead:" << isDead;
     }
 
-    qDebug() << "Matches data received";
+    // SET HERE THE QABSTRACTLISTMODEL MATCHES
+
+}
+
+void API::parseLike(QJsonObject json)
+{
+    // Handle matching
+    if(json["match"].isBool()) {
+        qDebug() << "Recommendation was not a pending match";
+    }
+    else if(json["match"].isObject()) {
+        qDebug() << "Recommendation was a pending match";
+        emit this->newMatch();
+    }
+    else {
+        qCritical() << "Unknown JSON response for liking recommendation";
+    }
+
+    // Handle out of likes
+    bool canLike = json["likes_remaining"].toInt() > 0;
+    this->setCanLike(canLike);
+
+    qDebug() << "Recommendation succesfully liked";
+}
+
+void API::parsePass(QJsonObject json)
+{
+    qDebug() << "Recommendation succesfully passed";
+}
+
+void API::parseSuperlike(QJsonObject json)
+{
+    // Handle matching
+    if(json.value("limit_exceeded") == QJsonValue::Undefined) {
+        if(json["match"].isBool()) {
+            qDebug() << "Recommendation was not a pending match";
+        }
+        else if(json["match"].isObject()) {
+            qDebug() << "Recommendation was a pending match";
+            emit this->newSuperMatch();
+        }
+        else {
+            qCritical() << "Unknown JSON response for superliking recommendation";
+        }
+    }
+    else {
+        qCritical() << "Superliking limit exceeded";
+    }
+
+    // Handle out of superlikes
+    bool canSuperlike = json["super_likes"].toObject()["remaining"].toInt() > 0;
+    this->setCanSuperlike(canSuperlike);
+
+    qDebug() << "Recommendation succesfully superliked";
 }
 
 QString API::token() const

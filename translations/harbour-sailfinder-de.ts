@@ -9,6 +9,16 @@
         <extracomment>Header on the login screen</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-oops">
+        <location filename="../qml/pages/FirstPage.qml" line="104"/>
+        <source>Oops!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-error">
+        <location filename="../qml/pages/FirstPage.qml" line="106"/>
+        <source>Something went wrong, please try again later</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="sailfinder-positioning-error">
         <location filename="../src/api.cpp" line="51"/>
         <source>Positioning unavailable, check if location services are enabled</source>
@@ -16,24 +26,24 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="berail-ssl-error">
-        <location filename="../src/api.cpp" line="407"/>
+        <location filename="../src/api.cpp" line="467"/>
         <source>SSL error, please check your device is running with the correct date and time</source>
         <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-error">
-        <location filename="../src/api.cpp" line="429"/>
+        <location filename="../src/api.cpp" line="489"/>
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-authentication-requested">
-        <location filename="../src/api.cpp" line="434"/>
+        <location filename="../src/api.cpp" line="494"/>
         <source>Tinder token expired, refreshing now</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-json-error">
-        <location filename="../src/api.cpp" line="498"/>
+        <location filename="../src/api.cpp" line="573"/>
         <source>Invalid JSON data received, please try again later</source>
         <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
         <translation type="unfinished"></translation>

@@ -37,6 +37,7 @@
 #include "models/photo.h"
 #include "models/recommendation.h"
 #include "models/match.h"
+#include "models/message.h"
 
 #define POSITION_MAX_UPDATE 10
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
@@ -48,7 +49,7 @@
 #define PROFILE_ENDPOINT "https://api.gotinder.com/v2/profile"
 #define LIKE_ENDPOINT "https://api.gotinder.com/like"
 #define PASS_ENDPOINT "https://api.gotinder.com/pass"
-#define SUPERLIKE_ENDPOINT "https://api.gotinder.com/superlike"
+#define SUPERLIKE_ENDPOINT "/super"
 
 class API : public QObject
 {
@@ -61,6 +62,7 @@ class API : public QObject
     Q_PROPERTY(bool canAddPhotosFromFacebook READ canAddPhotosFromFacebook NOTIFY canAddPhotosFromFacebookChanged)
     Q_PROPERTY(bool canShowCommonConnections READ canShowCommonConnections NOTIFY canShowCommonConnectionsChanged)
     Q_PROPERTY(bool canLike READ canLike NOTIFY canLikeChanged)
+    Q_PROPERTY(bool canSuperlike READ canSuperlike NOTIFY canSuperlikeChanged)
     Q_PROPERTY(User* profile READ profile NOTIFY profileChanged)
     Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
@@ -75,6 +77,9 @@ public:
     Q_INVOKABLE void getMatchesWithMessages();
     Q_INVOKABLE void getMatchesWithoutMessages();
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
+    Q_INVOKABLE void likeUser(QString userId);
+    Q_INVOKABLE void passUser(QString userId);
+    Q_INVOKABLE void superlikeUser(QString userId);
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -101,6 +106,8 @@ public:
     void setStandardPollInterval(int standardPollInterval);
     int persistentPollInterval() const;
     void setPersistentPollInterval(int persistentPollInterval);
+    bool canSuperlike() const;
+    void setCanSuperlike(bool canSuperlike);
 
 signals:
     void busyChanged();
@@ -111,6 +118,7 @@ signals:
     void canAddPhotosFromFacebookChanged();
     void canShowCommonConnectionsChanged();
     void canLikeChanged();
+    void canSuperlikeChanged();
     void profileChanged();
     void standardPollIntervalChanged();
     void persistentPollIntervalChanged();
@@ -118,6 +126,8 @@ signals:
     void authenticatedChanged();
     void errorOccurred(const QString &text);
     void authenticationRequested(const QString &text);
+    void newMatch();
+    void newSuperMatch();
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -134,6 +144,7 @@ private:
     bool m_canAddPhotosFromFacebook;
     bool m_canShowCommonConnections;
     bool m_canLike;
+    bool m_canSuperlike;
     bool m_busy;
     bool m_networkEnabled;
     User* m_profile;
@@ -153,6 +164,9 @@ private:
     void parseProfile(QJsonObject json);
     void parseRecommendations(QJsonObject json);
     void parseMatches(QJsonObject json);
+    void parseLike(QJsonObject json);
+    void parsePass(QJsonObject json);
+    void parseSuperlike(QJsonObject json);
 };
 
 #endif // API_H

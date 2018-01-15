@@ -20,6 +20,27 @@ Recommendation::Recommendation(QString id, QString name, QDateTime birthDate, Sa
     this->setDistance(distance);
 }
 
+Recommendation::~Recommendation()
+{
+    if(!this->photos().isEmpty()) {
+        foreach(Photo* item, this->photos()) {
+            item->deleteLater();
+        }
+    }
+
+    if(!this->jobs().isEmpty()) {
+        foreach(Job* item, this->jobs()) {
+            item->deleteLater();
+        }
+    }
+
+    if(!this->schools().isEmpty()) {
+        foreach(School* item, this->schools()) {
+            item->deleteLater();
+        }
+    }
+}
+
 QString Recommendation::contentHash() const
 {
     return m_contentHash;
@@ -48,4 +69,24 @@ int Recommendation::distance() const
 void Recommendation::setDistance(int distance)
 {
     m_distance = distance;
+}
+
+QList<School *> Recommendation::schools() const
+{
+    return m_schools;
+}
+
+void Recommendation::setSchools(const QList<School *> &schools)
+{
+    m_schools = schools;
+}
+
+QList<Job *> Recommendation::jobs() const
+{
+    return m_jobs;
+}
+
+void Recommendation::setJobs(const QList<Job *> &jobs)
+{
+    m_jobs = jobs;
 }
