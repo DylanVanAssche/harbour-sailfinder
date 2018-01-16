@@ -328,6 +328,39 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     }
 }
 
+Recommendation *API::recommendation() const
+{
+    return m_recommendation;
+}
+
+void API::setRecommendation(Recommendation *recommendation)
+{
+    m_recommendation = recommendation;
+    emit this->recommendationChanged();
+}
+
+QList<Match *> API::matchesList() const
+{
+    return m_matchesList;
+}
+
+void API::setMatchesList(const QList<Match *> &matchesList)
+{
+    m_matchesList = matchesList;
+    emit this->matchesListChanged();
+}
+
+QList<Recommendation *> API::recsList() const
+{
+    return m_recsList;
+}
+
+void API::setRecsList(const QList<Recommendation *> &recsList)
+{
+    m_recsList = recsList;
+    emit this->recsListChanged();
+}
+
 bool API::canSuperlike() const
 {
     return m_canSuperlike;
@@ -336,6 +369,7 @@ bool API::canSuperlike() const
 void API::setCanSuperlike(bool canSuperlike)
 {
     m_canSuperlike = canSuperlike;
+    emit this->canSuperlikeChanged();
 }
 
 int API::persistentPollInterval() const
@@ -346,6 +380,7 @@ int API::persistentPollInterval() const
 void API::setPersistentPollInterval(int persistentPollInterval)
 {
     m_persistentPollInterval = persistentPollInterval;
+    emit this->persistentPollIntervalChanged();
 }
 
 int API::standardPollInterval() const
@@ -356,6 +391,7 @@ int API::standardPollInterval() const
 void API::setStandardPollInterval(int standardPollInterval)
 {
     m_standardPollInterval = standardPollInterval;
+    emit this->standardPollIntervalChanged();
 }
 
 bool API::canLike() const
@@ -366,6 +402,7 @@ bool API::canLike() const
 void API::setCanLike(bool canLike)
 {
     m_canLike = canLike;
+    emit this->canLikeChanged();
 }
 
 bool API::canShowCommonConnections() const

@@ -64,6 +64,7 @@ class API : public QObject
     Q_PROPERTY(bool canLike READ canLike NOTIFY canLikeChanged)
     Q_PROPERTY(bool canSuperlike READ canSuperlike NOTIFY canSuperlikeChanged)
     Q_PROPERTY(User* profile READ profile NOTIFY profileChanged)
+    Q_PROPERTY(Recommendation* recommendation READ recommendation NOTIFY recommendationChanged)
     Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
 
@@ -108,6 +109,12 @@ public:
     void setPersistentPollInterval(int persistentPollInterval);
     bool canSuperlike() const;
     void setCanSuperlike(bool canSuperlike);
+    QList<Recommendation *> recsList() const;
+    void setRecsList(const QList<Recommendation *> &recsList);
+    QList<Match *> matchesList() const;
+    void setMatchesList(const QList<Match *> &matchesList);
+    Recommendation *recommendation() const;
+    void setRecommendation(Recommendation *recommendation);
 
 signals:
     void busyChanged();
@@ -128,6 +135,9 @@ signals:
     void authenticationRequested(const QString &text);
     void newMatch();
     void newSuperMatch();
+    void matchesListChanged();
+    void recsListChanged();
+    void recommendationChanged();
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -147,6 +157,9 @@ private:
     bool m_canSuperlike;
     bool m_busy;
     bool m_networkEnabled;
+    QList<Recommendation *> m_recsList;
+    QList<Match *> m_matchesList;
+    Recommendation* m_recommendation;
     User* m_profile;
     int m_standardPollInterval;
     int m_persistentPollInterval;
