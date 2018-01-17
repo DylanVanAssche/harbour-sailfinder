@@ -293,6 +293,29 @@ void API::superlikeUser(QString userId)
     }
 }
 
+void API::nextRecommendation()
+{
+    // Recommendations list is valid
+    if(this->recsList().length() > 0) {
+
+        // When out of recommendations, start HTTP request
+        if(this->recsList().length() <= recommendationCounter) {
+            qDebug() << "Out of recommendations, retrieving...";
+            this->getRecommendations();
+        }
+        // Retrieve the recommendation and increment the iterator counter
+        else {
+            this->setRecommendation(this->recsList().at(recommendationCounter));
+            recommendationCounter++;
+            qDebug() << "Pushing next recommendation:";
+            qDebug() << "\tId:" << this->recommendation()->id();
+        }
+    }
+    else {
+        qCritical() << "Recommendation list is NULL";
+    }
+}
+
 /**
  * @class API
  * @brief Parse the positioning
@@ -339,12 +362,12 @@ void API::setRecommendation(Recommendation *recommendation)
     emit this->recommendationChanged();
 }
 
-QList<Match *> API::matchesList() const
+MatchListModel *API::matchesList() const
 {
     return m_matchesList;
 }
 
-void API::setMatchesList(const QList<Match *> &matchesList)
+void API::setMatchesList(MatchListModel *matchesList)
 {
     m_matchesList = matchesList;
     emit this->matchesListChanged();
@@ -804,7 +827,11 @@ void API::parseRecommendations(QJsonObject json)
         qDebug() << "\tSNumber:" << sNumber;
         qDebug() << "\tGender:" << (int)(gender);
     }
-    // SET HERE THE QABSTRACTLISTMODEL CONTAINING OUR QLIST
+
+    // Reset the iterator, set the recs list and update the 'recommendation' property
+    this->setRecsList(recsList);
+    recommendationCounter = 0;
+    this->nextRecommendation();
 }
 
 void API::parseMatches(QJsonObject json)
@@ -859,8 +886,6 @@ void API::parseMatches(QJsonObject json)
         qDebug() << "\tDead:" << isDead;
     }
 
-    // SET HERE THE QABSTRACTLISTMODEL MATCHES
-
 }
 
 void API::parseLike(QJsonObject json)
@@ -882,11 +907,13 @@ void API::parseLike(QJsonObject json)
     this->setCanLike(canLike);
 
     qDebug() << "Recommendation succesfully liked";
+    this->nextRecommendation();
 }
 
 void API::parsePass(QJsonObject json)
 {
     qDebug() << "Recommendation succesfully passed";
+    this->nextRecommendation();
 }
 
 void API::parseSuperlike(QJsonObject json)
@@ -913,6 +940,7 @@ void API::parseSuperlike(QJsonObject json)
     this->setCanSuperlike(canSuperlike);
 
     qDebug() << "Recommendation succesfully superliked";
+    this->nextRecommendation();
 }
 
 QString API::token() const

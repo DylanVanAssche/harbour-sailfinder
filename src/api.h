@@ -37,6 +37,7 @@
 #include "models/photo.h"
 #include "models/recommendation.h"
 #include "models/match.h"
+#include "models/matchlistmodel.h"
 #include "models/message.h"
 
 #define POSITION_MAX_UPDATE 10
@@ -64,6 +65,7 @@ class API : public QObject
     Q_PROPERTY(bool canLike READ canLike NOTIFY canLikeChanged)
     Q_PROPERTY(bool canSuperlike READ canSuperlike NOTIFY canSuperlikeChanged)
     Q_PROPERTY(User* profile READ profile NOTIFY profileChanged)
+    Q_PROPERTY(MatchListModel* matchesList READ matchesList NOTIFY matchesListChanged)
     Q_PROPERTY(Recommendation* recommendation READ recommendation NOTIFY recommendationChanged)
     Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
@@ -81,6 +83,7 @@ public:
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
     Q_INVOKABLE void superlikeUser(QString userId);
+    Q_INVOKABLE void nextRecommendation();
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -111,8 +114,8 @@ public:
     void setCanSuperlike(bool canSuperlike);
     QList<Recommendation *> recsList() const;
     void setRecsList(const QList<Recommendation *> &recsList);
-    QList<Match *> matchesList() const;
-    void setMatchesList(const QList<Match *> &matchesList);
+    MatchListModel *matchesList() const;
+    void setMatchesList(MatchListModel *matchesList);
     Recommendation *recommendation() const;
     void setRecommendation(Recommendation *recommendation);
 
@@ -158,12 +161,13 @@ private:
     bool m_busy;
     bool m_networkEnabled;
     QList<Recommendation *> m_recsList;
-    QList<Match *> m_matchesList;
-    Recommendation* m_recommendation;
+    MatchListModel* m_matchesList;
     User* m_profile;
+    Recommendation* m_recommendation;
     int m_standardPollInterval;
     int m_persistentPollInterval;
     int positionUpdateCounter;
+    int recommendationCounter;
     QGeoPositionInfoSource* positionSource;
     QNetworkAccessManager* QNAM;
     QNetworkDiskCache* QNAMCache;

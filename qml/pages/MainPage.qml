@@ -20,13 +20,14 @@ import Sailfish.Silica 1.0
 
 Page {
     onStatusChanged: status===PageStatus.Active? getData(): undefined
+    property var recommendation
 
     function getData() {
         api.getRecommendations();
-        api.getProfile();
+        /*api.getProfile();
         api.getUpdates(new Date("2017-07-07T16:58:55.217Z"));
         api.getMatchesWithMessages();
-        api.getMatchesWithoutMessages();
+        api.getMatchesWithoutMessages();*/
     }
 
     Connections {
@@ -34,10 +35,19 @@ Page {
         onProfileChanged: {
             console.debug("Tinder profile in QML")
         }
+        onRecommendationChanged: {
+            console.debug("Tinder recs in QML")
+        }
+
     }
 
-    Label {
+    Button {
         anchors.centerIn: parent
-        text: "MAINPAGE"
+        text: "PASS"
+        onClicked:
+        {
+            console.debug(JSON.stringify(api.recommendation))
+            api.passUser(api.recommendation.id)
+        }
     }
 }
