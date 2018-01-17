@@ -18,10 +18,36 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-CoverBackground {
-    Label {
+Page {
+    onStatusChanged: status===PageStatus.Active? getData(): undefined
+    property var recommendation
+
+    function getData() {
+        api.getRecommendations();
+        /*api.getProfile();
+        api.getUpdates(new Date("2017-07-07T16:58:55.217Z"));
+        api.getMatchesWithMessages();
+        api.getMatchesWithoutMessages();*/
+    }
+
+    Connections {
+        target: api
+        onProfileChanged: {
+            console.debug("Tinder profile in QML")
+        }
+        onRecommendationChanged: {
+            console.debug("Tinder recs in QML")
+        }
+
+    }
+
+    Button {
         anchors.centerIn: parent
-        text: "Sailfinder"
+        text: "PASS"
+        onClicked:
+        {
+            console.debug(JSON.stringify(api.recommendation))
+            api.passUser(api.recommendation.id)
+        }
     }
 }
-

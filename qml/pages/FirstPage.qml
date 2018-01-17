@@ -1,12 +1,45 @@
+/*
+*   This file is part of Sailfinder.
+*
+*   Sailfinder is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Sailfinder is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import QtWebKit 3.0
 
 Page {
     property string fbToken
-    property string tinderToken
-    onFbTokenChanged: fbToken.length > 0? tinderLogin.visible = true: tinderLogin.visible = false
-    onTinderTokenChanged: tinderToken.length > 0? pageStack.push(Qt.resolvedUrl("../pages/MainPage.qml")): undefined
+    onFbTokenChanged: {
+        if(fbToken.length > 0) {
+            tinderLogin.visible = true
+            api.login(fbToken)
+        }
+        else {
+            tinderLogin.visible = false
+        }
+    }
+
+    Connections {
+        target: api
+        onAuthenticatedChanged: {
+            if(api.authenticated) {
+                console.debug("Tinder token successfully retrieved")
+                pageStack.replace(Qt.resolvedUrl("../pages/MainPage.qml"))
+            }
+        }
+    }
 
     SilicaFlickable {
         anchors.fill: parent
@@ -40,7 +73,7 @@ Page {
             experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
             experimental.customLayoutWidth: parent.width / _devicePixelRatio
             experimental.overview: true
-            experimental.userAgent: app.userAgent
+            experimental.userAgent: app.fbUserAgent
             experimental.onMessageReceived: {
                 var msg = JSON.parse(message.data);
                 switch(msg.type) {
