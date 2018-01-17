@@ -45,6 +45,9 @@ class JobListModel : public QAbstractListModel
 protected:
         QHash<int, QByteArray> roleNames() const;
 
+signals:
+        void jobListChanged();
+
 private:
         QList<Job *> m_jobList;
 };

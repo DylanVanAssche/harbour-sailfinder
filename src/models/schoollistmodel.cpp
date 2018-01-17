@@ -27,6 +27,15 @@ SchoolListModel::SchoolListModel()
 
 }
 
+SchoolListModel::~SchoolListModel()
+{
+    if(!this->schoolList().isEmpty()) {
+        foreach(School* item, this->schoolList()) {
+            item->deleteLater();
+        }
+    }
+}
+
 int SchoolListModel::rowCount(const QModelIndex &) const
 {
     return this->schoolList().length();
@@ -50,7 +59,7 @@ QVariant SchoolListModel::data(const QModelIndex &index, int role) const
     case IdRole:
         return QVariant(this->schoolList().at(index.row())->id());
     case NameRole:
-        return QVariant(QVariant::fromValue(this->schoolList().at(index.row())->name()));
+        return QVariant(this->schoolList().at(index.row())->name());
     default:
         return QVariant();
     }
@@ -64,4 +73,5 @@ QList<School *> SchoolListModel::schoolList() const
 void SchoolListModel::setSchoolList(const QList<School *> &schoolList)
 {
     m_schoolList = schoolList;
+    emit this->schoolListChanged();
 }

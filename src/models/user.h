@@ -6,6 +6,10 @@
 
 #include "person.h"
 #include "enum.h"
+#include "school.h"
+#include "job.h"
+#include "schoollistmodel.h"
+#include "joblistmodel.h"
 
 class User : public Person
 {
@@ -34,8 +38,6 @@ public:
                   QGeoCoordinate position,
                   bool discoverable
                   );
-    ~User();
-
     int ageMin() const;
     void setAgeMin(int ageMin);
     int ageMax() const;
@@ -48,10 +50,10 @@ public:
     void setPosition(const QGeoCoordinate &position);
     bool discoverable() const;
     void setDiscoverable(bool discoverable);
-    QList<School *> schools() const;
-    void setSchools(const QList<School *> &schools);
-    QList<Job *> jobs() const;
-    void setJobs(const QList<Job *> &jobs);
+    SchoolListModel *schools() const;
+    void setSchools(SchoolListModel *schools);
+    JobListModel *jobs() const;
+    void setJobs(JobListModel *jobs);
 
 signals:
     void ageMinChanged();
@@ -70,8 +72,8 @@ private:
     bool m_discoverable;
     Sailfinder::Gender m_interestedIn;
     QGeoCoordinate m_position;
-    QList<School *> m_schools;
-    QList<Job *> m_jobs;
+    SchoolListModel* m_schools;
+    JobListModel* m_jobs;
 };
 
 #endif // USER_H

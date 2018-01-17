@@ -46,6 +46,9 @@ class SchoolListModel : public QAbstractListModel
 protected:
         QHash<int, QByteArray> roleNames() const;
 
+signals:
+        void schoolListChanged();
+
 private:
         QList<School *> m_schoolList;
 };

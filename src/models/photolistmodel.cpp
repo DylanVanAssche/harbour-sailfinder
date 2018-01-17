@@ -10,6 +10,15 @@ PhotoListModel::PhotoListModel()
 
 }
 
+PhotoListModel::~PhotoListModel()
+{
+    if(!this->photoList().isEmpty()) {
+        foreach(Photo* item, this->photoList()) {
+            item->deleteLater();
+        }
+    }
+}
+
 int PhotoListModel::rowCount(const QModelIndex &) const
 {
     return this->photoList().length();
@@ -37,15 +46,15 @@ QVariant PhotoListModel::data(const QModelIndex &index, int role) const
     case IdRole:
         return QVariant(this->photoList().at(index.row())->id());
     case UrlAvatarRole:
-        return QVariant(QVariant::fromValue(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Avatar)));
+        return QVariant(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Avatar));
     case UrlSmallRole:
-        return QVariant(QVariant::fromValue(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Small)));
+        return QVariant(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Small));
     case UrlMediumRole:
-        return QVariant(QVariant::fromValue(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Medium)));
+        return QVariant(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Medium));
     case UrlLargeRole:
-        return QVariant(QVariant::fromValue(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Large)));
+        return QVariant(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Large));
     case UrlFullRole:
-        return QVariant(QVariant::fromValue(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Full)));
+        return QVariant(this->photoList().at(index.row())->getUrlWithSize(Sailfinder::Size::Full));
     default:
         return QVariant();
     }
@@ -59,4 +68,5 @@ QList<Photo *> PhotoListModel::photoList() const
 void PhotoListModel::setPhotoList(const QList<Photo *> &photoList)
 {
     m_photoList = photoList;
+    emit this->photoListChanged();
 }

@@ -12,33 +12,12 @@ Recommendation::Recommendation(QString id, QString name, QDateTime birthDate, Sa
     this->setBirthDate(birthDate);
     this->setGender(gender);
     this->setBio(bio);
-    this->setSchools(schools);
-    this->setJobs(jobs);
-    this->setPhotos(photos);
+    this->setSchools(new SchoolListModel(schools));
+    this->setJobs(new JobListModel(jobs));
+    this->setPhotos(new PhotoListModel(photos));
     this->setContentHash(contentHash);
     this->setSNumber(sNumber);
     this->setDistance(distance);
-}
-
-Recommendation::~Recommendation()
-{
-    if(!this->photos().isEmpty()) {
-        foreach(Photo* item, this->photos()) {
-            item->deleteLater();
-        }
-    }
-
-    if(!this->jobs().isEmpty()) {
-        foreach(Job* item, this->jobs()) {
-            item->deleteLater();
-        }
-    }
-
-    if(!this->schools().isEmpty()) {
-        foreach(School* item, this->schools()) {
-            item->deleteLater();
-        }
-    }
 }
 
 QString Recommendation::contentHash() const
@@ -49,6 +28,7 @@ QString Recommendation::contentHash() const
 void Recommendation::setContentHash(const QString &contentHash)
 {
     m_contentHash = contentHash;
+    emit this->contentHashChanged();
 }
 
 int Recommendation::sNumber() const
@@ -59,6 +39,7 @@ int Recommendation::sNumber() const
 void Recommendation::setSNumber(int sNumber)
 {
     m_sNumber = sNumber;
+    emit this->sNumberChanged();
 }
 
 int Recommendation::distance() const
@@ -69,24 +50,29 @@ int Recommendation::distance() const
 void Recommendation::setDistance(int distance)
 {
     m_distance = distance;
+    emit this->distanceChanged();
 }
 
-QList<School *> Recommendation::schools() const
+SchoolListModel *Recommendation::schools() const
 {
     return m_schools;
 }
 
-void Recommendation::setSchools(const QList<School *> &schools)
+void Recommendation::setSchools(SchoolListModel *schools)
 {
     m_schools = schools;
+    emit this->schoolsChanged();
 }
 
-QList<Job *> Recommendation::jobs() const
+JobListModel *Recommendation::jobs() const
 {
     return m_jobs;
 }
 
-void Recommendation::setJobs(const QList<Job *> &jobs)
+void Recommendation::setJobs(JobListModel *jobs)
 {
     m_jobs = jobs;
+    emit this->jobsChanged();
 }
+
+

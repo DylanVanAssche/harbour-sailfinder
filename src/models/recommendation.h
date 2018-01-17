@@ -3,6 +3,10 @@
 
 #include <QtCore/QObject>
 #include "person.h"
+#include "school.h"
+#include "job.h"
+#include "schoollistmodel.h"
+#include "joblistmodel.h"
 
 class Recommendation : public Person
 {
@@ -10,6 +14,8 @@ class Recommendation : public Person
     Q_PROPERTY(QString contentHash READ contentHash NOTIFY contentHashChanged)
     Q_PROPERTY(int sNumber READ sNumber NOTIFY sNumberChanged)
     Q_PROPERTY(int distance READ distance NOTIFY distanceChanged)
+    Q_PROPERTY(SchoolListModel* schools READ schools NOTIFY schoolsChanged)
+    Q_PROPERTY(JobListModel* jobs READ jobs NOTIFY jobsChanged)
 
 public:
     explicit Recommendation(QObject *parent = 0);
@@ -25,18 +31,16 @@ public:
                             int sNumber,
                             int distance
                             );
-    ~Recommendation();
-
     QString contentHash() const;
     void setContentHash(const QString &contentHash);
     int sNumber() const;
     void setSNumber(int sNumber);
     int distance() const;
     void setDistance(int distance);
-    QList<School *> schools() const;
-    void setSchools(const QList<School *> &schools);
-    QList<Job *> jobs() const;
-    void setJobs(const QList<Job *> &jobs);
+    SchoolListModel *schools() const;
+    void setSchools(SchoolListModel *schools);
+    JobListModel *jobs() const;
+    void setJobs(JobListModel *jobs);
 
 signals:
     void contentHashChanged();
@@ -49,8 +53,8 @@ private:
     QString m_contentHash;
     int m_sNumber;
     int m_distance;
-    QList<School *> m_schools;
-    QList<Job *> m_jobs;
+    SchoolListModel* m_schools;
+    JobListModel* m_jobs;
 };
 
 #endif // RECOMMENDATION_H

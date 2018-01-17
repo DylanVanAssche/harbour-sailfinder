@@ -847,7 +847,7 @@ void API::parseMatches(QJsonObject json)
             photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
         }
 
-        matchesList.append(new Match(id, name, birthDate, gender, bio, photoList, matchId, isSuperlike, isDead));
+        matchesList.append(new Match(id, name, birthDate, gender, bio, photoList, matchId, isSuperlike, isDead, messageList));
         qDebug() << "Match data:";
         qDebug() << "\tName:" << name;
         qDebug() << "\tGender:" << (int)(gender);

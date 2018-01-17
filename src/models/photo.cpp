@@ -47,7 +47,6 @@ QUrl Photo::getUrlWithSize(Sailfinder::Size size)
         return QUrl(newUrl.replace("1080x1080", "640x640"));
     default:
         qWarning() << "Unsupported size for photo";
-        Q_FALLTHROUGH();
     case Sailfinder::Size::Full:
         return QUrl(newUrl);
     }

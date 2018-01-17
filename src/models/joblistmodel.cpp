@@ -27,6 +27,15 @@ JobListModel::JobListModel()
 
 }
 
+JobListModel::~JobListModel()
+{
+    if(!this->jobList().isEmpty()) {
+        foreach(Job* item, this->jobList()) {
+            item->deleteLater();
+        }
+    }
+}
+
 int JobListModel::rowCount(const QModelIndex &) const
 {
     return this->jobList().length();
@@ -50,7 +59,7 @@ QVariant JobListModel::data(const QModelIndex &index, int role) const
     case IdRole:
         return QVariant(this->jobList().at(index.row())->id());
     case NameRole:
-        return QVariant(QVariant::fromValue(this->jobList().at(index.row())->name()));
+        return QVariant(this->jobList().at(index.row())->name());
     default:
         return QVariant();
     }
@@ -64,4 +73,5 @@ QList<Job *> JobListModel::jobList() const
 void JobListModel::setJobList(const QList<Job *> &jobList)
 {
     m_jobList = jobList;
+    emit this->jobListChanged();
 }

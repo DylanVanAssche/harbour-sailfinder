@@ -12,16 +12,7 @@ Person::Person(QString id, QString name, QDateTime birthDate, Sailfinder::Gender
     this->setBirthDate(birthDate);
     this->setGender(gender);
     this->setBio(bio);
-    this->setPhotos(photos);
-}
-
-Person::~Person()
-{
-    if(!this->photos().isEmpty()) {
-        foreach(Photo* item, this->photos()) {
-            item->deleteLater();
-        }
-    }
+    this->setPhotos(new PhotoListModel(photos));
 }
 
 QDateTime Person::birthDate() const
@@ -79,12 +70,12 @@ void Person::setBio(const QString &bio)
     emit this->bioChanged();
 }
 
-QList<Photo *> Person::photos() const
+PhotoListModel *Person::photos() const
 {
     return m_photos;
 }
 
-void Person::setPhotos(const QList<Photo *> &photos)
+void Person::setPhotos(PhotoListModel *photos)
 {
     m_photos = photos;
     emit this->photosChanged();

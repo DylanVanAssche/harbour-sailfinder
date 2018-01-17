@@ -12,36 +12,15 @@ User::User(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gen
     this->setBirthDate(birthDate);
     this->setGender(gender);
     this->setBio(bio);
-    this->setSchools(schools);
-    this->setJobs(jobs);
-    this->setPhotos(photos);
+    this->setSchools(new SchoolListModel(schools));
+    this->setJobs(new JobListModel(jobs));
+    this->setPhotos(new PhotoListModel(photos));
     this->setAgeMin(ageMin);
     this->setAgeMax(ageMax);
     this->setDistanceMax(distanceMax);
     this->setInterestedIn(interestedIn);
     this->setPosition(position);
     this->setDiscoverable(discoverable);
-}
-
-User::~User()
-{
-    if(!this->photos().isEmpty()) {
-        foreach(Photo* item, this->photos()) {
-            item->deleteLater();
-        }
-    }
-
-    if(!this->jobs().isEmpty()) {
-        foreach(Job* item, this->jobs()) {
-            item->deleteLater();
-        }
-    }
-
-    if(!this->schools().isEmpty()) {
-        foreach(School* item, this->schools()) {
-            item->deleteLater();
-        }
-    }
 }
 
 int User::ageMin() const
@@ -110,22 +89,24 @@ void User::setDiscoverable(bool discoverable)
     emit this->discoverableChanged();
 }
 
-QList<School *> User::schools() const
+SchoolListModel *User::schools() const
 {
     return m_schools;
 }
 
-void User::setSchools(const QList<School *> &schools)
+void User::setSchools(SchoolListModel *schools)
 {
     m_schools = schools;
+    emit this->schoolsChanged();
 }
 
-QList<Job *> User::jobs() const
+JobListModel *User::jobs() const
 {
     return m_jobs;
 }
 
-void User::setJobs(const QList<Job *> &jobs)
+void User::setJobs(JobListModel *jobs)
 {
     m_jobs = jobs;
+    emit this->jobsChanged();
 }

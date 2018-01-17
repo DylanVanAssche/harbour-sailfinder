@@ -6,8 +6,7 @@
 #include <QtCore/QString>
 
 #include "photo.h"
-#include "job.h"
-#include "school.h"
+#include "photolistmodel.h"
 
 class Person : public QObject
 {
@@ -17,6 +16,7 @@ class Person : public QObject
     Q_PROPERTY(Sailfinder::Gender gender READ gender NOTIFY genderChanged)
     Q_PROPERTY(QString id READ id NOTIFY idChanged)
     Q_PROPERTY(QString bio READ bio NOTIFY bioChanged)
+    Q_PROPERTY(PhotoListModel* photos READ photos NOTIFY photosChanged)
 
 public:
     explicit Person(QObject *parent = 0);
@@ -27,7 +27,6 @@ public:
                     QString bio,
                     QList<Photo *> photos
                     );
-    ~Person();
     QDateTime birthDate() const;
     void setBirthDate(const QDateTime &birthDate);
     QString name() const;
@@ -38,8 +37,8 @@ public:
     void setId(const QString &id);
     QString bio() const;
     void setBio(const QString &bio);
-    QList<Photo *> photos() const;
-    void setPhotos(const QList<Photo *> &photos);
+    PhotoListModel *photos() const;
+    void setPhotos(PhotoListModel *photos);
 
 signals:
     void birthDateChanged();
@@ -55,7 +54,7 @@ private:
     Sailfinder::Gender m_gender;
     QString m_id;
     QString m_bio;
-    QList<Photo *> m_photos;
+    PhotoListModel *m_photos;
 };
 
 #endif // PERSON_H

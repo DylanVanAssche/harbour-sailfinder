@@ -35,6 +35,9 @@ class PhotoListModel : public QAbstractListModel
 protected:
         QHash<int, QByteArray> roleNames() const;
 
+signals:
+        void photoListChanged();
+
 private:
         QList<Photo *> m_photoList;
 };
