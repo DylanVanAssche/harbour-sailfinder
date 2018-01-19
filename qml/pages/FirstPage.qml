@@ -51,7 +51,7 @@ Page {
                 left: parent.left
                 right: parent.right
             }
-            //: Header on the login screen
+            //% Header on the login screen
             //% "Login"
             title: qsTrId("sailfinder-login-header")
         }

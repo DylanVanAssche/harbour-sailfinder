@@ -60,12 +60,19 @@ SOURCES += src/harbour-sailfinder.cpp \
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
-    rpm/harbour-sailfinder.changes.in \
-    rpm/harbour-sailfinder.changes.run.in \
+    qml/pages/MainPage.qml \
+    qml/pages/MatchesView.qml \
+    qml/pages/ProfileView.qml \
+    qml/pages/RecommendationsView.qml \
+    qml/components/NavigationBar.qml \
+    qml/components/NavigationBarDelegate.qml \
+    qml/components/PhotoGridLayout.qml \
+    qml/components/RecommendationsBar.qml \
     rpm/harbour-sailfinder.spec \
     rpm/harbour-sailfinder.yaml \
     translations/*.ts \
-    harbour-sailfinder.desktop
+    harbour-sailfinder.desktop \
+    rpm/harbour-sailfinder.changes
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
@@ -75,7 +82,8 @@ DEFINES += APP_VERSION=\"\\\"$${VERSION}\\\"\"
 # to disable building translations every time, comment out the
 # following CONFIG line
 CONFIG += sailfishapp_i18n \
-sailfishapp_i18n_idbased
+sailfishapp_i18n_idbased \
+sailfishapp_i18n_unfinished
 
 # German translation is enabled as an example. If you aren't
 # planning to localize your app, remember to comment out the

@@ -46,7 +46,7 @@ API::API(QObject *parent) : QObject(parent)
     }
     else {
         qCritical() << "Positioning not available";
-        //: Error shown to the user when an Positioning error occurs. The users could disabled GPS or an other error may be occured.
+        //% Error shown to the user when an Positioning error occurs. The users could disabled GPS or an other error may be occured.
         //% "Positioning unavailable, check if location services are enabled"
         emit this->errorOccurred(qtTrId("sailfinder-positioning-error"));
     }
@@ -522,9 +522,9 @@ void API::networkAccessible(QNetworkAccessManager::NetworkAccessibility state)
 void API::sslErrors(QNetworkReply* reply, QList<QSslError> sslError)
 {
     qCritical() << "SSL error occured:" << reply->errorString() << sslError;
-    //: Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.
+    //% Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.
     //% "SSL error, please check your device is running with the correct date and time"
-    emit this->errorOccurred(qtTrId("berail-ssl-error"));
+    emit this->errorOccurred(qtTrId("sailfinder-ssl-error"));
 }
 
 /**
@@ -544,7 +544,7 @@ void API::finished (QNetworkReply *reply)
         if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404 || reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 500)
         {
             qCritical() << reply->errorString();
-            //: Error shown to the user when the Tinder API failed to retrieve the requested data
+            //% Error shown to the user when the Tinder API failed to retrieve the requested data
             //% "Tinder API couldn't complete your request"
             emit this->errorOccurred(qtTrId("sailfinder-api-error"));
         }
@@ -601,6 +601,7 @@ void API::finished (QNetworkReply *reply)
             }
             else if(reply->url().toString().contains(RECS_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder recommendations data received";
+                qDebug() << replyData;
                 this->parseRecommendations(jsonObject);
             }
             else if(reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive)) {
@@ -628,7 +629,7 @@ void API::finished (QNetworkReply *reply)
         }
         else {
             qCritical() << "Received data isn't properly formatted as JSON! QJsonParseError:" << parseError.errorString();
-            //: Error shown to the user when the data is invalid JSON data
+            //% Error shown to the user when the data is invalid JSON data
             //% "Invalid JSON data received, please try again later"
             emit this->errorOccurred(qtTrId("sailfinder-json-error"));
         }
@@ -767,65 +768,77 @@ void API::parseProfile(QJsonObject json)
 void API::parseRecommendations(QJsonObject json)
 {
     QList<Recommendation *> recsList;
-    foreach(QJsonValue item, json["results"].toArray()) {
-        QList<Photo *> photoList;
-        QList<School *> schoolList;
-        QList<Job *> jobList;
-        QJsonObject recommendation = item.toObject()["user"].toObject();
-        int distance = recommendation["distance_mi"].toInt();
-        QString contentHash = recommendation["content_hash"].toString();
-        int sNumber = recommendation["s_number"].toInt();
-        Sailfinder::Gender gender = Sailfinder::Gender::Female;
-        if(recommendation["gender"].toInt() == 0) { // Default female, change if needed
-            gender = Sailfinder::Gender::Male;
-        }
-        QString id = recommendation["_id"].toString();
-        QString bio = recommendation["bio"].toString();
-        QDateTime birthDate = QDateTime::fromString(recommendation["birth_date"].toString(), Qt::ISODate);
-        QString name = recommendation["name"].toString();
-        foreach(QJsonValue item, recommendation["photos"].toArray()) {
-            QJsonObject photo = item.toObject();
-            photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
-        }
-
-        foreach(QJsonValue item, recommendation["schools"].toArray()) {
-            QJsonObject school = item.toObject();
-            // Name is needed but ID might be missing sometimes!
-            if(school.value("id") != QJsonValue::Undefined) {
-                schoolList.append(new School(school["id"].toString(), school["name"].toString()));
+    if(json.value("message") == QJsonValue::Undefined) {
+        foreach(QJsonValue item, json["results"].toArray()) {
+            QList<Photo *> photoList;
+            QList<School *> schoolList;
+            QList<Job *> jobList;
+            QJsonObject recommendation = item.toObject()["user"].toObject();
+            int distance = recommendation["distance_mi"].toInt();
+            QString contentHash = recommendation["content_hash"].toString();
+            int sNumber = recommendation["s_number"].toInt();
+            Sailfinder::Gender gender = Sailfinder::Gender::Female;
+            if(recommendation["gender"].toInt() == 0) { // Default female, change if needed
+                gender = Sailfinder::Gender::Male;
             }
-            else {
-                qWarning() << "School id is missing";
-                schoolList.append(new School(school["name"].toString()));
+            QString id = recommendation["_id"].toString();
+            QString bio = recommendation["bio"].toString();
+            QDateTime birthDate = QDateTime::fromString(recommendation["birth_date"].toString(), Qt::ISODate);
+            QString name = recommendation["name"].toString();
+            foreach(QJsonValue item, recommendation["photos"].toArray()) {
+                QJsonObject photo = item.toObject();
+                photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
             }
+
+            foreach(QJsonValue item, recommendation["schools"].toArray()) {
+                QJsonObject school = item.toObject();
+                // Name is needed but ID might be missing sometimes!
+                if(school.value("id") != QJsonValue::Undefined) {
+                    schoolList.append(new School(school["id"].toString(), school["name"].toString()));
+                }
+                else {
+                    qWarning() << "School id is missing";
+                    schoolList.append(new School(school["name"].toString()));
+                }
+            }
+
+            foreach(QJsonValue item, recommendation["jobs"].toArray()) {
+                QJsonObject job = item.toObject();
+                // Name is needed but ID might be missing sometimes!
+                if(job.value("id") != QJsonValue::Undefined) {
+                    jobList.append(new Job(job["id"].toString(), job["name"].toString()));
+                }
+                else {
+                    qWarning() << "Job id is missing";
+                    jobList.append(new Job(job["name"].toString()));
+                }
+            }
+
+            recsList.append(new Recommendation(id, name, birthDate, gender, bio, schoolList, jobList, photoList, contentHash, sNumber, distance));
+
+            qDebug() << "Recommendation data:";
+            qDebug() << "\tName:" << name;
+            qDebug() << "\tID:" << id;
+            qDebug() << "\tBirthdate:" << birthDate;
+            qDebug() << "\tBio:" << bio;
+            qDebug() << "\tDistance:" << distance;
+            qDebug() << "\tPhotos:" << photoList;
+            qDebug() << "\tSchools:" << schoolList;
+            qDebug() << "\tJobs:" << jobList;
+            qDebug() << "\tContentHash:" << contentHash;
+            qDebug() << "\tSNumber:" << sNumber;
+            qDebug() << "\tGender:" << (int)(gender);
         }
-
-        foreach(QJsonValue item, recommendation["jobs"].toArray()) {
-            QJsonObject job = item.toObject();
-            // Name is needed but ID might be missing sometimes!
-            if(job.value("id") != QJsonValue::Undefined) {
-                jobList.append(new Job(job["id"].toString(), job["name"].toString()));
-            }
-            else {
-                qWarning() << "Job id is missing";
-                jobList.append(new Job(job["name"].toString()));
-            }
+    }
+    else {
+        QString msg = json["message"].toString();
+        if(msg == "recs timeout") {
+            qWarning() << "Recommendations timeout received";
+            emit this->recommendationTimeOut();
         }
-
-        recsList.append(new Recommendation(id, name, birthDate, gender, bio, schoolList, jobList, photoList, contentHash, sNumber, distance));
-
-        qDebug() << "Recommendation data:";
-        qDebug() << "\tName:" << name;
-        qDebug() << "\tID:" << id;
-        qDebug() << "\tBirthdate:" << birthDate;
-        qDebug() << "\tBio:" << bio;
-        qDebug() << "\tDistance:" << distance;
-        qDebug() << "\tPhotos:" << photoList;
-        qDebug() << "\tSchools:" << schoolList;
-        qDebug() << "\tJobs:" << jobList;
-        qDebug() << "\tContentHash:" << contentHash;
-        qDebug() << "\tSNumber:" << sNumber;
-        qDebug() << "\tGender:" << (int)(gender);
+        else {
+            qCritical() << "Unknown recommendation message";
+        }
     }
 
     // Reset the iterator, set the recs list and update the 'recommendation' property

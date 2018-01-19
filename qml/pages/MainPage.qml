@@ -17,37 +17,57 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../components"
+import "../js/util.js" as Util
 
 Page {
-    onStatusChanged: status===PageStatus.Active? getData(): undefined
-    property var recommendation
+    SilicaFlickable {
+        anchors.fill: parent
+        contentHeight: Screen.height
 
-    function getData() {
-        api.getRecommendations();
-        /*api.getProfile();
-        api.getUpdates(new Date("2017-07-07T16:58:55.217Z"));
-        api.getMatchesWithMessages();
-        api.getMatchesWithoutMessages();*/
-    }
+        PullDownMenu {
+            busy: api.busy
+            MenuItem {
+                //% "About"
+                text: qsTrId("sailfinder-about")
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+            }
 
-    Connections {
-        target: api
-        onProfileChanged: {
-            console.debug("Tinder profile in QML")
+            MenuItem {
+                //% "Settings"
+                text: qsTrId("sailfinder-settings")
+                onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
+            }
         }
-        onRecommendationChanged: {
-            console.debug("Tinder recs in QML")
+
+        PageHeader {
+            id: header
+            title: Util.header(swipeView.currentIndex)
         }
 
-    }
+        SlideshowView {
+            id: swipeView
+            itemWidth: width
+            itemHeight: height
+            clip: true
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: header.bottom
+                bottom: bar.top
+            }
+            model: VisualItemModel {
+                RecommendationsView {}
+                MatchesView {}
+                ProfileView {}
+            }
+        }
 
-    Button {
-        anchors.centerIn: parent
-        text: "PASS"
-        onClicked:
-        {
-            console.debug(JSON.stringify(api.recommendation))
-            api.passUser(api.recommendation.id)
+        NavigationBar {
+            id: bar
+            anchors.bottom: parent.bottom
+            currentIndex: swipeView.currentIndex
+            onNewIndex: swipeView.currentIndex = index
         }
     }
 }

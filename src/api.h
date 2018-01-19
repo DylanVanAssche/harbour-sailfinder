@@ -141,6 +141,7 @@ signals:
     void matchesListChanged();
     void recsListChanged();
     void recommendationChanged();
+    void recommendationTimeOut();
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
