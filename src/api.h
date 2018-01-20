@@ -37,7 +37,7 @@
 #include "models/photo.h"
 #include "models/recommendation.h"
 #include "models/match.h"
-#include "models/matchlistmodel.h"
+#include "models/matcheslistmodel.h"
 #include "models/message.h"
 
 #define POSITION_MAX_UPDATE 10
@@ -65,7 +65,7 @@ class API : public QObject
     Q_PROPERTY(bool canLike READ canLike NOTIFY canLikeChanged)
     Q_PROPERTY(bool canSuperlike READ canSuperlike NOTIFY canSuperlikeChanged)
     Q_PROPERTY(User* profile READ profile NOTIFY profileChanged)
-    Q_PROPERTY(MatchListModel* matchesList READ matchesList NOTIFY matchesListChanged)
+    Q_PROPERTY(MatchesListModel* matchesList READ matchesList NOTIFY matchesListChanged)
     Q_PROPERTY(Recommendation* recommendation READ recommendation NOTIFY recommendationChanged)
     Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
@@ -114,8 +114,8 @@ public:
     void setCanSuperlike(bool canSuperlike);
     QList<Recommendation *> recsList() const;
     void setRecsList(const QList<Recommendation *> &recsList);
-    MatchListModel *matchesList() const;
-    void setMatchesList(MatchListModel *matchesList);
+    MatchesListModel *matchesList() const;
+    void setMatchesList(MatchesListModel *matchesList);
     Recommendation *recommendation() const;
     void setRecommendation(Recommendation *recommendation);
 
@@ -162,7 +162,7 @@ private:
     bool m_busy;
     bool m_networkEnabled;
     QList<Recommendation *> m_recsList;
-    MatchListModel* m_matchesList;
+    MatchesListModel* m_matchesList;
     User* m_profile;
     Recommendation* m_recommendation;
     int m_standardPollInterval;

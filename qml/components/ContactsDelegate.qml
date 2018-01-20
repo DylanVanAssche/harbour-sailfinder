@@ -17,29 +17,11 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../components"
 
-SilicaFlickable {
-    width: parent.width
-    height: parent.height
-    Component.onCompleted: api.getMatchesWithoutMessages()
+Item {
+    height: Theme.itemSizeExtraLarge
 
-    Connections {
-        target: api
-        onMatchesListChanged: {
-            console.debug("Matches data received")
-            console.debug(api.matchesList)
-            matchesListView.model = api.matchesList
-        }
-    }
-
-    SilicaListView {
-        id: matchesListView
-        anchors.fill: parent
-        delegate: ContactsDelegate {
-            width: ListView.view.width
-            Component.onCompleted: console.debug(model.name)
-        }
-        onModelChanged: console.debug("Model set:" + count)
+    Label {
+        text: model.name
     }
 }

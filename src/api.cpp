@@ -362,12 +362,12 @@ void API::setRecommendation(Recommendation *recommendation)
     emit this->recommendationChanged();
 }
 
-MatchListModel *API::matchesList() const
+MatchesListModel *API::matchesList() const
 {
     return m_matchesList;
 }
 
-void API::setMatchesList(MatchListModel *matchesList)
+void API::setMatchesList(MatchesListModel *matchesList)
 {
     m_matchesList = matchesList;
     emit this->matchesListChanged();
@@ -601,7 +601,6 @@ void API::finished (QNetworkReply *reply)
             }
             else if(reply->url().toString().contains(RECS_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder recommendations data received";
-                qDebug() << replyData;
                 this->parseRecommendations(jsonObject);
             }
             else if(reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive)) {
@@ -610,17 +609,14 @@ void API::finished (QNetworkReply *reply)
             }
             else if(reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder like data received";
-                qDebug() << replyData;
                 this->parseLike(jsonObject);
             }
             else if(reply->url().toString().contains(PASS_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder pass data received";
-                qDebug() << replyData;
                 this->parsePass(jsonObject);
             }
             else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder superlike data received";
-                qDebug() << replyData;
                 this->parseSuperlike(jsonObject);
             }
             else {
@@ -682,7 +678,7 @@ void API::parseProfile(QJsonObject json)
 {
     QJsonObject user = json["data"].toObject()["user"].toObject();
     QJsonObject likes = json["data"].toObject()["likes"].toObject();
-    QJsonObject superlikes = json["data"].toObject()["superlikes"].toObject();
+    QJsonObject superlikes = json["data"].toObject()["super_likes"].toObject();
     QList<Photo *> photoList;
     QList<School *> schoolList;
     QList<Job *> jobList;
@@ -758,7 +754,7 @@ void API::parseProfile(QJsonObject json)
     qDebug() << "\tSchools:" << schoolList;
     qDebug() << "\tJobs:" << jobList;
     qDebug() << "\tCan like:" << canLike;
-    qDebug() << "\tCan superlike:" << canSuperlike;
+    qDebug() << "\tCan superlike:" << canSuperlike << "remaining:" << superlikes["remaining"].toInt();
 
     this->setCanLike(canLike);
     this->setCanSuperlike(canSuperlike);
@@ -897,8 +893,9 @@ void API::parseMatches(QJsonObject json)
         qDebug() << "\tMatch ID:" << matchId;
         qDebug() << "\tSuperlike:" << isSuperlike;
         qDebug() << "\tDead:" << isDead;
+        qDebug() << "list:" << matchesList;
     }
-
+    this->setMatchesList(new MatchesListModel(matchesList));
 }
 
 void API::parseLike(QJsonObject json)

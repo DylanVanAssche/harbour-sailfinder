@@ -26,6 +26,10 @@ Item {
     width: parent.width
     height: parent.width
 
+    function closeFullScreen() {
+        fullScreen.visible = false
+    }
+
     GridLayout {
         id: layout
         anchors.fill: parent // IMPORTANT: Using GridLayout without this will fail!
@@ -75,6 +79,7 @@ Item {
         width: parent.width
         height: parent.width
         anchors.centerIn: parent
+        z: 1
 
         MouseArea {
             anchors.fill: parent

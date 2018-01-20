@@ -59,30 +59,30 @@ SilicaFlickable {
             id: photoList
         }
 
-        TextArea {
-            id: bio
-            width: parent.width
-            readOnly: true
-            visible: text.length > 0
-        }
-
         RecommendationsBar {
             id: recsBar
             onLiked: {
                 loaded = false
                 api.likeUser(api.recommendation.id)
-                //photoList.closeFullScreen()
+                photoList.closeFullScreen()
             }
             onSuperliked: {
                 loaded = false
                 api.superlikeUser(api.recommendation.id)
-                //photoList.closeFullScreen()
+                photoList.closeFullScreen()
             }
             onPassed: {
                 loaded = false
                 api.passUser(api.recommendation.id)
-                //photoList.closeFullScreen()
+                photoList.closeFullScreen()
             }
+        }
+
+        TextArea {
+            id: bio
+            width: parent.width
+            readOnly: true
+            visible: text.length > 0
         }
     }
 }

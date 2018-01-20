@@ -24,7 +24,7 @@
 #include "match.h"
 #include "enum.h"
 
-class MatchListModel : public QAbstractListModel
+class MatchesListModel : public QAbstractListModel
 {
     Q_OBJECT
 
@@ -42,23 +42,23 @@ class MatchListModel : public QAbstractListModel
             MessagesRole = Qt::UserRole + 10
         };
 
-        explicit MatchListModel(QList<Match *> matchList);
-        explicit MatchListModel();
-        ~MatchListModel();
+        explicit MatchesListModel(QList<Match *> matchesList);
+        explicit MatchesListModel();
+        ~MatchesListModel();
 
         virtual int rowCount(const QModelIndex&) const;
         virtual QVariant data(const QModelIndex &index, int role) const;
-        QList<Match *> matchList() const;
-        void setMatchList(const QList<Match *> &matchList);
+        QList<Match *> matchesList() const;
+        void setMatchesList(const QList<Match *> &matchesList);
 
 protected:
         QHash<int, QByteArray> roleNames() const;
 
 signals:
-        void matchListChanged();
+        void matchesListChanged();
 
 private:
-        QList<Match *> m_matchList;
+        QList<Match *> m_matchesList;
 };
 
 #endif // MATCHLISTMODEL_H

@@ -55,7 +55,7 @@ SOURCES += src/harbour-sailfinder.cpp \
     src/models/joblistmodel.cpp \
     src/models/photolistmodel.cpp \
     src/models/messagelistmodel.cpp \
-    src/models/matchlistmodel.cpp
+    src/models/matcheslistmodel.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/cover/CoverPage.qml \
@@ -108,4 +108,4 @@ HEADERS += \
     src/models/joblistmodel.h \
     src/models/photolistmodel.h \
     src/models/messagelistmodel.h \
-    src/models/matchlistmodel.h
+    src/models/matcheslistmodel.h
