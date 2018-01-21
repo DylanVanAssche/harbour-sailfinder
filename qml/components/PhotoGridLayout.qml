@@ -61,6 +61,9 @@ Item {
                 sourceSize.width: width
                 sourceSize.height: height
                 source: model.urlMedium
+                asynchronous: true
+                opacity: progress
+                Behavior on opacity { FadeAnimator {} }
 
                 MouseArea {
                     anchors.fill: parent
@@ -68,6 +71,20 @@ Item {
                         fullScreen.source = image.source
                         fullScreen.visible = true
                     }
+                }
+
+                BusyIndicator {
+                    size: BusyIndicatorSize.Medium
+                    anchors.centerIn: parent
+                    running: Qt.application.active && (image.status == Image.Loading || image.status == Image.Null)
+                }
+
+                Label {
+                    id: errorText
+                    anchors.centerIn: parent
+                    visible: image.status == Image.Error
+                    //% "Oops!"
+                    text: qsTrId("sailfinder-oops")
                 }
             }
             onModelChanged: forceFirstItem()

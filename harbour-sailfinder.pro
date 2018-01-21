@@ -72,7 +72,8 @@ DISTFILES += qml/harbour-sailfinder.qml \
     rpm/harbour-sailfinder.yaml \
     translations/*.ts \
     harbour-sailfinder.desktop \
-    rpm/harbour-sailfinder.changes
+    rpm/harbour-sailfinder.changes \
+    qml/components/Avatar.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
@@ -82,14 +83,14 @@ DEFINES += APP_VERSION=\"\\\"$${VERSION}\\\"\"
 # to disable building translations every time, comment out the
 # following CONFIG line
 CONFIG += sailfishapp_i18n \
-sailfishapp_i18n_idbased \
-sailfishapp_i18n_unfinished
+    sailfishapp_i18n_idbased
 
 # German translation is enabled as an example. If you aren't
 # planning to localize your app, remember to comment out the
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
-TRANSLATIONS += translations/harbour-sailfinder-de.ts
+TRANSLATIONS += translations/harbour-sailfinder.ts \
+translations/harbour-sailfinder-de.ts
 
 HEADERS += \
     src/api.h \

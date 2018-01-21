@@ -9,6 +9,7 @@
     </message>
     <message id="sailfinder-api-error">
         <source>Tinder API couldn&apos;t complete your request</source>
+        <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
         <translation>Tinder API couldn&apos;t complete your request</translation>
     </message>
     <message id="sailfinder-api-authentication-requested">
@@ -17,10 +18,12 @@
     </message>
     <message id="sailfinder-json-error">
         <source>Invalid JSON data received, please try again later</source>
+        <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
         <translation>Invalid JSON data received, please try again later</translation>
     </message>
     <message id="sailfinder-positioning-error">
         <source>Positioning unavailable, check if location services are enabled</source>
+        <extracomment>Error shown to the user when an Positioning error occurs. The users could disabled GPS or an other error may be occured.</extracomment>
         <translation>Positioning unavailable, check if location services are enabled</translation>
     </message>
     <message id="sailfinder-oops">
@@ -45,6 +48,7 @@
     </message>
     <message id="sailfinder-matches">
         <source>Matches</source>
+        <extracomment>Header for matches</extracomment>
         <translation>Matches</translation>
     </message>
     <message id="sailfinder-discoverable">
@@ -85,6 +89,7 @@
     </message>
     <message id="sailfinder-ssl-error">
         <source>SSL error, please check your device is running with the correct date and time</source>
+        <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>
         <translation>SSL error, please check your device is running with the correct date and time</translation>
     </message>
     <message id="sailfinder-max-age">
@@ -101,10 +106,31 @@
     </message>
     <message id="sailfinder-male">
         <source>Male</source>
-        <translation type="unfinished"></translation>
+        <translation>Male</translation>
     </message>
     <message id="sailfinder-everyone">
         <source>Everyone</source>
+        <translation>Everyone</translation>
+    </message>
+    <message id="sailfinder-no-message">
+        <source>No messages yet, say hi!</source>
+        <extracomment>Text shown when no messages are retrieved in a conversation.</extracomment>
+        <translation>No messages yet, say hi!</translation>
+    </message>
+    <message id="sailfinder-new-match">
+        <source>New match!</source>
+        <translation>New match!</translation>
+    </message>
+    <message id="sailfinder-new-match-hint">
+        <source>You have received a new match! Go say hi!</source>
+        <translation>You have received a new match! Go say hi!</translation>
+    </message>
+    <message id="sailfinder-remaining-characters">
+        <source>%L0/%L1</source>
+        <translation>%L0/%L1</translation>
+    </message>
+    <message id="sailfinder-bio-hint">
+        <source>Type your biography here</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

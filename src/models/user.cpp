@@ -25,7 +25,6 @@ User::User(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gen
 
 int User::ageMin() const
 {
-    qDebug() << "Age min requested:" << m_ageMin;
     return m_ageMin;
 }
 
@@ -37,7 +36,6 @@ void User::setAgeMin(int ageMin)
 
 int User::ageMax() const
 {
-    qDebug() << "Age max requested:" << m_ageMax;
     return m_ageMax;
 }
 

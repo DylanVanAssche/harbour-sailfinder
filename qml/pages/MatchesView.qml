@@ -17,19 +17,37 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Harbour.Sailfinder.SFOS 1.0
 import "../components"
+import "../js/util.js" as Util
 
 SilicaFlickable {
+    signal header(string text)
+
     width: parent.width
     height: parent.height
-    Component.onCompleted: api.getMatchesWithoutMessages()
+    Component.onCompleted: api.getMatchesAll()
+
+    SFOS {
+        id: sfos
+    }
 
     Connections {
         target: api
         onMatchesListChanged: {
-            console.debug("Matches data received")
-            console.debug(api.matchesList)
             matchesListView.model = api.matchesList
+            header(Util.createHeaderMatches(matchesListView.count))
+        }
+        onNewMatch: {
+            sfos.createNotification(
+                        //% "New match!"
+                        qsTrId("sailfinder-new-match"),
+                        //% "You have received a new match! Go say hi!"
+                        qsTrId("sailfinder-new-match-hint"),
+                        "social",
+                        "sailfinder-new-match"
+                        )
+            api.getMatchesAll();
         }
     }
 
@@ -38,8 +56,6 @@ SilicaFlickable {
         anchors.fill: parent
         delegate: ContactsDelegate {
             width: ListView.view.width
-            Component.onCompleted: console.debug(model.name)
         }
-        onModelChanged: console.debug("Model set:" + count)
     }
 }

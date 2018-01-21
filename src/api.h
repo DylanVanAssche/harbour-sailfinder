@@ -29,6 +29,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QVariantMap>
 #include <QtCore/QList>
+#include <QtCore/QScopedPointer>
 #include <QtPositioning/QGeoSatelliteInfoSource>
 #include <QtPositioning/QGeoPositionInfoSource>
 
@@ -79,11 +80,13 @@ public:
     Q_INVOKABLE void getRecommendations();
     Q_INVOKABLE void getMatchesWithMessages();
     Q_INVOKABLE void getMatchesWithoutMessages();
+    Q_INVOKABLE void getMatchesAll();
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
     Q_INVOKABLE void superlikeUser(QString userId);
     Q_INVOKABLE void nextRecommendation();
+    Q_INVOKABLE void updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable);
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -162,13 +165,14 @@ private:
     bool m_busy;
     bool m_networkEnabled;
     QList<Recommendation *> m_recsList;
-    MatchesListModel* m_matchesList;
+    MatchesListModel* m_matchesList = NULL;
     User* m_profile;
     Recommendation* m_recommendation;
     int m_standardPollInterval;
     int m_persistentPollInterval;
     int positionUpdateCounter;
     int recommendationCounter;
+    QList<Match *> matchesTempList = QList<Match*> ();
     QGeoPositionInfoSource* positionSource;
     QNetworkAccessManager* QNAM;
     QNetworkDiskCache* QNAMCache;
@@ -176,6 +180,7 @@ private:
     OS SFOS;
     QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters);
     void getMatches(bool withMessages);
+    void getMatches(QString pageToken);
     void parseLogin(QJsonObject json);
     void parseMeta(QJsonObject json);
     void parseUpdates(QJsonObject json);

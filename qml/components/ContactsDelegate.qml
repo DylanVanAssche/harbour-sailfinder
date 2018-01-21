@@ -18,10 +18,65 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Item {
-    height: Theme.itemSizeExtraLarge
+ListItem {
+    contentHeight: Theme.itemSizeExtraLarge
+    highlighted: model.mentioned
+
+    Avatar {
+        id: avatar
+        anchors { left: parent.left; leftMargin: Theme.horizontalPageMargin; verticalCenter: parent.verticalCenter }
+        source: model.avatar
+    }
 
     Label {
+        id: name
+        anchors {
+            left: avatar.right
+            leftMargin: Theme.paddingLarge
+            top: avatar.top
+        }
+        font.pixelSize: Theme.fontSizeLarge
         text: model.name
+    }
+
+    Label {
+        anchors { left: avatar.right; leftMargin: Theme.paddingLarge; top: name.bottom; topMargin: Theme.paddingSmall }
+        font.pixelSize: Theme.fontSizeExtraSmall
+        font.italic: true
+        text: model.messagesPreview
+    }
+
+    Rectangle {
+        width: Math.max(Theme.itemSizeSmall/2, unreadCounter.width)
+        height: Theme.itemSizeSmall/2
+        anchors { right: parent.right; rightMargin: Theme.horizontalPageMargin; top: avatar.top }
+        color: Theme.highlightColor
+        radius: width/2
+        visible: model.unreadCounter > 0
+
+        Label {
+            id: unreadCounter
+            anchors.centerIn: parent
+            font.bold: true
+            text: model.unreadCounter
+        }
+    }
+
+    Label {
+        id: messageStatus
+        anchors { right: parent.right; rightMargin: Theme.horizontalPageMargin; bottom: avatar.bottom }
+        font.pixelSize: Theme.fontSizeTiny
+        font.bold: true
+        text: {
+            if(model.readMessage && model.receivedMessage) {
+                return "✓✓"
+            }
+            else if(model.receivedMessage) {
+                return "✓"
+            }
+            else {
+                return ""
+            }
+        }
     }
 }

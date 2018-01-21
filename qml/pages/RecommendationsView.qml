@@ -18,8 +18,11 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../components"
+import "../js/util.js" as Util
 
 SilicaFlickable {
+    signal header(string text)
+
     width: parent.width
     height: parent.height
     contentHeight: column.height
@@ -42,7 +45,7 @@ SilicaFlickable {
             recsBar.canLike = api.canLike
             recsBar.canSuperlike = api.canSuperlike
             recsBar.loaded = true
-
+            header(Util.createHeaderRecs(api.recommendation.name, api.recommendation.birthDate, api.recommendation.gender))
         }
         onRecommendationTimeOut: {
             console.warn("Recommendation timeout, retrying in 5 minutes...")

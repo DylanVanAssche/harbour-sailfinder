@@ -18,23 +18,42 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../components"
+import "../js/util.js" as Util
 
 SilicaFlickable {
+    property bool _hadFocus
+    signal header(string text)
+
     width: parent.width
     height: parent.height
     contentHeight: column.height
     Component.onCompleted: api.getProfile()
-
+    
+    Connections {
+        target: swipeView
+        onCurrentIndexChanged: {
+            if(swipeView.currentIndex != 2 && _hadFocus) {
+                console.debug("Flicking to different view, updating profile preferences...")
+                _hadFocus = false;
+                api.updateProfile(bio.text, ageMin.value, ageMax.value, distanceMax.value, interestedIn.currentIndex, discoverable.checked)
+            }
+            else {
+                _hadFocus = true;
+            }
+        }
+    }
+    
     Connections {
         target: api
         onProfileChanged: {
             discoverable.checked = api.profile.discoverable
             interestedIn.currentIndex = api.profile.interestedIn
             distanceMax.value = api.profile.distanceMax
-            ageMin.value = api.profile.ageMin
             ageMax.value = api.profile.ageMax
+            ageMin.value = api.profile.ageMin // Order is important otherwise the value will not be updated due our limits implemented in the sliders
             photoList.photoListModel = api.profile.photos
             bio.text = api.profile.bio
+            header(Util.createHeaderProfile(api.profile.name, api.profile.birthDate, api.profile.gender))
         }
     }
 
@@ -50,6 +69,14 @@ SilicaFlickable {
         TextArea {
             id: bio
             width: parent.width
+            onTextChanged: {
+                console.debug("Length: " + text.length)
+                if(text.length > 500) text.remove(500, text.length); // Character limit is 500 characters
+            }
+            //% "%L0/%L1"
+            label: text.length > 0? qsTrId("sailfinder-remaining-characters").arg(text.length).arg(500): ""
+            //% "Type your biography here"
+            placeholderText: qsTrId("sailfinder-bio-hint")
         }
 
         //% "Discovery"
@@ -59,8 +86,6 @@ SilicaFlickable {
             id: discoverable
             //% "Discoverable"
             text: qsTrId("sailfinder-discoverable")
-            icon.source: "qrc:///images/icon-recs.png"
-            icon.scale: Theme.iconSizeMedium/icon.width // Scale icons according to the screen sizes
             busy: api.busy
             enabled: !busy
             //% "Disable discovery to hide your profile for other people. This has no effect on your current matches."
@@ -145,5 +170,7 @@ SilicaFlickable {
             opacity: enabled? 1.0: app.fadeOutValue
             onClicked: console.debug("Logging out...")
         }
+
+        Spacer {}
     }
 }

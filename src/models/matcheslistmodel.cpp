@@ -38,7 +38,6 @@ MatchesListModel::~MatchesListModel()
 
 int MatchesListModel::rowCount(const QModelIndex &) const
 {
-    qDebug() << "matchesList length:" << this->matchesList().length();
     return this->matchesList().length();
 }
 
@@ -55,6 +54,12 @@ QHash<int, QByteArray> MatchesListModel::roleNames() const
     roles[IsSuperlikeRole] = "isSuperlike";
     roles[IsDeadRole] = "isDead";
     roles[MessagesRole] = "messages";
+    roles[AvatarRole] = "avatar";
+    roles[MessagesPreviewRole] = "messagesPreview";
+    roles[UnreadCounterRole] = "unreadCounter";
+    roles[ReceivedMessageRole] = "receivedMessage";
+    roles[ReadMessageRole] = "readMessage";
+    roles[MentionedRole] = "mentioned";
     return roles;
 }
 
@@ -85,6 +90,34 @@ QVariant MatchesListModel::data(const QModelIndex &index, int role) const
         return QVariant(this->matchesList().at(index.row())->isDead());
     case MessagesRole:
         return QVariant(QVariant::fromValue(this->matchesList().at(index.row())->messages()));
+    case AvatarRole:
+        if(!this->matchesList().at(index.row())->photos()->photoList().empty()) {
+            // Return the first photo of the match
+            return QVariant(this->matchesList().at(index.row())->photos()->photoList().at(0)->getUrlWithSize(Sailfinder::Size::Small));
+        }
+        else {
+            // Return a placeholder when match doesn't has any pictures
+            return QVariant(":/images/icon-liked.png");
+        }
+    case MessagesPreviewRole:
+        if(!this->matchesList().at(index.row())->messages()->messageList().empty()) {
+            // Return the text of the first message in the conversation
+            return QVariant(this->matchesList().at(index.row())->messages()->messageList().at(0)->message());
+        }
+        else {
+            //: Text shown when no messages are retrieved in a conversation.
+            //% "No messages yet, say hi!"
+            return QVariant(qtTrId("sailfinder-no-message"));
+        }
+    case UnreadCounterRole:
+        return QVariant(0);
+    // The following roles aren't supported (yet) by Tinder
+    case ReceivedMessageRole:
+        return QVariant(false);
+    case ReadMessageRole:
+        return QVariant(false);
+    case MentionedRole:
+        return QVariant(false);
     default:
         return QVariant();
     }
@@ -98,5 +131,6 @@ QList<Match *> MatchesListModel::matchesList() const
 void MatchesListModel::setMatchesList(const QList<Match *> &matchesList)
 {
     m_matchesList = matchesList;
+    emit this->dataChanged(QModelIndex(), QModelIndex(), QVector<int>());
     emit this->matchesListChanged();
 }

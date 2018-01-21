@@ -17,6 +17,8 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Nemo.DBus 2.0
+import Harbour.Sailfinder.SFOS 1.0
 import "../components"
 import "../js/util.js" as Util
 
@@ -42,10 +44,52 @@ Page {
 
         PageHeader {
             id: header
-            title: Util.header(swipeView.currentIndex)
+            title: {
+                switch(swipeView.currentIndex) {
+                case 0:
+                    return swipeView._recommendationsHeader;
+                case 1:
+                    return swipeView._matchesHeader;
+                case 2:
+                    return swipeView._profileHeader;
+                default:
+                    return "Unknown header";
+                }
+            }
+        }
+
+        SFOS {
+            id: sfos
+        }
+
+        DBusAdaptor {
+            service: sfos.appName.replace("-", ".")
+            iface: sfos.appName.replace("-", ".")
+            path: "/"
+            xml: '  <interface name="' + sfos.appName.replace("-", ".") + '">\n' +
+                 '    <method name="activate" />\n' +
+                 '  </interface>\n'
+
+            function activate(category) {
+                if(category == "sailfinder-new-match") {
+                    swipeView.currentIndex = 1;
+                    app.activate();
+                    console.debug("Notification activation: " + category);
+                }
+                else {
+                    console.warn("Notification activation doesn't match with our categories: " + category);
+                }
+            }
         }
 
         SlideshowView {
+            //% "Recommendations"
+            property string _recommendationsHeader: qsTrId("sailfinder-recommendations")
+            //% "Matches"
+            property string _matchesHeader: qsTrId("sailfinder-matches")
+            //% "Profile"
+            property string _profileHeader: qsTrId("sailfinder-profile")
+
             id: swipeView
             itemWidth: width
             itemHeight: height
@@ -57,9 +101,15 @@ Page {
                 bottom: bar.top
             }
             model: VisualItemModel {
-                RecommendationsView {}
-                MatchesView {}
-                ProfileView {}
+                RecommendationsView {
+                    onHeader: swipeView._recommendationsHeader = text
+                }
+                MatchesView {
+                    onHeader: swipeView._matchesHeader = text
+                }
+                ProfileView {
+                    onHeader: swipeView._profileHeader = text
+                }
             }
         }
 
