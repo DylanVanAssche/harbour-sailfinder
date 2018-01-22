@@ -46,8 +46,8 @@ Item {
                 itemAt(0).Layout.columnSpan = 2
                 itemAt(0).Layout.rowSpan = 2
             }
-            Image {
-                id: image
+
+            Item {
                 width: Layout.columnSpan*parent.width/parent.columns
                 height: Layout.rowSpan*parent.width/parent.columns
                 Layout.minimumWidth: width
@@ -58,35 +58,58 @@ Item {
                 Layout.maximumHeight: parent.height
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                sourceSize.width: width
-                sourceSize.height: height
-                source: model.urlMedium
-                asynchronous: true
-                opacity: progress
-                Behavior on opacity { FadeAnimator {} }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        fullScreen.source = image.source
-                        fullScreen.visible = true
+                Image {
+                    id: image
+                    width: parent.width
+                    height: parent.height
+                    sourceSize.width: width
+                    sourceSize.height: height
+                    source: model.urlMedium
+                    asynchronous: true
+                    opacity: progress
+                    Behavior on opacity { FadeAnimator {} }
+                    onStatusChanged: {
+                        if(status == Image.Error) {
+                            console.warn("Can't load image")
+                            errorText.visible = true
+                            loadIndicator.running = false
+                        }
+                        else if(status == Image.Ready) {
+                            loadIndicator.running = false
+                        }
+                        else {
+                            loadIndicator.running = Qt.application.active
+                        }
                     }
-                }
 
-                BusyIndicator {
-                    size: BusyIndicatorSize.Medium
-                    anchors.centerIn: parent
-                    running: Qt.application.active && (image.status == Image.Loading || image.status == Image.Null)
+                    MouseArea {
+                        anchors.fill: parent
+                        enabled: image.status == Image.Ready
+                        onClicked: {
+                            fullScreen.source = image.source
+                            fullScreen.visible = true
+                        }
+                    }
                 }
 
                 Label {
                     id: errorText
                     anchors.centerIn: parent
-                    visible: image.status == Image.Error
+                    visible: false
+                    font.pixelSize: Theme.fontSizeLarge
+                    font.bold: true
                     //% "Oops!"
                     text: qsTrId("sailfinder-oops")
                 }
+
+                BusyIndicator {
+                    id: loadIndicator
+                    size: BusyIndicatorSize.Large
+                    anchors.centerIn: parent
+                }
             }
+
             onModelChanged: forceFirstItem()
         }
     }

@@ -55,6 +55,9 @@ SilicaFlickable {
             bio.text = api.profile.bio
             header(Util.createHeaderProfile(api.profile.name, api.profile.birthDate, api.profile.gender))
         }
+        onLoggedOut: {
+            pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { logout: true })
+        }
     }
 
     Column {
@@ -99,10 +102,10 @@ SilicaFlickable {
             label: qsTrId("sailfinder-interested-in")
             currentIndex: -1
             menu: ContextMenu {
-                //% "Female"
-                MenuItem { text: qsTrId("sailfinder-female") }
                 //% "Male"
                 MenuItem { text: qsTrId("sailfinder-male") }
+                //% "Female"
+                MenuItem { text: qsTrId("sailfinder-female") }
                 //% "Everyone"
                 MenuItem { text: qsTrId("sailfinder-everyone") }
             }
@@ -168,7 +171,10 @@ SilicaFlickable {
             //% "Logout"
             text: qsTrId("sailfinder-logout")
             opacity: enabled? 1.0: app.fadeOutValue
-            onClicked: console.debug("Logging out...")
+            onClicked: {
+                console.debug("Logging out")
+                api.logout()
+            }
         }
 
         Spacer {}

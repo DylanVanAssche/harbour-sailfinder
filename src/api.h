@@ -44,6 +44,7 @@
 #define POSITION_MAX_UPDATE 10
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
+#define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
 #define META_ENDPOINT "https://api.gotinder.com/v2/meta"
 #define UPDATES_ENDPOINT "https://api.gotinder.com/updates"
 #define RECS_ENDPOINT "https://api.gotinder.com/recs/core"
@@ -87,6 +88,7 @@ public:
     Q_INVOKABLE void superlikeUser(QString userId);
     Q_INVOKABLE void nextRecommendation();
     Q_INVOKABLE void updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable);
+    Q_INVOKABLE void logout();
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -145,6 +147,7 @@ signals:
     void recsListChanged();
     void recommendationChanged();
     void recommendationTimeOut();
+    void loggedOut();
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -190,6 +193,7 @@ private:
     void parseLike(QJsonObject json);
     void parsePass(QJsonObject json);
     void parseSuperlike(QJsonObject json);
+    void parseLogout(QJsonObject json);
 };
 
 #endif // API_H

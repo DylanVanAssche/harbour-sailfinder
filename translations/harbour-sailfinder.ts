@@ -131,7 +131,12 @@
     </message>
     <message id="sailfinder-bio-hint">
         <source>Type your biography here</source>
-        <translation type="unfinished"></translation>
+        <translation>Type your biography here</translation>
+    </message>
+    <message id="sailfinder-logout-error">
+        <source>Logout error, please try again later</source>
+        <extracomment>Error shown to the user when logging out of Facebook failed</extracomment>
+        <translation>Logout error, please try again later</translation>
     </message>
 </context>
 </TS>

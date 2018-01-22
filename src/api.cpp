@@ -431,6 +431,44 @@ void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sa
     }
 }
 
+void API::logout()
+{
+    if(this->authenticated()) {
+        // Clear Webkit cache for Facebook authentication
+        const QString cachePath = SFOS.cacheLocation() + "/" + SFOS.appName() + "/.QtWebKit";
+        QDir webcache(cachePath);
+        if (webcache.exists()) {
+            if (webcache.removeRecursively()) {
+                qInfo() << "Succesfully cleared webview cache:" << cachePath;
+            }
+            else {
+                qCritical() << "Clearing webview cache failed:" << cachePath;
+                //: Error shown to the user when logging out of Facebook failed
+                //% "Logout error, please try again later"
+                emit this->errorOccurred(qtTrId("sailfinder-logout-error"));
+            }
+        }
+        else {
+            qWarning() << "Webview cache not found:" << cachePath << " logged in via SMS?";
+        }
+
+        // Build URL
+        QUrl url(QString(AUTH_LOGOUT_ENDPOINT));
+        QUrlQuery parameters;
+
+        // Build POST payload
+        // Empty POST data for this endpoint but it's required to use HTTP POST request
+        QVariantMap data;
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+        // Prepare & do request
+        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve logout data";
+    }
+}
+
 /**
  * @class API
  * @brief Parse the positioning
@@ -733,6 +771,10 @@ void API::finished (QNetworkReply *reply)
             else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder superlike data received";
                 this->parseSuperlike(jsonObject);
+            }
+            else if(reply->url().toString().contains(AUTH_LOGOUT_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder logout data received";
+                this->parseLogout(jsonObject);
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
@@ -1099,6 +1141,12 @@ void API::parseSuperlike(QJsonObject json)
 
     qDebug() << "Recommendation succesfully superliked";
     this->nextRecommendation();
+}
+
+void API::parseLogout(QJsonObject json)
+{
+    qDebug() << "Logging out";
+    emit this->loggedOut();
 }
 
 QString API::token() const

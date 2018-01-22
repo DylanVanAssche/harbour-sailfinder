@@ -40,13 +40,22 @@ ListItem {
     }
 
     Label {
-        anchors { left: avatar.right; leftMargin: Theme.paddingLarge; top: name.bottom; topMargin: Theme.paddingSmall }
+        anchors {
+            left: avatar.right
+            leftMargin: Theme.paddingLarge
+            top: name.bottom
+            topMargin: Theme.paddingSmall
+            right: unreadCounterBackground.left
+            rightMargin: Theme.paddingLarge
+        }
         font.pixelSize: Theme.fontSizeExtraSmall
         font.italic: true
+        truncationMode: TruncationMode.Fade
         text: model.messagesPreview
     }
 
     Rectangle {
+        id: unreadCounterBackground
         width: Math.max(Theme.itemSizeSmall/2, unreadCounter.width)
         height: Theme.itemSizeSmall/2
         anchors { right: parent.right; rightMargin: Theme.horizontalPageMargin; top: avatar.top }

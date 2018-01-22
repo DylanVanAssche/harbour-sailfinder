@@ -21,6 +21,8 @@ import QtWebKit 3.0
 
 Page {
     property string fbToken
+    property bool logout
+
     onFbTokenChanged: {
         if(fbToken.length > 0) {
             tinderLogin.visible = true
@@ -59,6 +61,7 @@ Page {
         SilicaWebView {
             // Rounding floating numbers in JS: https://stackoverflow.com/questions/9453421/how-to-round-float-numbers-in-javascript
             // Default 1.5x zoom
+            id: webview
             property real _devicePixelRatio: Math.round(1.5*Theme.pixelRatio * 10) / 10.0
 
             anchors {
@@ -95,6 +98,13 @@ Page {
                 }
             }
             url: app.fbAuthUrl
+            Component.onCompleted: {
+                if(logout) {
+                    console.debug("Clearing cookies due logout")
+                    webview.experimental.deleteAllCookies();
+                    webview.reload()
+                }
+            }
 
             Behavior on opacity { FadeAnimation {} }
 
@@ -111,6 +121,7 @@ Page {
             id: tinderLogin
             size: BusyIndicatorSize.Large
             anchors.centerIn: parent
+            visible: false
             running: Qt.application.active && visible
         }
     }
