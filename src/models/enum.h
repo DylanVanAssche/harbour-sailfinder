@@ -13,8 +13,8 @@ public:
     explicit Sailfinder();
 
     enum class Gender {
-        Female = 0,
-        Male = 1,
+        Male = 0,
+        Female = 1,
         All = 2
     };
 

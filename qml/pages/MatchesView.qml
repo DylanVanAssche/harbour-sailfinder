@@ -55,7 +55,16 @@ SilicaFlickable {
         id: matchesListView
         anchors.fill: parent
         delegate: ContactsDelegate {
+            id: contact
             width: ListView.view.width
+            onRemoved: api.unmatch(model.matchId)
+            menu: ContextMenu {
+                MenuItem {
+                    //% "Unmatch"
+                    text: qsTrId("sailfinder-unmatch")
+                    onClicked: contact.remove()
+                }
+            }
         }
     }
 }

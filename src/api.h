@@ -53,6 +53,7 @@
 #define LIKE_ENDPOINT "https://api.gotinder.com/like"
 #define PASS_ENDPOINT "https://api.gotinder.com/pass"
 #define SUPERLIKE_ENDPOINT "/super"
+#define MATCH_OPERATIONS_ENDPOINT "https://api.gotinder.com/user/matches"
 
 class API : public QObject
 {
@@ -89,6 +90,7 @@ public:
     Q_INVOKABLE void nextRecommendation();
     Q_INVOKABLE void updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable);
     Q_INVOKABLE void logout();
+    Q_INVOKABLE void unmatch(QString matchId);
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -194,6 +196,7 @@ private:
     void parsePass(QJsonObject json);
     void parseSuperlike(QJsonObject json);
     void parseLogout(QJsonObject json);
+    void parseUnmatch(QJsonObject json);
 };
 
 #endif // API_H

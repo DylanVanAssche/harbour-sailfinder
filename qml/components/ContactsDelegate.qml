@@ -19,8 +19,18 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 ListItem {
+    signal removed()
+
     contentHeight: Theme.itemSizeExtraLarge
     highlighted: model.mentioned
+    ListView.onRemove: animateRemoval(this)
+
+    function remove() {
+        //% "Unmatching"
+        remorseAction(qsTrId("sailfinder-unmatching"), function() {
+            removed();
+        })
+    }
 
     Avatar {
         id: avatar
@@ -61,7 +71,7 @@ ListItem {
         anchors { right: parent.right; rightMargin: Theme.horizontalPageMargin; top: avatar.top }
         color: Theme.highlightColor
         radius: width/2
-        visible: model.unreadCounter > 0
+        visible: model.hasUnreadMessages
 
         Label {
             id: unreadCounter

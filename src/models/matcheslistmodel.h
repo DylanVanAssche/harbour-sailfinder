@@ -45,7 +45,8 @@ class MatchesListModel : public QAbstractListModel
             UnreadCounterRole = Qt::UserRole + 13,
             ReceivedMessageRole = Qt::UserRole + 14,
             ReadMessageRole = Qt::UserRole + 15,
-            MentionedRole = Qt::UserRole + 16
+            MentionedRole = Qt::UserRole + 16,
+            HasUnreadMessagesRole = Qt::UserRole + 17
         };
 
         explicit MatchesListModel(QList<Match *> matchesList);

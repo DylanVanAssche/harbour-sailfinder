@@ -60,6 +60,7 @@ QHash<int, QByteArray> MatchesListModel::roleNames() const
     roles[ReceivedMessageRole] = "receivedMessage";
     roles[ReadMessageRole] = "readMessage";
     roles[MentionedRole] = "mentioned";
+    roles[HasUnreadMessagesRole] = "hasUnreadMessages";
     return roles;
 }
 
@@ -109,9 +110,12 @@ QVariant MatchesListModel::data(const QModelIndex &index, int role) const
             //% "No messages yet, say hi!"
             return QVariant(qtTrId("sailfinder-no-message"));
         }
+        // Use UnreadCounter for displaying if match is a superlike match or not
     case UnreadCounterRole:
-        return QVariant(0);
-    // The following roles aren't supported (yet) by Tinder
+        return QVariant("★");
+    case HasUnreadMessagesRole:
+        return QVariant(this->matchesList().at(index.row())->isSuperlike());
+        // The following roles aren't supported (yet) by Tinder
     case ReceivedMessageRole:
         return QVariant(false);
     case ReadMessageRole:

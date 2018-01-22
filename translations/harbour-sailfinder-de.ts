@@ -32,24 +32,24 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-ssl-error">
-        <location filename="../src/api.cpp" line="680"/>
+        <location filename="../src/api.cpp" line="695"/>
         <source>SSL error, please check your device is running with the correct date and time</source>
         <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-error">
-        <location filename="../src/api.cpp" line="702"/>
+        <location filename="../src/api.cpp" line="717"/>
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-authentication-requested">
-        <location filename="../src/api.cpp" line="707"/>
+        <location filename="../src/api.cpp" line="722"/>
         <source>Tinder token expired, refreshing now</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-json-error">
-        <location filename="../src/api.cpp" line="787"/>
+        <location filename="../src/api.cpp" line="806"/>
         <source>Invalid JSON data received, please try again later</source>
         <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
         <translation type="unfinished"></translation>
@@ -65,21 +65,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-recommendations">
-        <location filename="../qml/js/util.js" line="5"/>
         <location filename="../qml/pages/MainPage.qml" line="87"/>
         <source>Recommendations</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-matches">
-        <location filename="../qml/js/util.js" line="8"/>
-        <location filename="../qml/js/util.js" line="51"/>
+        <location filename="../qml/js/util.js" line="22"/>
         <location filename="../qml/pages/MainPage.qml" line="89"/>
         <source>Matches</source>
         <extracomment>Header for matches</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-profile">
-        <location filename="../qml/js/util.js" line="28"/>
         <location filename="../qml/pages/MainPage.qml" line="91"/>
         <source>Profile</source>
         <translation type="unfinished"></translation>
@@ -160,7 +157,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-message">
-        <location filename="../src/models/matcheslistmodel.cpp" line="110"/>
+        <location filename="../src/models/matcheslistmodel.cpp" line="111"/>
         <source>No messages yet, say hi!</source>
         <extracomment>Text shown when no messages are retrieved in a conversation.</extracomment>
         <translation type="unfinished"></translation>
@@ -173,6 +170,16 @@
     <message id="sailfinder-new-match-hint">
         <location filename="../qml/pages/MatchesView.qml" line="46"/>
         <source>You have received a new match! Go say hi!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-unmatch">
+        <location filename="../qml/pages/MatchesView.qml" line="64"/>
+        <source>Unmatch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-unmatching">
+        <location filename="../qml/components/ContactsDelegate.qml" line="30"/>
+        <source>Unmatching</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

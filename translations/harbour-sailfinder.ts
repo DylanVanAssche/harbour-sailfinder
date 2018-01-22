@@ -138,5 +138,13 @@
         <extracomment>Error shown to the user when logging out of Facebook failed</extracomment>
         <translation>Logout error, please try again later</translation>
     </message>
+    <message id="sailfinder-unmatching">
+        <source>Unmatching</source>
+        <translation>Unmatching</translation>
+    </message>
+    <message id="sailfinder-unmatch">
+        <source>Unmatch</source>
+        <translation>Unmatch</translation>
+    </message>
 </context>
 </TS>

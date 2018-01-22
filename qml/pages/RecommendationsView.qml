@@ -26,7 +26,6 @@ SilicaFlickable {
     width: parent.width
     height: parent.height
     contentHeight: column.height
-    Component.onCompleted: api.getRecommendations()
 
     Timer {
         id: retryTimer
@@ -50,6 +49,14 @@ SilicaFlickable {
         onRecommendationTimeOut: {
             console.warn("Recommendation timeout, retrying in 5 minutes...")
             retryTimer.start()
+        }
+        onProfileChanged: {
+            if(!retryTimer.running) {
+                api.getRecommendations()
+            }
+            else {
+                console.debug("Waiting for fetching recommendations until retryTimer is triggered")
+            }
         }
     }
 

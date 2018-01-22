@@ -469,6 +469,21 @@ void API::logout()
     }
 }
 
+void API::unmatch(QString matchId)
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNAM->deleteResource(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve unmatch data";
+    }
+}
+
 /**
  * @class API
  * @brief Parse the positioning
@@ -760,7 +775,7 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder matches data received";
                 this->parseMatches(jsonObject);
             }
-            else if(reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive) && !reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder like data received";
                 this->parseLike(jsonObject);
             }
@@ -768,13 +783,17 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder pass data received";
                 this->parsePass(jsonObject);
             }
-            else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive) && !reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder superlike data received";
                 this->parseSuperlike(jsonObject);
             }
             else if(reply->url().toString().contains(AUTH_LOGOUT_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder logout data received";
                 this->parseLogout(jsonObject);
+            }
+            else if(reply->url().toString().contains(MATCH_OPERATIONS_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder unmatch data received";
+                this->parseUnmatch(jsonObject);
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
@@ -1136,6 +1155,7 @@ void API::parseSuperlike(QJsonObject json)
     }
 
     // Handle out of superlikes
+    qDebug() << "SUPERLIKE REMAINING" << json["super_likes"].toObject()["remaining"].toInt();
     bool canSuperlike = json["super_likes"].toObject()["remaining"].toInt() > 0;
     this->setCanSuperlike(canSuperlike);
 
@@ -1147,6 +1167,12 @@ void API::parseLogout(QJsonObject json)
 {
     qDebug() << "Logging out";
     emit this->loggedOut();
+}
+
+void API::parseUnmatch(QJsonObject json)
+{
+    qDebug() << "Unmatching OK, refreshing matches...";
+    this->getMatchesAll();
 }
 
 QString API::token() const
