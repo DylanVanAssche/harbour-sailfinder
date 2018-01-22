@@ -112,16 +112,16 @@ QVariant MatchesListModel::data(const QModelIndex &index, int role) const
         }
         // Use UnreadCounter for displaying if match is a superlike match or not
     case UnreadCounterRole:
-        return QVariant("★");
+        return QVariant(0);
     case HasUnreadMessagesRole:
-        return QVariant(this->matchesList().at(index.row())->isSuperlike());
+        return QVariant(false);
         // The following roles aren't supported (yet) by Tinder
     case ReceivedMessageRole:
         return QVariant(false);
     case ReadMessageRole:
         return QVariant(false);
     case MentionedRole:
-        return QVariant(false);
+        return QVariant(this->matchesList().at(index.row())->isSuperlike());
     default:
         return QVariant();
     }

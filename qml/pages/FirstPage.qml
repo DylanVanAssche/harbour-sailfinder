@@ -43,6 +43,16 @@ Page {
         }
     }
 
+    Connections {
+        target: app
+        onNetworkStatusChanged: {
+            if(app.networkStatus) {
+                console.debug("Network recovered, reloading webview")
+                webview.reload()
+            }
+        }
+    }
+
     SilicaFlickable {
         anchors.fill: parent
 
@@ -70,9 +80,11 @@ Page {
                 left: parent.left
                 right: parent.right
             }
+            clip: true
             experimental.preferences.javascriptEnabled: true
             experimental.preferences.navigatorQtObjectEnabled: true
             experimental.preferences.developerExtrasEnabled: true
+            experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
             experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
             experimental.customLayoutWidth: parent.width / _devicePixelRatio
             experimental.overview: true

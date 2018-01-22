@@ -146,5 +146,9 @@
         <source>Unmatch</source>
         <translation>Unmatch</translation>
     </message>
+    <message id="sailfinder-not-connected">
+        <source>Network connection failure</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

@@ -68,12 +68,17 @@ DISTFILES += qml/harbour-sailfinder.qml \
     qml/components/NavigationBarDelegate.qml \
     qml/components/PhotoGridLayout.qml \
     qml/components/RecommendationsBar.qml \
+    qml/components/ContactsDelegate.qml \
+    qml/components/Avatar.qml \
+    qml/components/Spacer.qml \
+    qml/components/RecommendationsBar.qml \
+    qml/js/facebook.js \
+    qml/css/facebook.css \
     rpm/harbour-sailfinder.spec \
     rpm/harbour-sailfinder.yaml \
     translations/*.ts \
     harbour-sailfinder.desktop \
-    rpm/harbour-sailfinder.changes \
-    qml/components/Avatar.qml
+    rpm/harbour-sailfinder.changes
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

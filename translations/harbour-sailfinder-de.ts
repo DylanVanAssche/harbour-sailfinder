@@ -3,19 +3,24 @@
 <TS version="2.1">
 <context>
     <name></name>
+    <message id="sailfinder-not-connected">
+        <location filename="../qml/harbour-sailfinder.qml" line="31"/>
+        <source>Network connection failure</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="sailfinder-login-header">
-        <location filename="../qml/pages/FirstPage.qml" line="58"/>
+        <location filename="../qml/pages/FirstPage.qml" line="68"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-oops">
         <location filename="../qml/components/PhotoGridLayout.qml" line="103"/>
-        <location filename="../qml/pages/FirstPage.qml" line="114"/>
+        <location filename="../qml/pages/FirstPage.qml" line="126"/>
         <source>Oops!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-error">
-        <location filename="../qml/pages/FirstPage.qml" line="116"/>
+        <location filename="../qml/pages/FirstPage.qml" line="128"/>
         <source>Something went wrong, please try again later</source>
         <translation type="unfinished"></translation>
     </message>
