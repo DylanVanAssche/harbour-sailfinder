@@ -67,6 +67,7 @@ class API : public QObject
     Q_PROPERTY(bool canShowCommonConnections READ canShowCommonConnections NOTIFY canShowCommonConnectionsChanged)
     Q_PROPERTY(bool canLike READ canLike NOTIFY canLikeChanged)
     Q_PROPERTY(bool canSuperlike READ canSuperlike NOTIFY canSuperlikeChanged)
+    Q_PROPERTY(bool hasRecommendations READ hasRecommendations NOTIFY hasRecommendationsChanged)
     Q_PROPERTY(User* profile READ profile NOTIFY profileChanged)
     Q_PROPERTY(MatchesListModel* matchesList READ matchesList NOTIFY matchesListChanged)
     Q_PROPERTY(Recommendation* recommendation READ recommendation NOTIFY recommendationChanged)
@@ -125,6 +126,8 @@ public:
     void setMatchesList(MatchesListModel *matchesList);
     Recommendation *recommendation() const;
     void setRecommendation(Recommendation *recommendation);
+    bool hasRecommendations() const;
+    void setHasRecommendations(bool hasRecommendations);
 
 signals:
     void busyChanged();
@@ -149,6 +152,7 @@ signals:
     void recsListChanged();
     void recommendationChanged();
     void recommendationTimeOut();
+    void hasRecommendationsChanged();
     void loggedOut();
 
 public slots:
@@ -167,6 +171,7 @@ private:
     bool m_canShowCommonConnections;
     bool m_canLike;
     bool m_canSuperlike;
+    bool m_hasRecommendations;
     bool m_busy;
     bool m_networkEnabled;
     QList<Recommendation *> m_recsList;

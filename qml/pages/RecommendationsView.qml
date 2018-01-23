@@ -25,7 +25,7 @@ SilicaFlickable {
 
     width: parent.width
     height: parent.height
-    contentHeight: column.height
+    contentHeight: exhaustedText.enabled? parent.height: column.height
 
     Timer {
         id: retryTimer
@@ -41,15 +41,32 @@ SilicaFlickable {
             photoList.photoListModel = api.recommendation.photos
             bio.text = api.recommendation.bio
             retryTimer.stop()
-            recsBar.canLike = api.canLike
             recsBar.canSuperlike = api.canSuperlike
             recsBar.loaded = true
-            headerChanged(Util.createHeaderRecs(api.recommendation.name, api.recommendation.birthDate, api.recommendation.gender))
+            column.visible = api.canLike
+            exhaustedText.enabled = !api.canLike
+            if(api.canLike) {
+                headerChanged(Util.createHeaderRecs(api.recommendation.name, api.recommendation.birthDate, api.recommendation.gender))
+            }
+            else {
+                //% "Recommendations"
+                headerChanged(qsTrId("sailfinder-recommendations"))
+            }
         }
+
         onRecommendationTimeOut: {
             console.warn("Recommendation timeout, retrying in 5 minutes...")
             retryTimer.start()
         }
+
+        onHasRecommendationsChanged: {
+            console.warn("Recommendation exhausted, showing placeholder...")
+            column.visible = api.hasRecommendations
+            exhaustedText.enabled = !api.hasRecommendations
+            //% "Recommendations"
+            headerChanged(qsTrId("sailfinder-recommendations"))
+        }
+
         onProfileChanged: {
             if(!retryTimer.running) {
                 api.getRecommendations()
@@ -64,6 +81,7 @@ SilicaFlickable {
         id: column
         width: parent.width
         spacing: Theme.paddingLarge
+        visible: true
 
         PhotoGridLayout {
             id: photoList
@@ -94,5 +112,15 @@ SilicaFlickable {
             readOnly: true
             visible: text.length > 0
         }
+    }
+
+    ViewPlaceholder {
+        id: exhaustedText
+        anchors.centerIn: parent
+        //% "Exhausted!"
+        text: qsTrId("sailfinder-out-of-recs")
+        //% "Please come back later"
+        hintText: qsTrId("sailfinder-out-of-recs-text")
+        enabled: false
     }
 }

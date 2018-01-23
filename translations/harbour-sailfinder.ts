@@ -151,12 +151,12 @@
         <translation>About %0 V%1</translation>
     </message>
     <message id="sailfinder-what-is">
-        <source>What&apos;s %0 ?</source>
-        <translation>What&apos;s %0 ?</translation>
+        <source>What&apos;s %0?</source>
+        <translation>What&apos;s %0?</translation>
     </message>
     <message id="sailfinder-what-is-text">
-        <source>%0 is an opensource application to have on Tinder with your Sailfish OS smartphone!</source>
-        <translation>%0 is an opensource application to have on Tinder with your Sailfish OS smartphone!</translation>
+        <source>%0 is an opensource application to have fun on Tinder with your Sailfish OS smartphone!</source>
+        <translation>%0 is an opensource application to have fun on Tinder with your Sailfish OS smartphone!</translation>
     </message>
     <message id="sailfinder-privacy-licensing">
         <source>Privacy &amp; licensing</source>
@@ -205,6 +205,14 @@
     <message id="sailfinder-icons">
         <source>%0 icons</source>
         <translation>%0 icons</translation>
+    </message>
+    <message id="sailfinder-out-of-recs">
+        <source>Exhausted!</source>
+        <translation>Exhausted!</translation>
+    </message>
+    <message id="sailfinder-out-of-recs-text">
+        <source>Please come back later</source>
+        <translation>Please come back later</translation>
     </message>
 </context>
 </TS>

@@ -19,7 +19,6 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Item {
-    property bool canLike
     property bool canSuperlike
     property bool loaded
 
@@ -55,7 +54,7 @@ Item {
             anchors { verticalCenter: parent.verticalCenter}
             icon.source: "qrc:///images/like.png"
             icon.scale: Theme.iconSizeExtraLarge/icon.width
-            enabled: loaded && canLike
+            enabled: loaded
             onClicked: liked()
         }
     }

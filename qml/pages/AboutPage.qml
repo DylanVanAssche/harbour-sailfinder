@@ -39,11 +39,11 @@ Page {
             //% "About %0 V%1"
             PageHeader { title: qsTrId("sailfinder-version").arg(sfos.appNamePretty).arg(sfos.appVersion) }
 
-            //% "What's %0 ?"
+            //% "What's %0?"
             SectionHeader { text: qsTrId("sailfinder-what-is").arg(sfos.appNamePretty) }
 
             TextLabel {
-                //% "%0 is an opensource application to have on Tinder with your Sailfish OS smartphone!"
+                //% "%0 is an opensource application to have fun on Tinder with your Sailfish OS smartphone!"
                 text: qsTrId("sailfinder-what-is-text").arg(sfos.appNamePretty)
             }
 

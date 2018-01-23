@@ -519,6 +519,17 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     }
 }
 
+bool API::hasRecommendations() const
+{
+    return m_hasRecommendations;
+}
+
+void API::setHasRecommendations(bool hasRecommendations)
+{
+    m_hasRecommendations = hasRecommendations;
+    emit this->hasRecommendationsChanged();
+}
+
 Recommendation *API::recommendation() const
 {
     return m_recommendation;
@@ -783,7 +794,7 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder pass data received";
                 this->parsePass(jsonObject);
             }
-            else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive) && !reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive) && reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder superlike data received";
                 this->parseSuperlike(jsonObject);
             }
@@ -1015,22 +1026,34 @@ void API::parseRecommendations(QJsonObject json)
             qDebug() << "\tSNumber:" << sNumber;
             qDebug() << "\tGender:" << (int)(gender);
         }
+
+        this->setHasRecommendations(true);
+        qDebug() << "Has recommendations:" << this->hasRecommendations();
     }
     else {
         QString msg = json["message"].toString();
         if(msg == "recs timeout") {
             qWarning() << "Recommendations timeout received";
+            this->setHasRecommendations(false);
+            qDebug() << "Has recommendations:" << this->hasRecommendations();
             emit this->recommendationTimeOut();
         }
+        if(msg == "recs exhausted") {
+            qWarning() << "Recommendations exhausted received";
+            this->setHasRecommendations(false);
+            qDebug() << "Has recommendations:" << this->hasRecommendations();
+        }
         else {
-            qCritical() << "Unknown recommendation message";
+            qCritical() << "Unknown recommendation message:" << json["message"].toString();
         }
     }
 
     // Reset the iterator, set the recs list and update the 'recommendation' property
     this->setRecsList(recsList);
     recommendationCounter = 0;
-    this->nextRecommendation();
+    if(this->hasRecommendations()) {
+        this->nextRecommendation();
+    }
 }
 
 void API::parseMatches(QJsonObject json)

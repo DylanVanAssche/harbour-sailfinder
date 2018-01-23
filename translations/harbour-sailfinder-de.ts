@@ -32,24 +32,24 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-ssl-error">
-        <location filename="../src/api.cpp" line="695"/>
+        <location filename="../src/api.cpp" line="706"/>
         <source>SSL error, please check your device is running with the correct date and time</source>
         <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-error">
-        <location filename="../src/api.cpp" line="717"/>
+        <location filename="../src/api.cpp" line="728"/>
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-authentication-requested">
-        <location filename="../src/api.cpp" line="722"/>
+        <location filename="../src/api.cpp" line="733"/>
         <source>Tinder token expired, refreshing now</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-json-error">
-        <location filename="../src/api.cpp" line="806"/>
+        <location filename="../src/api.cpp" line="817"/>
         <source>Invalid JSON data received, please try again later</source>
         <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
         <translation type="unfinished"></translation>
@@ -66,6 +66,8 @@
     </message>
     <message id="sailfinder-recommendations">
         <location filename="../qml/pages/MainPage.qml" line="89"/>
+        <location filename="../qml/pages/RecommendationsView.qml" line="53"/>
+        <location filename="../qml/pages/RecommendationsView.qml" line="67"/>
         <source>Recommendations</source>
         <translation type="unfinished"></translation>
     </message>
@@ -189,12 +191,14 @@
     </message>
     <message id="sailfinder-what-is">
         <location filename="../qml/pages/AboutPage.qml" line="43"/>
-        <source>What&apos;s %0 ?</source>
+        <source>What&apos;s %0?</source>
+        <oldsource>What&apos;s %0 ?</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-what-is-text">
         <location filename="../qml/pages/AboutPage.qml" line="47"/>
-        <source>%0 is an opensource application to have on Tinder with your Sailfish OS smartphone!</source>
+        <source>%0 is an opensource application to have fun on Tinder with your Sailfish OS smartphone!</source>
+        <oldsource>%0 is an opensource application to have on Tinder with your Sailfish OS smartphone!</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-privacy-licensing">
@@ -256,6 +260,17 @@
     <message id="sailfinder-icons">
         <location filename="../qml/pages/AboutPage.qml" line="111"/>
         <source>%0 icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-out-of-recs">
+        <location filename="../qml/pages/RecommendationsView.qml" line="121"/>
+        <source>Exhausted!</source>
+        <oldsource>No recommendations</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-out-of-recs-text">
+        <location filename="../qml/pages/RecommendationsView.qml" line="123"/>
+        <source>Please come back later</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
