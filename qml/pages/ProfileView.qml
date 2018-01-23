@@ -22,7 +22,7 @@ import "../js/util.js" as Util
 
 SilicaFlickable {
     property bool _hadFocus
-    signal header(string text)
+    signal headerChanged(string text)
 
     width: parent.width
     height: parent.height
@@ -53,7 +53,7 @@ SilicaFlickable {
             ageMin.value = api.profile.ageMin // Order is important otherwise the value will not be updated due our limits implemented in the sliders
             photoList.photoListModel = api.profile.photos
             bio.text = api.profile.bio
-            header(Util.createHeaderProfile(api.profile.name, api.profile.birthDate, api.profile.gender))
+            headerChanged(Util.createHeaderProfile(api.profile.name, api.profile.birthDate, api.profile.gender))
         }
         onLoggedOut: {
             pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { logout: true })

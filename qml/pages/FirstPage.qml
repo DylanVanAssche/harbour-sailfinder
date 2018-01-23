@@ -53,10 +53,10 @@ Page {
         }
     }
 
-    SilicaFlickable {
-        anchors.fill: parent
+    //SilicaFlickable {
+    //    anchors.fill: parent
 
-        PageHeader {
+        /*PageHeader {
             id: header
             anchors {
                 top: parent.top
@@ -66,7 +66,7 @@ Page {
             //% Header on the login screen
             //% "Login"
             title: qsTrId("sailfinder-login-header")
-        }
+        }*/
 
         SilicaWebView {
             // Rounding floating numbers in JS: https://stackoverflow.com/questions/9453421/how-to-round-float-numbers-in-javascript
@@ -74,17 +74,23 @@ Page {
             id: webview
             property real _devicePixelRatio: Math.round(1.5*Theme.pixelRatio * 10) / 10.0
 
-            anchors {
+            /*anchors {
                 top: header.bottom
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
+            }*/
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
             }
             clip: true
             experimental.preferences.javascriptEnabled: true
             experimental.preferences.navigatorQtObjectEnabled: true
             experimental.preferences.developerExtrasEnabled: true
-            experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
+            //experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
             experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
             experimental.customLayoutWidth: parent.width / _devicePixelRatio
             experimental.overview: true
@@ -136,6 +142,6 @@ Page {
             visible: false
             running: Qt.application.active && visible
         }
-    }
+    //}
 }
 

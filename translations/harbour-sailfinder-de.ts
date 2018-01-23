@@ -4,23 +4,18 @@
 <context>
     <name></name>
     <message id="sailfinder-not-connected">
-        <location filename="../qml/harbour-sailfinder.qml" line="31"/>
+        <location filename="../qml/harbour-sailfinder.qml" line="32"/>
         <source>Network connection failure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="sailfinder-login-header">
-        <location filename="../qml/pages/FirstPage.qml" line="68"/>
-        <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-oops">
         <location filename="../qml/components/PhotoGridLayout.qml" line="103"/>
-        <location filename="../qml/pages/FirstPage.qml" line="126"/>
+        <location filename="../qml/pages/FirstPage.qml" line="132"/>
         <source>Oops!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-error">
-        <location filename="../qml/pages/FirstPage.qml" line="128"/>
+        <location filename="../qml/pages/FirstPage.qml" line="134"/>
         <source>Something went wrong, please try again later</source>
         <translation type="unfinished"></translation>
     </message>
@@ -60,29 +55,29 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-about">
-        <location filename="../qml/pages/MainPage.qml" line="34"/>
+        <location filename="../qml/pages/MainPage.qml" line="35"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-settings">
-        <location filename="../qml/pages/MainPage.qml" line="40"/>
+        <location filename="../qml/pages/MainPage.qml" line="41"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-recommendations">
-        <location filename="../qml/pages/MainPage.qml" line="87"/>
+        <location filename="../qml/pages/MainPage.qml" line="88"/>
         <source>Recommendations</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-matches">
         <location filename="../qml/js/util.js" line="22"/>
-        <location filename="../qml/pages/MainPage.qml" line="89"/>
+        <location filename="../qml/pages/MainPage.qml" line="90"/>
         <source>Matches</source>
         <extracomment>Header for matches</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-profile">
-        <location filename="../qml/pages/MainPage.qml" line="91"/>
+        <location filename="../qml/pages/MainPage.qml" line="92"/>
         <source>Profile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -168,17 +163,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-new-match">
-        <location filename="../qml/pages/MatchesView.qml" line="44"/>
+        <location filename="../qml/pages/MatchesView.qml" line="45"/>
         <source>New match!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-new-match-hint">
-        <location filename="../qml/pages/MatchesView.qml" line="46"/>
+        <location filename="../qml/pages/MatchesView.qml" line="47"/>
         <source>You have received a new match! Go say hi!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-unmatch">
-        <location filename="../qml/pages/MatchesView.qml" line="64"/>
+        <location filename="../qml/pages/MatchesView.qml" line="65"/>
         <source>Unmatch</source>
         <translation type="unfinished"></translation>
     </message>

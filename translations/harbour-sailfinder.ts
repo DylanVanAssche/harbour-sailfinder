@@ -3,10 +3,6 @@
 <TS version="2.1">
 <context>
     <name></name>
-    <message id="sailfinder-login-header">
-        <source>Login</source>
-        <translation>Login</translation>
-    </message>
     <message id="sailfinder-api-error">
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>

@@ -21,7 +21,7 @@ import "../components"
 import "../js/util.js" as Util
 
 SilicaFlickable {
-    signal header(string text)
+    signal headerChanged(string text)
 
     width: parent.width
     height: parent.height
@@ -44,7 +44,7 @@ SilicaFlickable {
             recsBar.canLike = api.canLike
             recsBar.canSuperlike = api.canSuperlike
             recsBar.loaded = true
-            header(Util.createHeaderRecs(api.recommendation.name, api.recommendation.birthDate, api.recommendation.gender))
+            headerChanged(Util.createHeaderRecs(api.recommendation.name, api.recommendation.birthDate, api.recommendation.gender))
         }
         onRecommendationTimeOut: {
             console.warn("Recommendation timeout, retrying in 5 minutes...")

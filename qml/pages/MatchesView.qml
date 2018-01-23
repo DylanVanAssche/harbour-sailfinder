@@ -22,7 +22,7 @@ import "../components"
 import "../js/util.js" as Util
 
 SilicaFlickable {
-    signal header(string text)
+    signal headerChanged(string text)
 
     width: parent.width
     height: parent.height
@@ -36,7 +36,8 @@ SilicaFlickable {
         target: api
         onMatchesListChanged: {
             matchesListView.model = api.matchesList
-            header(Util.createHeaderMatches(matchesListView.count))
+            console.log()
+            headerChanged(Util.createHeaderMatches(matchesListView.count))
         }
         onNewMatch: {
             sfos.createNotification(

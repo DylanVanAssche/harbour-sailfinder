@@ -17,7 +17,8 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import Nemo.DBus 2.0
+//import Nemo.DBus 2.0
+import org.nemomobile.dbus 2.0
 import Harbour.Sailfinder.SFOS 1.0
 import "../components"
 import "../js/util.js" as Util
@@ -102,13 +103,13 @@ Page {
             }
             model: VisualItemModel {
                 RecommendationsView {
-                    onHeader: swipeView._recommendationsHeader = text
+                    onHeaderChanged: swipeView._recommendationsHeader = text
                 }
                 MatchesView {
-                    onHeader: swipeView._matchesHeader = text
+                    onHeaderChanged: swipeView._matchesHeader = text
                 }
                 ProfileView {
-                    onHeader: swipeView._profileHeader = text
+                    onHeaderChanged: swipeView._profileHeader = text
                 }
             }
         }

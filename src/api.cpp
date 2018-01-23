@@ -882,16 +882,18 @@ void API::parseProfile(QJsonObject json)
         int distanceMax = user["distance_filter"].toInt();
         bool discoverable = user["discoverable"].toBool();
         Sailfinder::Gender gender = Sailfinder::Gender::Female;
-        if(user["gender"].toInt() == 0) { // Default female, change if needed
+        if(user["gender"].toInt() == (int)Sailfinder::Gender::Male) { // Default female, change if needed
             gender = Sailfinder::Gender::Male;
         }
 
+        qDebug() << "Profile 'user' entity:" << user;
+        qDebug() << "gender_filter:" << user["gender_filter"].toInt();
         Sailfinder::Gender interestedIn = Sailfinder::Gender::All;
-        if(user["gender_filter"].toInt() == 0) { // Both genders
+        if(user["gender_filter"].toInt() == (int)Sailfinder::Gender::Male) { // Both genders
             interestedIn = Sailfinder::Gender::Male;
         }
-        else if(user["gender_filter"].toInt() == 1) { // Change to male only
-            interestedIn = Sailfinder::Gender::Male;
+        else if(user["gender_filter"].toInt() == (int)Sailfinder::Gender::Female) { // Change to male only
+            interestedIn = Sailfinder::Gender::Female;
         }
         QString name = user["name"].toString();
         QString id = user["_id"].toString();
@@ -962,7 +964,7 @@ void API::parseRecommendations(QJsonObject json)
             QString contentHash = recommendation["content_hash"].toString();
             int sNumber = recommendation["s_number"].toInt();
             Sailfinder::Gender gender = Sailfinder::Gender::Female;
-            if(recommendation["gender"].toInt() == 0) { // Default female, change if needed
+            if(recommendation["gender"].toInt() == (int)Sailfinder::Gender::Male) { // Default female, change if needed
                 gender = Sailfinder::Gender::Male;
             }
             QString id = recommendation["_id"].toString();
@@ -1062,7 +1064,7 @@ void API::parseMatches(QJsonObject json)
         QString bio = person["bio"].toString();
         QDateTime birthDate = QDateTime::fromString(person["birth_date"].toString(), Qt::ISODate);
         Sailfinder::Gender gender = Sailfinder::Gender::Female;
-        if(person["gender"].toInt() == 0) { // Default female, change if needed
+        if(person["gender"].toInt() == (int)Sailfinder::Gender::Male) { // Default female, change if needed
             gender = Sailfinder::Gender::Male;
         }
 

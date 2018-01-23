@@ -33,8 +33,8 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDebug>
 
-#define MAX_BODY_LENGTH 100
-#define MAX_PREVIEW_LENGTH 40
+#define MAX_BODY_LENGTH 200
+#define MAX_PREVIEW_LENGTH 100
 
 class OS: public QObject {
     Q_OBJECT
