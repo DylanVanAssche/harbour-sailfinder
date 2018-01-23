@@ -28,6 +28,12 @@ SilicaFlickable {
     height: parent.height
     contentHeight: column.height
     Component.onCompleted: api.getProfile()
+
+    Timer {
+        id: updatesTimer
+        interval: 5*1000
+        onTriggered: api.getUpdates(temp.lastActivityDate)
+    }
     
     Connections {
         target: swipeView
@@ -54,9 +60,25 @@ SilicaFlickable {
             photoList.photoListModel = api.profile.photos
             bio.text = api.profile.bio
             headerChanged(Util.createHeaderProfile(api.profile.name, api.profile.birthDate, api.profile.gender))
+            updatesTimer.start()
         }
+
         onLoggedOut: {
             pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { logout: true })
+        }
+
+        onStandardPollIntervalChanged: {
+            if(Qt.application.active) {
+                updatesTimer.interval = api.standardPollInterval
+            }
+            else {
+                updatesTimer.interval = api.persistentPollInterval
+            }
+        }
+
+        onUpdatesReady: {
+            temp.lastActivityDate = new Date()
+            updatesTimer.start()
         }
     }
 

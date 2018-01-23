@@ -851,7 +851,19 @@ void API::parseMeta(QJsonObject json)
 
 void API::parseUpdates(QJsonObject json)
 {
-    // TODO: Parse the update data and update the models for matches, send notifications, ...
+    QJsonArray matchesArray = json["matches"].toArray();
+    bool refetch = false;
+
+    if(matchesArray.count() > 0) {
+        emit this->newMatch(matchesArray.count());
+        refetch = true;
+    }
+
+    QJsonArray blocksArray = json["blocks"].toArray();
+    if(blocksArray.count() > 0) {
+        refetch = true;
+    }
+
     QJsonObject pollingData = json["poll_interval"].toObject();
     this->setStandardPollInterval(pollingData["standard"].toInt());
     this->setPersistentPollInterval(pollingData["persistent"].toInt());
@@ -859,6 +871,10 @@ void API::parseUpdates(QJsonObject json)
     qDebug() << "Updates data:";
     qDebug() << "\tPolling interval standard:" << this->standardPollInterval();
     qDebug() << "\tPolling interval persitent:" << this->persistentPollInterval();
+    qDebug() << "\tMatches:" << matchesArray.count();
+    qDebug() << "\tBlocks:" << blocksArray.count();
+
+    emit this->updatesReady(QDateTime::fromString(json["last_activity_date"].toString(), Qt::ISODate), refetch);
 }
 
 void API::parseProfile(QJsonObject json)
@@ -1140,7 +1156,7 @@ void API::parseLike(QJsonObject json)
     }
     else if(json["match"].isObject()) {
         qDebug() << "Recommendation was a pending match";
-        emit this->newMatch();
+        emit this->newMatch(1);
     }
     else {
         qCritical() << "Unknown JSON response for liking recommendation";

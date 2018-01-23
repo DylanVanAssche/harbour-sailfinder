@@ -39,16 +39,36 @@ SilicaFlickable {
             console.log()
             headerChanged(Util.createHeaderMatches(matchesListView.count))
         }
+
         onNewMatch: {
-            sfos.createNotification(
-                        //% "New match!"
-                        qsTrId("sailfinder-new-match"),
-                        //% "You have received a new match! Go say hi!"
-                        qsTrId("sailfinder-new-match-hint"),
-                        "social",
-                        "sailfinder-new-match"
-                        )
-            api.getMatchesAll();
+            if(count == 1) {
+                sfos.createNotification(
+                            //% "New match!"
+                            qsTrId("sailfinder-new-match"),
+                            //% "You have received a new match! Go say hi!"
+                            qsTrId("sailfinder-new-match-hint"),
+                            "social",
+                            "sailfinder-new-match"
+                            )
+            }
+            else {
+                sfos.createNotification(
+                            //% "New matches!"
+                            qsTrId("sailfinder-new-matches"),
+                            //% "You have received %L0 new matches! Go say hi!"
+                            qsTrId("sailfinder-new-matches-hint").arg(count),
+                            "social",
+                            "sailfinder-new-match"
+                            )
+            }
+            api.getMatchesAll()
+        }
+
+        onUpdatesReady: {
+            if(refetch) {
+                console.debug("Matches or Blocks updated, refetching...")
+                api.getMatchesAll()
+            }
         }
     }
 

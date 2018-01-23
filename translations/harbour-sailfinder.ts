@@ -34,10 +34,6 @@
         <source>About</source>
         <translation>About</translation>
     </message>
-    <message id="sailfinder-settings">
-        <source>Settings</source>
-        <translation>Settings</translation>
-    </message>
     <message id="sailfinder-recommendations">
         <source>Recommendations</source>
         <translation>Recommendations</translation>
@@ -213,6 +209,14 @@
     <message id="sailfinder-out-of-recs-text">
         <source>Please come back later</source>
         <translation>Please come back later</translation>
+    </message>
+    <message id="sailfinder-new-matches">
+        <source>New matches!</source>
+        <translation>New matches!</translation>
+    </message>
+    <message id="sailfinder-new-matches-hint">
+        <source>You have received %L0 new matches! Go say hi!</source>
+        <translation>You have received %L0 new matches! Go say hi!</translation>
     </message>
 </context>
 </TS>

@@ -146,7 +146,7 @@ signals:
     void authenticatedChanged();
     void errorOccurred(const QString &text);
     void authenticationRequested(const QString &text);
-    void newMatch();
+    void newMatch(int count);
     void newSuperMatch();
     void matchesListChanged();
     void recsListChanged();
@@ -154,6 +154,7 @@ signals:
     void recommendationTimeOut();
     void hasRecommendationsChanged();
     void loggedOut();
+    void updatesReady(QDateTime lastActivityDate, bool refetch);
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);

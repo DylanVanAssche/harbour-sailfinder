@@ -29,7 +29,7 @@ SilicaFlickable {
 
     Timer {
         id: retryTimer
-        interval: 5*60*1000
+        interval: 10*60*1000
         repeat: true
         onTriggered: api.getRecommendations()
     }
@@ -65,6 +65,7 @@ SilicaFlickable {
             exhaustedText.enabled = !api.hasRecommendations
             //% "Recommendations"
             headerChanged(qsTrId("sailfinder-recommendations"))
+            retryTimer.start()
         }
 
         onProfileChanged: {

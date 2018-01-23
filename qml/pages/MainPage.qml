@@ -36,12 +36,6 @@ Page {
                 text: qsTrId("sailfinder-about")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
-
-            MenuItem {
-                //% "Settings"
-                text: qsTrId("sailfinder-settings")
-                onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
-            }
         }
 
         PageHeader {
