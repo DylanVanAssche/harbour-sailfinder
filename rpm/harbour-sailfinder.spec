@@ -16,7 +16,7 @@ Summary:    Sailfinder
 Version:    4.0
 Release:    1
 Group:      Qt/Qt
-License:    LICENSE
+License:    GPLv3
 URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-sailfinder.yaml
@@ -30,8 +30,7 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 
 %description
-Short description of my Sailfish OS Application
-
+Sailfinder is a Sailfish OS application to have fun on Tinder.
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -43,7 +42,8 @@ Short description of my Sailfish OS Application
 # >> build pre
 # << build pre
 
-%qtc_qmake5 
+%qtc_qmake5  \
+    VERSION=%{version}
 
 %qtc_make %{?_smp_mflags}
 

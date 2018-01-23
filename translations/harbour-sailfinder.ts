@@ -144,7 +144,67 @@
     </message>
     <message id="sailfinder-not-connected">
         <source>Network connection failure</source>
-        <translation type="unfinished"></translation>
+        <translation>Network connection failure</translation>
+    </message>
+    <message id="sailfinder-version">
+        <source>About %0 V%1</source>
+        <translation>About %0 V%1</translation>
+    </message>
+    <message id="sailfinder-what-is">
+        <source>What&apos;s %0 ?</source>
+        <translation>What&apos;s %0 ?</translation>
+    </message>
+    <message id="sailfinder-what-is-text">
+        <source>%0 is an opensource application to have on Tinder with your Sailfish OS smartphone!</source>
+        <translation>%0 is an opensource application to have on Tinder with your Sailfish OS smartphone!</translation>
+    </message>
+    <message id="sailfinder-privacy-licensing">
+        <source>Privacy &amp; licensing</source>
+        <translation>Privacy &amp; licensing</translation>
+    </message>
+    <message id="sailfinder-privacy-licensing-text">
+        <source>%0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0.</source>
+        <translation>%0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0.</translation>
+    </message>
+    <message id="sailfinder-responsibility">
+        <source>Responsibility</source>
+        <translation>Responsibility</translation>
+    </message>
+    <message id="sailfinder-responsibility-text">
+        <source>%0 and it&apos;s developer can&apos;t be hold responsible for using %0. %0 and it&apos;s developer aren&apos;t affilated in any way with Tinder.</source>
+        <translation>%0 and it&apos;s developer can&apos;t be hold responsible for using %0. %0 and it&apos;s developer aren&apos;t affilated in any way with Tinder.</translation>
+    </message>
+    <message id="sailfinder-developer-source">
+        <source>Developer &amp; source code</source>
+        <translation>Developer &amp; source code</translation>
+    </message>
+    <message id="sailfinder-donate-with">
+        <source>Donate with %0</source>
+        <translation>Donate with %0</translation>
+    </message>
+    <message id="sailfinder-source">
+        <source>Source code</source>
+        <translation>Source code</translation>
+    </message>
+    <message id="sailfinder-translations">
+        <source>Translations</source>
+        <translation>Translations</translation>
+    </message>
+    <message id="sailfinder-translations-text">
+        <source>%0 can be translated into your language but for that we need your help! You can translate this app on %1</source>
+        <translation>%0 can be translated into your language but for that we need your help! You can translate this app on %1</translation>
+    </message>
+    <message id="sailfinder-translations-project">
+        <source>%0 project</source>
+        <translation>%0 project</translation>
+    </message>
+    <message id="sailfinder-powered-by">
+        <source>Powered by</source>
+        <translation>Powered by</translation>
+    </message>
+    <message id="sailfinder-icons">
+        <source>%0 icons</source>
+        <translation>%0 icons</translation>
     </message>
 </context>
 </TS>

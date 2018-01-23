@@ -61,6 +61,7 @@ DISTFILES += qml/harbour-sailfinder.qml \
     qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
     qml/pages/MainPage.qml \
+    qml/pages/AboutPage.qml \
     qml/pages/MatchesView.qml \
     qml/pages/ProfileView.qml \
     qml/pages/RecommendationsView.qml \

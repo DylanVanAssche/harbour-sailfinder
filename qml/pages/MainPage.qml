@@ -30,6 +30,7 @@ Page {
 
         PullDownMenu {
             busy: api.busy
+
             MenuItem {
                 //% "About"
                 text: qsTrId("sailfinder-about")

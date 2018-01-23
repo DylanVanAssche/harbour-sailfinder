@@ -6,16 +6,17 @@ Release: 1
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
 Group: Qt/Qt
 URL: http://example.org/
-License: LICENSE
+License: GPLv3
 # This must be generated before uploading a package to a remote build service.
 # Usually this line does not need to be modified.
 Sources:
 - '%{name}-%{version}.tar.bz2'
-Description: |
-  Short description of my Sailfish OS Application
+Description: Sailfinder is a Sailfish OS application to have fun on Tinder.
 Configure: none
 # The qtc5 builder inserts macros to allow QtCreator to have fine
 # control over qmake/make execution
+QMakeOptions:
+- VERSION=%{version}
 Builder: qtc5
 
 # This section specifies build dependencies that are resolved using pkgconfig.

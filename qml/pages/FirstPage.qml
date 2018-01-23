@@ -53,95 +53,73 @@ Page {
         }
     }
 
-    //SilicaFlickable {
-    //    anchors.fill: parent
+    SilicaWebView {
+        // Rounding floating numbers in JS: https://stackoverflow.com/questions/9453421/how-to-round-float-numbers-in-javascript
+        // Default 1.5x zoom
+        id: webview
+        property real _devicePixelRatio: Math.round(1.5*Theme.pixelRatio * 10) / 10.0
 
-        /*PageHeader {
-            id: header
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        clip: true
+        experimental.preferences.javascriptEnabled: true
+        experimental.preferences.navigatorQtObjectEnabled: true
+        experimental.preferences.developerExtrasEnabled: true
+        experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
+        experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
+        experimental.customLayoutWidth: parent.width / _devicePixelRatio
+        experimental.overview: true
+        experimental.userAgent: app.fbUserAgent
+        experimental.onMessageReceived: {
+            var msg = JSON.parse(message.data);
+            switch(msg.type) {
+            case 0: // FB_TOKEN
+                console.debug("Successfully retrieved Facebook access token: " + msg.data);
+                fbToken = msg.data;
+                errorFacebookLogin.enabled = false;
+                opacity = 0.0;
+                break;
+            case 1: // ERROR
+                console.error("Can't retrieve Facebook access token: " + msg.data);
+                fbToken = "";
+                errorFacebookLogin.enabled = true;
+                opacity = 1.0;
+                break;
+            case 42: // DEBUG
+                console.debug(msg.data);
+                break;
             }
-            //% Header on the login screen
-            //% "Login"
-            title: qsTrId("sailfinder-login-header")
-        }*/
-
-        SilicaWebView {
-            // Rounding floating numbers in JS: https://stackoverflow.com/questions/9453421/how-to-round-float-numbers-in-javascript
-            // Default 1.5x zoom
-            id: webview
-            property real _devicePixelRatio: Math.round(1.5*Theme.pixelRatio * 10) / 10.0
-
-            /*anchors {
-                top: header.bottom
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-            }*/
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-            }
-            clip: true
-            experimental.preferences.javascriptEnabled: true
-            experimental.preferences.navigatorQtObjectEnabled: true
-            experimental.preferences.developerExtrasEnabled: true
-            //experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
-            experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
-            experimental.customLayoutWidth: parent.width / _devicePixelRatio
-            experimental.overview: true
-            experimental.userAgent: app.fbUserAgent
-            experimental.onMessageReceived: {
-                var msg = JSON.parse(message.data);
-                switch(msg.type) {
-                case 0: // FB_TOKEN
-                    console.debug("Successfully retrieved Facebook access token: " + msg.data);
-                    fbToken = msg.data;
-                    errorFacebookLogin.enabled = false;
-                    opacity = 0.0;
-                    break;
-                case 1: // ERROR
-                    console.error("Can't retrieve Facebook access token: " + msg.data);
-                    fbToken = "";
-                    errorFacebookLogin.enabled = true;
-                    opacity = 1.0;
-                    break;
-                case 42: // DEBUG
-                    console.debug(msg.data);
-                    break;
-                }
-            }
-            url: app.fbAuthUrl
-            Component.onCompleted: {
-                if(logout) {
-                    console.debug("Clearing cookies due logout")
-                    webview.experimental.deleteAllCookies();
-                    webview.reload()
-                }
-            }
-
-            Behavior on opacity { FadeAnimation {} }
-
-            ViewPlaceholder {
-                id: errorFacebookLogin
-                //% "Oops!"
-                text: qsTrId("sailfinder-oops")
-                //% "Something went wrong, please try again later"
-                hintText: qsTrId("sailfinder-error")
+        }
+        url: app.fbAuthUrl
+        Component.onCompleted: {
+            if(logout) {
+                console.debug("Clearing cookies due logout")
+                webview.experimental.deleteAllCookies();
+                webview.reload()
             }
         }
 
-        BusyIndicator {
-            id: tinderLogin
-            size: BusyIndicatorSize.Large
-            anchors.centerIn: parent
-            visible: false
-            running: Qt.application.active && visible
+        Behavior on opacity { FadeAnimation {} }
+
+        ViewPlaceholder {
+            id: errorFacebookLogin
+            //% "Oops!"
+            text: qsTrId("sailfinder-oops")
+            //% "Something went wrong, please try again later"
+            hintText: qsTrId("sailfinder-error")
         }
-    //}
+    }
+
+    BusyIndicator {
+        id: tinderLogin
+        size: BusyIndicatorSize.Large
+        anchors.centerIn: parent
+        visible: false
+        running: Qt.application.active && visible
+    }
 }
 

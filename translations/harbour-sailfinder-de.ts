@@ -10,12 +10,12 @@
     </message>
     <message id="sailfinder-oops">
         <location filename="../qml/components/PhotoGridLayout.qml" line="103"/>
-        <location filename="../qml/pages/FirstPage.qml" line="132"/>
+        <location filename="../qml/pages/FirstPage.qml" line="111"/>
         <source>Oops!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-error">
-        <location filename="../qml/pages/FirstPage.qml" line="134"/>
+        <location filename="../qml/pages/FirstPage.qml" line="113"/>
         <source>Something went wrong, please try again later</source>
         <translation type="unfinished"></translation>
     </message>
@@ -55,29 +55,29 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-about">
-        <location filename="../qml/pages/MainPage.qml" line="35"/>
+        <location filename="../qml/pages/MainPage.qml" line="36"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-settings">
-        <location filename="../qml/pages/MainPage.qml" line="41"/>
+        <location filename="../qml/pages/MainPage.qml" line="42"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-recommendations">
-        <location filename="../qml/pages/MainPage.qml" line="88"/>
+        <location filename="../qml/pages/MainPage.qml" line="89"/>
         <source>Recommendations</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-matches">
         <location filename="../qml/js/util.js" line="22"/>
-        <location filename="../qml/pages/MainPage.qml" line="90"/>
+        <location filename="../qml/pages/MainPage.qml" line="91"/>
         <source>Matches</source>
         <extracomment>Header for matches</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-profile">
-        <location filename="../qml/pages/MainPage.qml" line="92"/>
+        <location filename="../qml/pages/MainPage.qml" line="93"/>
         <source>Profile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -180,6 +180,82 @@
     <message id="sailfinder-unmatching">
         <location filename="../qml/components/ContactsDelegate.qml" line="30"/>
         <source>Unmatching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-version">
+        <location filename="../qml/pages/AboutPage.qml" line="40"/>
+        <source>About %0 V%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-what-is">
+        <location filename="../qml/pages/AboutPage.qml" line="43"/>
+        <source>What&apos;s %0 ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-what-is-text">
+        <location filename="../qml/pages/AboutPage.qml" line="47"/>
+        <source>%0 is an opensource application to have on Tinder with your Sailfish OS smartphone!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-privacy-licensing">
+        <location filename="../qml/pages/AboutPage.qml" line="51"/>
+        <source>Privacy &amp; licensing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-privacy-licensing-text">
+        <location filename="../qml/pages/AboutPage.qml" line="55"/>
+        <source>%0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-responsibility">
+        <location filename="../qml/pages/AboutPage.qml" line="59"/>
+        <source>Responsibility</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-responsibility-text">
+        <location filename="../qml/pages/AboutPage.qml" line="63"/>
+        <source>%0 and it&apos;s developer can&apos;t be hold responsible for using %0. %0 and it&apos;s developer aren&apos;t affilated in any way with Tinder.</source>
+        <oldsource>The developers can&apos;t be hold responsible for anything by using %0.</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-developer-source">
+        <location filename="../qml/pages/AboutPage.qml" line="67"/>
+        <source>Developer &amp; source code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-donate-with">
+        <location filename="../qml/pages/AboutPage.qml" line="79"/>
+        <source>Donate with %0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-source">
+        <location filename="../qml/pages/AboutPage.qml" line="86"/>
+        <source>Source code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-translations">
+        <location filename="../qml/pages/AboutPage.qml" line="90"/>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-translations-text">
+        <location filename="../qml/pages/AboutPage.qml" line="94"/>
+        <source>%0 can be translated into your language but for that we need your help! You can translate this app on %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-translations-project">
+        <location filename="../qml/pages/AboutPage.qml" line="101"/>
+        <source>%0 project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-powered-by">
+        <location filename="../qml/pages/AboutPage.qml" line="105"/>
+        <source>Powered by</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-icons">
+        <location filename="../qml/pages/AboutPage.qml" line="111"/>
+        <source>%0 icons</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
