@@ -22,11 +22,11 @@ import "../components"
 import "../js/util.js" as Util
 
 SilicaFlickable {
+    property bool _intialFetchRequired: true
     signal headerChanged(string text)
 
     width: parent.width
     height: parent.height
-    Component.onCompleted: api.getMatchesAll()
 
     SFOS {
         id: sfos
@@ -36,8 +36,9 @@ SilicaFlickable {
         target: api
         onMatchesListChanged: {
             matchesListView.model = api.matchesList
-            console.log()
             headerChanged(Util.createHeaderMatches(matchesListView.count))
+            noMatchesText.enabled = matchesListView.count == 0
+            _intialFetchRequired = false
         }
 
         onNewMatch: {
@@ -65,7 +66,9 @@ SilicaFlickable {
         }
 
         onUpdatesReady: {
-            if(refetch) {
+            // Wait for refetch or do intial fetch when updates are received
+            // Avoiding double intial fetch when updates are received at launch
+            if(refetch || _intialFetchRequired) {
                 console.debug("Matches or Blocks updated, refetching...")
                 api.getMatchesAll()
             }
@@ -79,6 +82,7 @@ SilicaFlickable {
             id: contact
             width: ListView.view.width
             onRemoved: api.unmatch(model.matchId)
+            onClicked: pageStack.push(Qt.resolvedUrl("MessagingPage.qml"), { matchObject: model.messages })
             menu: ContextMenu {
                 MenuItem {
                     //% "Unmatch"
@@ -87,5 +91,17 @@ SilicaFlickable {
                 }
             }
         }
+
+        VerticalScrollDecorator {}
+    }
+
+    ViewPlaceholder {
+        id: noMatchesText
+        anchors.centerIn: parent
+        //% "No matches!"
+        text: qsTrId("sailfinder-no-matches")
+        //% "Swipe on some recommendations"
+        hintText: qsTrId("sailfinder-no-matches-text")
+        enabled: false
     }
 }

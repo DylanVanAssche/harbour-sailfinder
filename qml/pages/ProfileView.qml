@@ -27,11 +27,14 @@ SilicaFlickable {
     width: parent.width
     height: parent.height
     contentHeight: column.height
-    Component.onCompleted: api.getProfile()
+    Component.onCompleted: {
+        api.getProfile()
+        api.getUpdates(temp.lastActivityDate)
+    }
 
     Timer {
         id: updatesTimer
-        interval: 5*1000
+        interval: 30000
         onTriggered: api.getUpdates(temp.lastActivityDate)
     }
     
@@ -45,6 +48,17 @@ SilicaFlickable {
             }
             else {
                 _hadFocus = true;
+            }
+        }
+    }
+
+    Connections {
+        target: Qt.application
+        onActiveChanged: {
+            if(Qt.application.active) {
+                // Fetch immediately when becoming active again
+                api.getUpdates(temp.lastActivityDate)
+                updatesTimer.restart()
             }
         }
     }
@@ -67,18 +81,18 @@ SilicaFlickable {
             pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { logout: true })
         }
 
-        onStandardPollIntervalChanged: {
-            if(Qt.application.active) {
-                updatesTimer.interval = api.standardPollInterval
+        onPersistentPollIntervalChanged: {
+            if(api.persistentPollInterval > 0) {
+                updatesTimer.interval = api.persistentPollInterval
             }
             else {
-                updatesTimer.interval = api.persistentPollInterval
+                console.warn("Invalid persitent poll interval received: " + api.persistentPollInterval)
             }
         }
 
         onUpdatesReady: {
             temp.lastActivityDate = new Date()
-            updatesTimer.start()
+            updatesTimer.restart()
         }
     }
 

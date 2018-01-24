@@ -218,5 +218,13 @@
         <source>You have received %L0 new matches! Go say hi!</source>
         <translation>You have received %L0 new matches! Go say hi!</translation>
     </message>
+    <message id="sailfinder-no-matches">
+        <source>No matches!</source>
+        <translation>No matches!</translation>
+    </message>
+    <message id="sailfinder-no-matches-text">
+        <source>Swipe on some recommendations</source>
+        <translation>Swipe on some recommendations</translation>
+    </message>
 </context>
 </TS>

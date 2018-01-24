@@ -23,6 +23,8 @@ Page {
     property string fbToken
     property bool logout
 
+    id: page
+
     onFbTokenChanged: {
         if(fbToken.length > 0) {
             tinderLogin.visible = true
@@ -57,7 +59,6 @@ Page {
         // Rounding floating numbers in JS: https://stackoverflow.com/questions/9453421/how-to-round-float-numbers-in-javascript
         // Default 1.5x zoom
         id: webview
-        property real _devicePixelRatio: Math.round(1.5*Theme.pixelRatio * 10) / 10.0
 
         anchors {
             top: parent.top
@@ -71,7 +72,12 @@ Page {
         experimental.preferences.developerExtrasEnabled: true
         experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
         experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
-        experimental.customLayoutWidth: parent.width / _devicePixelRatio
+        property real devicePixelRatio: {
+                    if (Screen.width <= 540) return 1.5;
+                    else if (Screen.width > 540 && Screen.width <= 768) return 2.0;
+                    else if (Screen.width > 768) return 3.0;
+                }
+        experimental.customLayoutWidth: page.width / devicePixelRatio
         experimental.overview: true
         experimental.userAgent: app.fbUserAgent
         experimental.onMessageReceived: {

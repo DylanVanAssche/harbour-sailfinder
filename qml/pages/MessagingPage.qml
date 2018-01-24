@@ -21,6 +21,31 @@ import "../components"
 
 Page {
     property var matchObject
+    Component.onCompleted: {
+        messagesListView.model = matchObject
+        console.log("MESSAGING PAGE=" + matchObject)
+    }
 
+    SilicaFlickable {
+        anchors.fill: parent
 
+        PageHeader {
+            id: header
+            anchors { top: parent.top; left: parent.left; right: parent.right }
+            title: "NAME"
+        }
+
+        SilicaListView {
+            id: messagesListView
+            width: parent.width
+            height: contentHeight
+            anchors { top: header.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+            onModelChanged: console.log("MESSAGE COUNT=" + messagesListView.count)
+            delegate: MessagesDelegate {
+                width: ListView.view.width
+            }
+
+            VerticalScrollDecorator {}
+        }
+    }
 }

@@ -204,7 +204,10 @@ void API::getMatchesWithoutMessages()
 
 void API::getMatchesAll()
 {
-    if(this->authenticated()) {
+    if(this->authenticated() && !matchFetchLock) {
+        // Lock matches fetching
+        matchFetchLock = true;
+
         // Build URL
         QUrl url(QString(MATCHES_ENDPOINT));
         QUrlQuery parameters;
@@ -213,6 +216,9 @@ void API::getMatchesAll()
         // Prepare & do request
         QNAM->get(this->prepareRequest(url, parameters));
     }
+    else if(matchFetchLock) {
+        qWarning() << "Skipping matches fetching since locked by other request";
+    }
     else {
         qWarning() << "Not authenticated, can't retrieve matches data";
     }
@@ -220,7 +226,10 @@ void API::getMatchesAll()
 
 void API::getMatches(bool withMessages)
 {
-    if(this->authenticated()) {
+    if(this->authenticated() && !matchFetchLock) {
+        // Lock matches fetching
+        matchFetchLock = true;
+
         // Build URL
         QUrl url(QString(MATCHES_ENDPOINT));
         QUrlQuery parameters;
@@ -235,6 +244,9 @@ void API::getMatches(bool withMessages)
         // Prepare & do request
         QNAM->get(this->prepareRequest(url, parameters));
     }
+    else if(matchFetchLock) {
+        qWarning() << "Skipping matches fetching since locked by other request";
+    }
     else {
         qWarning() << "Not authenticated, can't retrieve matches data";
     }
@@ -243,6 +255,9 @@ void API::getMatches(bool withMessages)
 void API::getMatches(QString pageToken)
 {
     if(this->authenticated()) {
+        // Lock matches fetching
+        matchFetchLock = true;
+
         // Build URL
         QUrl url(QString(MATCHES_ENDPOINT));
         QUrlQuery parameters;
@@ -852,7 +867,7 @@ void API::parseMeta(QJsonObject json)
 void API::parseUpdates(QJsonObject json)
 {
     QJsonArray matchesArray = json["matches"].toArray();
-    bool refetch = false;
+    bool refetch = true;
 
     if(matchesArray.count() > 0) {
         emit this->newMatch(matchesArray.count());
@@ -913,8 +928,6 @@ void API::parseProfile(QJsonObject json)
             gender = Sailfinder::Gender::Male;
         }
 
-        qDebug() << "Profile 'user' entity:" << user;
-        qDebug() << "gender_filter:" << user["gender_filter"].toInt();
         Sailfinder::Gender interestedIn = Sailfinder::Gender::All;
         if(user["gender_filter"].toInt() == (int)Sailfinder::Gender::Male) { // Both genders
             interestedIn = Sailfinder::Gender::Male;
@@ -1087,6 +1100,7 @@ void API::parseMatches(QJsonObject json)
         bool isDead = match["dead"].toBool();
         bool isSuperlike = match["is_super_like"].toBool();
 
+        qDebug() << "MESSAGES=" << match["messages"].toArray();
         foreach(QJsonValue item, match["messages"].toArray()) {
             QJsonObject message = item.toObject();
             messageList.append(new Message(message["_id"].toString(),
@@ -1122,18 +1136,8 @@ void API::parseMatches(QJsonObject json)
         qDebug() << "\tMatch ID:" << matchId;
         qDebug() << "\tSuperlike:" << isSuperlike;
         qDebug() << "\tDead:" << isDead;
+        qDebug() << "\tMessages:" << messageList;
     }
-
-    /*// Check if we need to extend our list or create a new one
-    if(this->matchesList() != NULL) {
-        qDebug() << "Appending to old matches list";
-        this->matchesList()->matchesList().append(matchesList);
-        qDebug() << "New list:" << this->matchesList()->matchesList();
-    }
-    else {
-        qDebug() << "No matches list exists, creating a new one";
-        this->setMatchesList(new MatchesListModel(matchesList));
-    }*/
 
     // Handle pagination if available
     if(matchesData.value("next_page_token") != QJsonValue::Undefined) {
@@ -1146,6 +1150,9 @@ void API::parseMatches(QJsonObject json)
         this->setMatchesList(new MatchesListModel(matchesTempList));
         matchesTempList.clear();
     }
+
+    // Unlock matches fetching
+    matchFetchLock = false;
 }
 
 void API::parseLike(QJsonObject json)
