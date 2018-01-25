@@ -68,14 +68,7 @@ SilicaFlickable {
             retryTimer.start()
         }
 
-        onProfileChanged: {
-            if(!retryTimer.running) {
-                api.getRecommendations()
-            }
-            else {
-                console.debug("Waiting for fetching recommendations until retryTimer is triggered")
-            }
-        }
+        onProfileChanged: api.getRecommendations()
     }
 
     Column {

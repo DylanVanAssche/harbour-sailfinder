@@ -163,7 +163,10 @@ void API::getMeta(int latitude, int longitude)
  */
 void API::getProfile()
 {
-    if(this->authenticated()) {
+    if(this->authenticated() && !profileFetchLock) {
+        // Lock profile fetching
+        profileFetchLock = true;
+
         // Build URL
         QUrl url(QString(PROFILE_ENDPOINT));
         QUrlQuery parameters;
@@ -172,6 +175,9 @@ void API::getProfile()
         // Prepare & do request
         QNAM->get(this->prepareRequest(url, parameters));
     }
+    else if(profileFetchLock) {
+        qWarning() << "Profile fetching is locked";
+    }
     else {
         qWarning() << "Not authenticated, can't retrieve profile data";
     }
@@ -179,13 +185,19 @@ void API::getProfile()
 
 void API::getRecommendations()
 {
-    if(this->authenticated()) {
+    if(this->authenticated() && !recommendationsFetchLock) {
+        // Lock recommendations fetching
+        recommendationsFetchLock = true;
+
         // Build URL
         QUrl url(QString(RECS_ENDPOINT));
         QUrlQuery parameters;
 
         // Prepare & do request
         QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else if(recommendationsFetchLock) {
+        qWarning() << "Recommendations fetching is locked";
     }
     else {
         qWarning() << "Not authenticated, can't retrieve recommendations data";
@@ -274,7 +286,10 @@ void API::getMatches(QString pageToken)
 
 void API::getUpdates(QDateTime lastActivityDate)
 {
-    if(this->authenticated()) {
+    if(this->authenticated() && !updatesFetchLock) {
+        // Lock updates fetching
+        updatesFetchLock = true;
+
         // Build URL
         QUrl url(QString(UPDATES_ENDPOINT));
         QUrlQuery parameters;
@@ -286,6 +301,9 @@ void API::getUpdates(QDateTime lastActivityDate)
 
         // Prepare & do request
         QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    }
+    else if(updatesFetchLock) {
+        qWarning() << "Updates fetching locked";
     }
     else {
         qWarning() << "Not authenticated, can't retrieve updates data";
@@ -532,6 +550,17 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     else {
         qWarning() << "Position fix not accurate enough yet" << positionUpdateCounter << "/" << POSITION_MAX_UPDATE ;
     }
+}
+
+MessageListModel *API::messagesList() const
+{
+    return m_messagesList;
+}
+
+void API::setMessagesList(MessageListModel *messagesList)
+{
+    m_messagesList = messagesList;
+    emit this->messagesListChanged();
 }
 
 bool API::hasRecommendations() const
@@ -867,7 +896,7 @@ void API::parseMeta(QJsonObject json)
 void API::parseUpdates(QJsonObject json)
 {
     QJsonArray matchesArray = json["matches"].toArray();
-    bool refetch = true;
+    bool refetch = false;
 
     if(matchesArray.count() > 0) {
         emit this->newMatch(matchesArray.count());
@@ -890,6 +919,9 @@ void API::parseUpdates(QJsonObject json)
     qDebug() << "\tBlocks:" << blocksArray.count();
 
     emit this->updatesReady(QDateTime::fromString(json["last_activity_date"].toString(), Qt::ISODate), refetch);
+
+    // Unlock updates fetching
+    updatesFetchLock = false;
 }
 
 void API::parseProfile(QJsonObject json)
@@ -989,6 +1021,9 @@ void API::parseProfile(QJsonObject json)
 
         this->setProfile(new User(id, name, birthDate, gender, bio, schoolList, jobList, photoList, ageMin, ageMax, distanceMax, interestedIn, position, discoverable));
     }
+
+    // Unlock profile fetching
+    profileFetchLock = false;
 }
 
 void API::parseRecommendations(QJsonObject json)
@@ -1083,6 +1118,9 @@ void API::parseRecommendations(QJsonObject json)
     if(this->hasRecommendations()) {
         this->nextRecommendation();
     }
+
+    // Unlock recommendations fetching
+    recommendationsFetchLock = false;
 }
 
 void API::parseMatches(QJsonObject json)
@@ -1091,7 +1129,7 @@ void API::parseMatches(QJsonObject json)
     QJsonObject matchesData = json["data"].toObject();
     foreach(QJsonValue item, matchesData["matches"].toArray()) {
         QList<Photo *> photoList;
-        QList<Message *> messageList;
+        Message* latestMessage = NULL;
         QJsonObject match = item.toObject();
         QJsonObject person = match["person"].toObject();
 
@@ -1099,16 +1137,18 @@ void API::parseMatches(QJsonObject json)
         QString matchId = match["_id"].toString();
         bool isDead = match["dead"].toBool();
         bool isSuperlike = match["is_super_like"].toBool();
-
-        qDebug() << "MESSAGES=" << match["messages"].toArray();
-        foreach(QJsonValue item, match["messages"].toArray()) {
-            QJsonObject message = item.toObject();
-            messageList.append(new Message(message["_id"].toString(),
-                               message["match_id"].toString(),
+        
+        if(!match["messages"].toArray().empty()) {
+            // Matches only return 1 message (last message as preview) if available
+            QJsonObject message = match["messages"].toArray().at(0).toObject();
+            latestMessage = new Message(
+                        message["_id"].toString(),
+                    message["match_id"].toString(),
                     message["message"].toString(),
                     QDateTime::fromString(message["sent_date"].toString(), Qt::ISODate),
                     message["from"].toString(),
-                    message["to"].toString()));
+                    message["to"].toString()
+                    );
         }
 
         // Person with who the user matched with data
@@ -1126,7 +1166,7 @@ void API::parseMatches(QJsonObject json)
             photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
         }
 
-        matchesList.append(new Match(id, name, birthDate, gender, bio, photoList, matchId, isSuperlike, isDead, messageList));
+        matchesList.append(new Match(id, name, birthDate, gender, bio, photoList, matchId, isSuperlike, isDead, latestMessage));
         qDebug() << "Match data:";
         qDebug() << "\tName:" << name;
         qDebug() << "\tGender:" << (int)(gender);
@@ -1136,7 +1176,7 @@ void API::parseMatches(QJsonObject json)
         qDebug() << "\tMatch ID:" << matchId;
         qDebug() << "\tSuperlike:" << isSuperlike;
         qDebug() << "\tDead:" << isDead;
-        qDebug() << "\tMessages:" << messageList;
+        qDebug() << "\tLatest message:" << latestMessage;
     }
 
     // Handle pagination if available

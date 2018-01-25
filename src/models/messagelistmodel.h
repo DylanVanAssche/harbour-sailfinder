@@ -54,7 +54,7 @@ signals:
         void messageListChanged();
 
 private:
-        QList<Message *> m_messageList;
+        QList<Message *> m_messageList = QList<Message *>();
 };
 
 #endif // MESSAGELISTMODEL_H

@@ -50,7 +50,7 @@ signals:
         void schoolListChanged();
 
 private:
-        QList<School *> m_schoolList;
+        QList<School *> m_schoolList = QList<School *>();
 };
 
 #endif // SCHOOLLISTMODEL_H

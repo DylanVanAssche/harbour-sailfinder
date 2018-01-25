@@ -66,14 +66,14 @@ signals:
     void schoolsChanged();
 
 private:
-    int m_ageMin;
-    int m_ageMax;
-    int m_distanceMax;
-    bool m_discoverable;
-    Sailfinder::Gender m_interestedIn;
-    QGeoCoordinate m_position;
-    SchoolListModel* m_schools;
-    JobListModel* m_jobs;
+    int m_ageMin = 0;
+    int m_ageMax = 0;
+    int m_distanceMax = 0;
+    bool m_discoverable = false;
+    Sailfinder::Gender m_interestedIn = Sailfinder::Gender::Female;
+    QGeoCoordinate m_position = QGeoCoordinate();
+    SchoolListModel* m_schools = NULL;
+    JobListModel* m_jobs = NULL;
 };
 
 #endif // USER_H

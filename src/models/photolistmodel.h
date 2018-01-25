@@ -40,7 +40,7 @@ signals:
         void photoListChanged();
 
 private:
-        QList<Photo *> m_photoList;
+        QList<Photo *> m_photoList = QList<Photo *>();
 };
 
 #endif // PHOTOLISTMODEL_H

@@ -4,7 +4,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include "person.h"
-#include "messagelistmodel.h"
+#include "message.h"
 
 class Match : public Person
 {
@@ -12,7 +12,7 @@ class Match : public Person
     Q_PROPERTY(QString matchId READ matchId NOTIFY matchIdChanged)
     Q_PROPERTY(bool isSuperlike READ isSuperlike NOTIFY isSuperlikeChanged)
     Q_PROPERTY(bool isDead READ isDead NOTIFY isDeadChanged)
-    Q_PROPERTY(MessageListModel* messages READ messages NOTIFY messagesChanged)
+    Q_PROPERTY(Message* message READ message NOTIFY messageChanged)
 
 public:
     explicit Match(QObject *parent = 0);
@@ -25,7 +25,7 @@ public:
                    QString matchId,
                    bool isSuperlike,
                    bool isDead,
-                   QList<Message *> messages
+                   Message* message
                    );
     QString matchId() const;
     void setMatchId(const QString &matchId);
@@ -33,20 +33,20 @@ public:
     void setIsSuperlike(bool value);
     bool isDead() const;
     void setIsDead(bool value);
-    MessageListModel *messages() const;
-    void setMessages(MessageListModel *messages);
+    Message *message() const;
+    void setMessage(Message *messages);
 
 signals:
     void matchIdChanged();
     void isSuperlikeChanged();
     void isDeadChanged();
-    void messagesChanged();
+    void messageChanged();
 
 private:
-    QString m_matchId;
-    bool m_isSuperlike;
-    bool m_isDead;
-    MessageListModel* m_messages;
+    QString m_matchId = QString();
+    bool m_isSuperlike = false;
+    bool m_isDead = false;
+    Message* m_message = NULL;
 };
 
 #endif // MATCH_H

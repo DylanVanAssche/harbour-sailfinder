@@ -40,6 +40,7 @@
 #include "models/match.h"
 #include "models/matcheslistmodel.h"
 #include "models/message.h"
+#include "models/messagelistmodel.h"
 
 #define POSITION_MAX_UPDATE 10
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
@@ -128,6 +129,8 @@ public:
     void setRecommendation(Recommendation *recommendation);
     bool hasRecommendations() const;
     void setHasRecommendations(bool hasRecommendations);
+    MessageListModel *messagesList() const;
+    void setMessagesList(MessageListModel *messagesList);
 
 signals:
     void busyChanged();
@@ -153,6 +156,7 @@ signals:
     void recommendationChanged();
     void recommendationTimeOut();
     void hasRecommendationsChanged();
+    void messagesListChanged();
     void loggedOut();
     void updatesReady(QDateTime lastActivityDate, bool refetch);
 
@@ -177,6 +181,7 @@ private:
     bool m_networkEnabled = false;
     QList<Recommendation *> m_recsList = QList<Recommendation *>();
     MatchesListModel* m_matchesList = NULL;
+    MessageListModel* m_messagesList = NULL;
     User* m_profile = NULL;
     Recommendation* m_recommendation = NULL;
     int m_standardPollInterval = 0;
@@ -184,6 +189,9 @@ private:
     int positionUpdateCounter = 0;
     int recommendationCounter = 0;
     bool matchFetchLock = false;
+    bool profileFetchLock = false;
+    bool recommendationsFetchLock = false;
+    bool updatesFetchLock = false;
     QList<Match *> matchesTempList = QList<Match*> ();
     QGeoPositionInfoSource* positionSource = NULL;
     QNetworkAccessManager* QNAM = NULL;

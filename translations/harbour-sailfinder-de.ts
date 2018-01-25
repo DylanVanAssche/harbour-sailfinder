@@ -10,12 +10,12 @@
     </message>
     <message id="sailfinder-oops">
         <location filename="../qml/components/PhotoGridLayout.qml" line="103"/>
-        <location filename="../qml/pages/FirstPage.qml" line="117"/>
+        <location filename="../qml/pages/FirstPage.qml" line="122"/>
         <source>Oops!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-error">
-        <location filename="../qml/pages/FirstPage.qml" line="119"/>
+        <location filename="../qml/pages/FirstPage.qml" line="124"/>
         <source>Something went wrong, please try again later</source>
         <translation type="unfinished"></translation>
     </message>
@@ -26,30 +26,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-logout-error">
-        <location filename="../src/api.cpp" line="463"/>
+        <location filename="../src/api.cpp" line="481"/>
         <source>Logout error, please try again later</source>
         <extracomment>Error shown to the user when logging out of Facebook failed</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-ssl-error">
-        <location filename="../src/api.cpp" line="721"/>
+        <location filename="../src/api.cpp" line="750"/>
         <source>SSL error, please check your device is running with the correct date and time</source>
         <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-error">
-        <location filename="../src/api.cpp" line="743"/>
+        <location filename="../src/api.cpp" line="772"/>
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-authentication-requested">
-        <location filename="../src/api.cpp" line="748"/>
+        <location filename="../src/api.cpp" line="777"/>
         <source>Tinder token expired, refreshing now</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-json-error">
-        <location filename="../src/api.cpp" line="832"/>
+        <location filename="../src/api.cpp" line="861"/>
         <source>Invalid JSON data received, please try again later</source>
         <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
         <translation type="unfinished"></translation>
@@ -154,7 +154,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-message">
-        <location filename="../src/models/matcheslistmodel.cpp" line="111"/>
+        <location filename="../src/models/matcheslistmodel.cpp" line="107"/>
         <source>No messages yet, say hi!</source>
         <extracomment>Text shown when no messages are retrieved in a conversation.</extracomment>
         <translation type="unfinished"></translation>
@@ -279,14 +279,26 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-out-of-recs">
-        <location filename="../qml/pages/RecommendationsView.qml" line="122"/>
+        <location filename="../qml/pages/RecommendationsView.qml" line="115"/>
         <source>Exhausted!</source>
         <oldsource>No recommendations</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-out-of-recs-text">
-        <location filename="../qml/pages/RecommendationsView.qml" line="124"/>
+        <location filename="../qml/pages/RecommendationsView.qml" line="117"/>
         <source>Please come back later</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-messages-header">
+        <location filename="../qml/pages/MessagingPage.qml" line="31"/>
+        <source>%0 (%L1) %2</source>
+        <oldsource>%0 (%L0) %0</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-messaging-placeholder">
+        <location filename="../qml/pages/MessagingPage.qml" line="60"/>
+        <source>Say hi to %0!</source>
+        <oldsource>Say hi to %0</oldsource>
         <translation type="unfinished"></translation>
     </message>
 </context>

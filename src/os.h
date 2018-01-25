@@ -82,9 +82,9 @@ class OS: public QObject {
 
     private:
         QList<QPair<QString, QString>> extractFileData(QString location, QStringList querryList);
-        QString m_release;
-        QString m_version;
-        QString m_device;
+        QString m_release = QString();
+        QString m_version = QString();
+        QString m_device = QString();
 };
 
 #endif // OS_H

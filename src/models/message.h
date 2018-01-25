@@ -47,12 +47,12 @@ signals:
     void toPersonIdChanged();
 
 private:
-    QString m_id;
-    QString m_matchId;
-    QString m_message;
-    QDateTime m_timestamp;
-    QString m_fromPersonId;
-    QString m_toPersonId;
+    QString m_id = QString();
+    QString m_matchId = QString();
+    QString m_message = QString();
+    QDateTime m_timestamp = QDateTime();
+    QString m_fromPersonId = QString();
+    QString m_toPersonId = QString();
 };
 
 #endif // MESSAGE_H

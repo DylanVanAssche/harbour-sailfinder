@@ -49,7 +49,7 @@ signals:
         void jobListChanged();
 
 private:
-        QList<Job *> m_jobList;
+        QList<Job *> m_jobList = QList<Job *>();
 };
 
 #endif // JOBLISTMODEL_H

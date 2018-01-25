@@ -33,11 +33,11 @@
 #define LINE_LENGTH 100
 
 static bool clearLog = true;
-static QString name;
-static QString version;
-static QString compileDate;
-static QString compileTime;
-static QString logpath;
+static QString name = QString();
+static QString version = QString();
+static QString compileDate = QString();
+static QString compileTime = QString();
+static QString logpath = QString();
 void handler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 bool enableLogger(bool enabled);
 

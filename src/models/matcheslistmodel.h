@@ -39,14 +39,13 @@ class MatchesListModel : public QAbstractListModel
             MatchIdRole = Qt::UserRole + 7,
             IsSuperlikeRole = Qt::UserRole + 8,
             IsDeadRole = Qt::UserRole + 9,
-            MessagesRole = Qt::UserRole + 10,
-            AvatarRole = Qt::UserRole + 11,
-            MessagesPreviewRole = Qt::UserRole + 12,
-            UnreadCounterRole = Qt::UserRole + 13,
-            ReceivedMessageRole = Qt::UserRole + 14,
-            ReadMessageRole = Qt::UserRole + 15,
-            MentionedRole = Qt::UserRole + 16,
-            HasUnreadMessagesRole = Qt::UserRole + 17
+            AvatarRole = Qt::UserRole + 10,
+            MessagesPreviewRole = Qt::UserRole + 11,
+            UnreadCounterRole = Qt::UserRole + 12,
+            ReceivedMessageRole = Qt::UserRole + 13,
+            ReadMessageRole = Qt::UserRole + 14,
+            MentionedRole = Qt::UserRole + 15,
+            HasUnreadMessagesRole = Qt::UserRole + 16
         };
 
         explicit MatchesListModel(QList<Match *> matchesList);
@@ -65,7 +64,7 @@ signals:
         void matchesListChanged();
 
 private:
-        QList<Match *> m_matchesList;
+        QList<Match *> m_matchesList = QList<Match *>();
 };
 
 #endif // MATCHLISTMODEL_H

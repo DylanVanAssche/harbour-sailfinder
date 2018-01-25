@@ -20,32 +20,43 @@ import Sailfish.Silica 1.0
 import "../components"
 
 Page {
-    property var matchObject
-    Component.onCompleted: {
-        messagesListView.model = matchObject
-        console.log("MESSAGING PAGE=" + matchObject)
+    property string name
+    //property int age
+    //property int gender
+
+    PageHeader {
+        id: messagingHeader
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        //% "%0 (%L1) %2"
+        title: qsTrId("sailfinder-messages-header").arg("Johnny").arg(25).arg("♂")
     }
 
-    SilicaFlickable {
-        anchors.fill: parent
-
-        PageHeader {
-            id: header
-            anchors { top: parent.top; left: parent.left; right: parent.right }
-            title: "NAME"
+    /*SilicaListView {
+        id: messagesListView
+        width: parent.width
+        anchors {
+            top: messagingHeader.bottom // conflict with header property
+            bottom: bar.top
+        }
+        delegate: MessagesDelegate {
+            width: ListView.view.width
         }
 
-        SilicaListView {
-            id: messagesListView
-            width: parent.width
-            height: contentHeight
-            anchors { top: header.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
-            onModelChanged: console.log("MESSAGE COUNT=" + messagesListView.count)
-            delegate: MessagesDelegate {
-                width: ListView.view.width
-            }
+        VerticalScrollDecorator {}
 
-            VerticalScrollDecorator {}
+        ViewPlaceholder {
+            enabled: messagesListView.count == 0
+            //% "No messages yet :-("
+            text: qsTrId("sailfinder-no-messages-text")
+            //% "Be the first one to start the conversation!"
+            hintText: qsTrId("sailfinder-no-messages-hint")
         }
+    }*/
+
+    MessagingBar {
+        id: bar
+        anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
+        //% "Say hi to %0!"
+        placeHolderText: qsTrId("sailfinder-messaging-placeholder").arg(name)
     }
 }

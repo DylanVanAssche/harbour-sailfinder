@@ -56,8 +56,18 @@ Page {
     }
 
     SilicaWebView {
-        // Rounding floating numbers in JS: https://stackoverflow.com/questions/9453421/how-to-round-float-numbers-in-javascript
-        // Default 1.5x zoom
+        property real devicePixelRatio: {
+            if (Screen.width <= 540) {
+                return 1.5;
+            }
+            else if (Screen.width > 540 && Screen.width <= 768) {
+                return 2.0;
+            }
+            else {
+                return 3.0;
+            }
+        }
+
         id: webview
 
         anchors {
@@ -72,11 +82,6 @@ Page {
         experimental.preferences.developerExtrasEnabled: true
         experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
         experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
-        property real devicePixelRatio: {
-                    if (Screen.width <= 540) return 1.5;
-                    else if (Screen.width > 540 && Screen.width <= 768) return 2.0;
-                    else if (Screen.width > 768) return 3.0;
-                }
         experimental.customLayoutWidth: page.width / devicePixelRatio
         experimental.overview: true
         experimental.userAgent: app.fbUserAgent

@@ -226,5 +226,13 @@
         <source>Swipe on some recommendations</source>
         <translation>Swipe on some recommendations</translation>
     </message>
+    <message id="sailfinder-messaging-placeholder">
+        <source>Say hi to %0!</source>
+        <translation>Say hi to %0!</translation>
+    </message>
+    <message id="sailfinder-messages-header">
+        <source>%0 (%L1) %2</source>
+        <translation>%0 (%L1) %2</translation>
+    </message>
 </context>
 </TS>
