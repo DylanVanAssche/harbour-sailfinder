@@ -181,17 +181,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-unmatch">
-        <location filename="../qml/pages/MatchesView.qml" line="89"/>
+        <location filename="../qml/pages/MatchesView.qml" line="97"/>
         <source>Unmatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-matches">
-        <location filename="../qml/pages/MatchesView.qml" line="102"/>
+        <location filename="../qml/pages/MatchesView.qml" line="110"/>
         <source>No matches!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-matches-text">
-        <location filename="../qml/pages/MatchesView.qml" line="104"/>
+        <location filename="../qml/pages/MatchesView.qml" line="112"/>
         <source>Swipe on some recommendations</source>
         <translation type="unfinished"></translation>
     </message>
@@ -289,16 +289,19 @@
         <source>Please come back later</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="sailfinder-messages-header">
-        <location filename="../qml/pages/MessagingPage.qml" line="31"/>
-        <source>%0 (%L1) %2</source>
-        <oldsource>%0 (%L0) %0</oldsource>
+    <message id="sailfinder-messaging-placeholder">
+        <location filename="../qml/pages/MessagingPage.qml" line="161"/>
+        <source>Say hi to %0!</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="sailfinder-messaging-placeholder">
-        <location filename="../qml/pages/MessagingPage.qml" line="60"/>
-        <source>Say hi to %0!</source>
-        <oldsource>Say hi to %0</oldsource>
+    <message id="sailfinder-no-messages-text">
+        <location filename="../qml/pages/MessagingPage.qml" line="168"/>
+        <source>No messages yet :-(</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-no-messages-hint">
+        <location filename="../qml/pages/MessagingPage.qml" line="170"/>
+        <source>Be the first one to start the conversation!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -19,41 +19,76 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import QtFeedback 5.0
 
+// Thanks to:
+// https://github.com/QtGram/harbour-sailorgram/blob/0.9/harbour-sailorgram/qml/components/message/input/MessageTextInput.qml
+// For circumventing the missing Qt Quick Controls module in Sailfish OS which contains the contentHeight property for QML TextArea
+
 Item {
     property string placeHolderText
+    signal send(string text)
 
     id: messagingBar
     width: parent.width
-    height: Theme.itemSizeLarge
+    // Harbour incompatible: QML Qt Quick Controls isn't allowed
+    height: timestamp.y + timestamp.height + Theme.paddingSmall
 
     // Harbour incompatible, needs a workaround for their to restrictive rules
     ThemeEffect {
         id: buttonBuzz
-        effect: ThemeEffect.PressStrong
+        effect: ThemeEffect.Press
+    }
+
+    Timer {
+        interval: 500
+        repeat: true
+        running: Qt.application.active
+        onTriggered: timestamp.text = new Date().toLocaleTimeString(Qt.locale(), "HH:mm:ss")
     }
 
     TextArea {
         id: input
         anchors {
             left: parent.left
-            leftMargin: Theme.horizontalPageMargin
             right: sendButton.left
-            rightMargin: Theme.paddingMediun
+            top: parent.top
         }
-
+        color: Theme.primaryColor
         placeholderText: messagingBar.placeHolderText
+        EnterKey.enabled: text.length > 0
     }
 
     IconButton {
         id: sendButton
+        anchors {
+            right: parent.right
+            rightMargin: Theme.horizontalPageMargin
+            top: parent.top
+        }
         icon.source: "qrc:///images/icon-send.png" + (pressed
                                                       ? Theme.highlightColor
                                                       : Theme.primaryColor)
         icon.scale: Theme.iconSizeSmall/icon.width
-        anchors {
-            right: parent.right
-            rightMargin: Theme.horizontalPageMargin
-        }
         onPressed: buttonBuzz.play()
+    }
+
+    Label {
+        id: timestamp
+        anchors {
+            top: input.bottom
+            topMargin: -input._labelItem.height - 3
+            left: input.left
+            leftMargin: input.textLeftMargin
+            right: input.right
+        }
+
+        color: Theme.highlightColor
+        font.pixelSize: Theme.fontSizeTiny
+    }
+
+    Rectangle {
+        z: -1
+        anchors.fill: parent
+        color: Theme.highlightDimmerColor
+        opacity: 0.9
     }
 }

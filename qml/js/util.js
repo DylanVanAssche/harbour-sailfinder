@@ -21,3 +21,7 @@ function createHeaderMatches(count) {
     //% "Matches"
     return qsTrId("sailfinder-matches") + " (" + count + ")";
 }
+
+function createHeaderMessages(name, birthDate, gender) {
+    return createHeaderRecs(name, birthDate, gender);
+}

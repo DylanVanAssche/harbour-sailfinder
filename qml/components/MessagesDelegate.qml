@@ -19,16 +19,64 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 ListItem {
-    contentHeight: Theme.itemSizeLarge
+    contentHeight: column.height + Theme.paddingLarge
+    width: parent.width*0.75
+    anchors.right: model.authorIsUser? parent.right: undefined // Left is automatically assigned
 
-    Label {
-        anchors.centerIn: parent
-        text: model.id
+    Column {
+        id: column
+        width: parent.width
+        spacing: Theme.paddingSmall
+        anchors.verticalCenter: parent.verticalCenter
+
+        Label {
+            id: author
+            anchors {
+                left: parent.left
+                leftMargin: Theme.paddingMedium
+            }
+            text: model.author
+            font.bold: true
+            color: model.authorIsUser? Theme.primaryColor: "black"
+        }
+
+        Label {
+            width: parent.width
+            anchors {
+                left: parent.left
+                leftMargin: Theme.paddingMedium
+                right: parent.right
+                rightMargin: Theme.paddingMedium
+            }
+            wrapMode: Text.WordWrap
+            text: model.message
+            color: model.authorIsUser? Theme.primaryColor: "black"
+        }
+
+        Label {
+            anchors {
+                right: parent.right
+                rightMargin: Theme.paddingMedium
+            }
+            font.pixelSize: Theme.fontSizeTiny
+            text: {
+                var timestamp = new Date().toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm") //model.timestamp.toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm")
+                var status = ""
+                if(model.readMessage && model.receivedMessage) {
+                    status = " ✓✓"
+                }
+                else if(model.receivedMessage) {
+                    status = " ✓"
+                }
+                return timestamp + status
+            }
+        }
     }
 
-    Label {
-        anchors.bottom: parent.bottom
-        text: model.message
+    Rectangle {
+        z: -1
+        anchors.fill: parent
+        color: model.authorIsUser? Theme.highlightColor: Theme.primaryColor
+        radius: Theme.paddingSmall
     }
-
 }

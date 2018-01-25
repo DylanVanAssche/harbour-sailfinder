@@ -230,9 +230,13 @@
         <source>Say hi to %0!</source>
         <translation>Say hi to %0!</translation>
     </message>
-    <message id="sailfinder-messages-header">
-        <source>%0 (%L1) %2</source>
-        <translation>%0 (%L1) %2</translation>
+    <message id="sailfinder-no-messages-text">
+        <source>No messages yet :-(</source>
+        <translation>No messages yet :-(</translation>
+    </message>
+    <message id="sailfinder-no-messages-hint">
+        <source>Be the first one to start the conversation!</source>
+        <translation>Be the first one to start the conversation!</translation>
     </message>
 </context>
 </TS>

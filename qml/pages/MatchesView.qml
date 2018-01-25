@@ -82,7 +82,15 @@ SilicaFlickable {
             id: contact
             width: ListView.view.width
             onRemoved: api.unmatch(model.matchId)
-            onClicked: pageStack.push(Qt.resolvedUrl("MessagingPage.qml"), { matchObject: model.messages })
+            onClicked: pageStack.push(
+                           Qt.resolvedUrl("MessagingPage.qml"),
+                           {
+                               name: model.name,
+                               birthDate: model.birthDate,
+                               gender: model.gender,
+                               avatar: model.avatar
+                           }
+                           )
             menu: ContextMenu {
                 MenuItem {
                     //% "Unmatch"

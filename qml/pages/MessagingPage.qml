@@ -18,45 +18,155 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 import "../components"
+import "../js/util.js" as Util
 
 Page {
     property string name
-    //property int age
-    //property int gender
+    property date birthDate
+    property int gender
+    property string avatar
 
     PageHeader {
         id: messagingHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        //% "%0 (%L1) %2"
-        title: qsTrId("sailfinder-messages-header").arg("Johnny").arg(25).arg("♂")
+        title: Util.createHeaderMessages(name, birthDate, gender)
+        height: childrenRect.height
+
+        Rectangle {
+            anchors.fill: parent
+            z: -1
+            color: Theme.highlightDimmerColor
+            opacity: 0.9
+        }
+
+        Label {
+            id: lastSeen
+            anchors { bottom: parent.bottom; bottomMargin: Theme.paddingMedium; right: parent.right; rightMargin: Theme.horizontalPageMargin }
+            text: "online"
+        }
+
+        Avatar {
+            width: Theme.itemSizeMedium
+            height: width
+            anchors {
+                left: parent.left
+                leftMargin: Theme.paddingLarge*1.5
+                verticalCenter: parent.verticalCenter
+            }
+            source: avatar
+        }
     }
 
-    /*SilicaListView {
+    SilicaListView {
         id: messagesListView
         width: parent.width
+        model: ListModel {
+            ListElement {
+                ID: "123456789" // id gives collision
+                message: "Sailfish OS is awesome!"
+                author: "Jonny Jansens"
+                authorIsUser: true
+                readMessage: true
+                receivedMessage: true
+            }
+
+            ListElement {
+                ID: "123456789" // id gives collision
+                message: "It has awesome ambiences!"
+                author: "Dylan Van Assche"
+                authorIsUser: false
+                readMessage: true
+                receivedMessage: true
+            }
+
+            ListElement {
+                ID: "123456789" // id gives collision
+                message: "And nice gestures!"
+                author: "Jonny Jansens"
+                authorIsUser: true
+                readMessage: true
+                receivedMessage: true
+            }
+
+            ListElement {
+                ID: "123456789" // id gives collision
+                message: "It's just missing some good messaging apps :-("
+                author: "Jonny Jansens"
+                authorIsUser: true
+                readMessage: true
+                receivedMessage: true
+            }
+
+            ListElement {
+                ID: "123456789" // id gives collision
+                message: "But Transponder will change that!"
+                author: "Dylan Van Assche"
+                authorIsUser: false
+                readMessage: true
+                receivedMessage: true
+            }
+
+            ListElement {
+                ID: "123456789" // id gives collision
+                message: "Transponder is a plugin based messenger for SFOS"
+                author: "Dylan Van Assche"
+                authorIsUser: false
+                readMessage: true
+                receivedMessage: true
+            }
+
+            ListElement {
+                ID: "123456789" // id gives collision
+                message: "Matrix.org, Telegram, IRC, ... as long as their is a Python library for it then Transponder can use it!"
+                author: "Dylan Van Assche"
+                authorIsUser: false
+                readMessage: true
+                receivedMessage: true
+            }
+
+            ListElement {
+                ID: "123456789" // id gives collision
+                message: "Oh that's great news!"
+                author: "Jonny Jansens"
+                readMessage: false
+                receivedMessage: true
+                authorIsUser: true
+            }
+        }
         anchors {
-            top: messagingHeader.bottom // conflict with header property
+            top: messagingHeader.bottom // Conflicts with header property
+            topMargin: Theme.paddingMedium
             bottom: bar.top
+            bottomMargin: Theme.paddingMedium
+            left: parent.left
+            leftMargin: Theme.horizontalPageMargin/2
+            right: parent.right
+            rightMargin: Theme.horizontalPageMargin/2
         }
+        clip: true
+        spacing: Theme.paddingMedium
         delegate: MessagesDelegate {
-            width: ListView.view.width
+            width: ListView.view.width*0.75
         }
+        onModelChanged: messagesListView.scrollToBottom()
+        Component.onCompleted: messagesListView.scrollToBottom()
 
         VerticalScrollDecorator {}
-
-        ViewPlaceholder {
-            enabled: messagesListView.count == 0
-            //% "No messages yet :-("
-            text: qsTrId("sailfinder-no-messages-text")
-            //% "Be the first one to start the conversation!"
-            hintText: qsTrId("sailfinder-no-messages-hint")
-        }
-    }*/
+    }
 
     MessagingBar {
         id: bar
         anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
         //% "Say hi to %0!"
         placeHolderText: qsTrId("sailfinder-messaging-placeholder").arg(name)
+    }
+
+    ViewPlaceholder {
+        anchors.centerIn: parent
+        enabled: messagesListView.count == 0
+        //% "No messages yet :-("
+        text: qsTrId("sailfinder-no-messages-text")
+        //% "Be the first one to start the conversation!"
+        hintText: qsTrId("sailfinder-no-messages-hint")
     }
 }
