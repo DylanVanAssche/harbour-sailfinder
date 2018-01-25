@@ -46,7 +46,7 @@ private:
     QString m_matchId = QString();
     bool m_isSuperlike = false;
     bool m_isDead = false;
-    Message* m_message = NULL;
+    Message* m_message = Message();
 };
 
 #endif // MATCH_H

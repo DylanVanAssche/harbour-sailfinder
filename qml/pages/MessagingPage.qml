@@ -26,11 +26,10 @@ Page {
     property int gender
     property string avatar
 
-    PageHeader {
+    Item {
         id: messagingHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        title: Util.createHeaderMessages(name, birthDate, gender)
-        height: childrenRect.height
+        height: Theme.itemSizeMedium + Theme.paddingLarge
 
         Rectangle {
             anchors.fill: parent
@@ -40,8 +39,20 @@ Page {
         }
 
         Label {
-            id: lastSeen
-            anchors { bottom: parent.bottom; bottomMargin: Theme.paddingMedium; right: parent.right; rightMargin: Theme.horizontalPageMargin }
+            id: title
+            anchors {
+                right: parent.right
+                rightMargin: Theme.horizontalPageMargin
+                top: parent.top
+                topMargin: Theme.paddingLarge
+            }
+            font.pixelSize: Theme.fontSizeLarge
+            color: Theme.highlightColor
+            text: Util.createHeaderMessages(name, birthDate, gender)
+        }
+
+        Label {
+            anchors { top: title.bottom; topMargin: Theme.paddingSmall; right: parent.right; rightMargin: Theme.horizontalPageMargin }
             text: "online"
         }
 

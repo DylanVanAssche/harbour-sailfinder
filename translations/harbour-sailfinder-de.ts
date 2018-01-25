@@ -290,17 +290,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-messaging-placeholder">
-        <location filename="../qml/pages/MessagingPage.qml" line="161"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="172"/>
         <source>Say hi to %0!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-messages-text">
-        <location filename="../qml/pages/MessagingPage.qml" line="168"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="179"/>
         <source>No messages yet :-(</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-messages-hint">
-        <location filename="../qml/pages/MessagingPage.qml" line="170"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="181"/>
         <source>Be the first one to start the conversation!</source>
         <translation type="unfinished"></translation>
     </message>

@@ -86,6 +86,7 @@ public:
     Q_INVOKABLE void getMatchesWithoutMessages();
     Q_INVOKABLE void getMatchesAll();
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
+    Q_INVOKABLE void getMessages(QString matchId);
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
     Q_INVOKABLE void superlikeUser(QString userId);

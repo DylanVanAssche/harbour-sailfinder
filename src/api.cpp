@@ -1170,7 +1170,7 @@ void API::parseMatches(QJsonObject json)
         qDebug() << "Match data:";
         qDebug() << "\tName:" << name;
         qDebug() << "\tGender:" << (int)(gender);
-        qDebug() << "\tbirthDate:" << birthDate;
+        qDebug() << "\tBirthDate:" << birthDate;
         qDebug() << "\tBio:" << bio;
         qDebug() << "\tPhotos:" << photoList;
         qDebug() << "\tMatch ID:" << matchId;

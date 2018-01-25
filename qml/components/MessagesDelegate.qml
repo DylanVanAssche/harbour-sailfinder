@@ -59,13 +59,15 @@ ListItem {
                 rightMargin: Theme.paddingMedium
             }
             font.pixelSize: Theme.fontSizeTiny
+            color: model.authorIsUser? Theme.primaryColor: "black"
             text: {
                 var timestamp = new Date().toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm") //model.timestamp.toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm")
                 var status = ""
-                if(model.readMessage && model.receivedMessage) {
+                // Status is only needed for our messages, not the other person
+                if(model.readMessage && model.receivedMessage && model.authorIsUser) {
                     status = " ✓✓"
                 }
-                else if(model.receivedMessage) {
+                else if(model.receivedMessage && model.authorIsUser) {
                     status = " ✓"
                 }
                 return timestamp + status
@@ -76,7 +78,7 @@ ListItem {
     Rectangle {
         z: -1
         anchors.fill: parent
-        color: model.authorIsUser? Theme.highlightColor: Theme.primaryColor
+        color: model.authorIsUser? Theme.secondaryHighlightColor: Theme.primaryColor
         radius: Theme.paddingSmall
     }
 }
