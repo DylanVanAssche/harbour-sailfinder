@@ -32,6 +32,7 @@
 #include <QtCore/QScopedPointer>
 #include <QtPositioning/QGeoSatelliteInfoSource>
 #include <QtPositioning/QGeoPositionInfoSource>
+#include <stdlib.h>
 
 #include "os.h"
 #include "models/user.h"
@@ -54,6 +55,7 @@
 #define LIKE_ENDPOINT "https://api.gotinder.com/like"
 #define PASS_ENDPOINT "https://api.gotinder.com/pass"
 #define SUPERLIKE_ENDPOINT "/super"
+#define MESSAGES_ENDPOINT "/messages"
 #define MATCH_OPERATIONS_ENDPOINT "https://api.gotinder.com/user/matches"
 
 class API : public QObject
@@ -74,6 +76,7 @@ class API : public QObject
     Q_PROPERTY(Recommendation* recommendation READ recommendation NOTIFY recommendationChanged)
     Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
+    Q_PROPERTY(MessageListModel* messages READ messages WRITE setMessages NOTIFY messagesChanged)
 
 public:
     explicit API(QObject *parent = 0);
@@ -87,6 +90,7 @@ public:
     Q_INVOKABLE void getMatchesAll();
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     Q_INVOKABLE void getMessages(QString matchId);
+    Q_INVOKABLE void postMessage(QString matchId, QString message, QString userId);
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
     Q_INVOKABLE void superlikeUser(QString userId);
@@ -130,8 +134,8 @@ public:
     void setRecommendation(Recommendation *recommendation);
     bool hasRecommendations() const;
     void setHasRecommendations(bool hasRecommendations);
-    MessageListModel *messagesList() const;
-    void setMessagesList(MessageListModel *messagesList);
+    MessageListModel *messages() const;
+    void setMessages(MessageListModel *messages);
 
 signals:
     void busyChanged();
@@ -157,7 +161,7 @@ signals:
     void recommendationChanged();
     void recommendationTimeOut();
     void hasRecommendationsChanged();
-    void messagesListChanged();
+    void messagesChanged();
     void loggedOut();
     void updatesReady(QDateTime lastActivityDate, bool refetch);
 
@@ -182,7 +186,7 @@ private:
     bool m_networkEnabled = false;
     QList<Recommendation *> m_recsList = QList<Recommendation *>();
     MatchesListModel* m_matchesList = NULL;
-    MessageListModel* m_messagesList = NULL;
+    MessageListModel* m_messages = NULL;
     User* m_profile = NULL;
     Recommendation* m_recommendation = NULL;
     int m_standardPollInterval = 0;
@@ -193,7 +197,10 @@ private:
     bool profileFetchLock = false;
     bool recommendationsFetchLock = false;
     bool updatesFetchLock = false;
+    bool messagesFetchLock = false;
     QList<Match *> matchesTempList = QList<Match*> ();
+    QList<Message *> messagesTempList = QList<Message*> ();
+    QString messagesMatchId = QString();
     QGeoPositionInfoSource* positionSource = NULL;
     QNetworkAccessManager* QNAM = NULL;
     QNetworkDiskCache* QNAMCache = NULL;
@@ -202,6 +209,7 @@ private:
     QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters);
     void getMatches(bool withMessages);
     void getMatches(QString pageToken);
+    void getMessages(QString matchId, QString pageToken);
     void parseLogin(QJsonObject json);
     void parseMeta(QJsonObject json);
     void parseUpdates(QJsonObject json);
@@ -213,6 +221,7 @@ private:
     void parseSuperlike(QJsonObject json);
     void parseLogout(QJsonObject json);
     void parseUnmatch(QJsonObject json);
+    void parseMessages(QJsonObject json);
 };
 
 #endif // API_H

@@ -18,7 +18,8 @@
 # The name of your application
 TARGET = harbour-sailfinder
 
-CONFIG += sailfishapp
+CONFIG += sailfishapp \
+    c++11
 
 # Disable warnings
 CONFIG += warn_off

@@ -88,7 +88,8 @@ SilicaFlickable {
                                name: model.name,
                                birthDate: model.birthDate,
                                gender: model.gender,
-                               avatar: model.avatar
+                               avatar: model.avatar,
+                               matchId: model.matchId
                            }
                            )
             menu: ContextMenu {

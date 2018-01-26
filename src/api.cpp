@@ -284,6 +284,26 @@ void API::getMatches(QString pageToken)
     }
 }
 
+void API::getMessages(QString matchId, QString pageToken)
+{
+    if(this->authenticated()) {
+        // Lock matches fetching
+        messagesFetchLock = true;
+
+        // Build URL
+        QUrl url(QString(MATCHES_ENDPOINT) + "/" + matchId + QString(MESSAGES_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("count", "100");
+        parameters.addQueryItem("page_token", pageToken);
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve messages data";
+    }
+}
+
 void API::getUpdates(QDateTime lastActivityDate)
 {
     if(this->authenticated() && !updatesFetchLock) {
@@ -311,6 +331,32 @@ void API::getUpdates(QDateTime lastActivityDate)
 }
 
 void API::getMessages(QString matchId)
+{
+    if(this->authenticated() && !messagesFetchLock) {
+        // Lock message fetching
+        messagesFetchLock = true;
+
+        // Save the matchId for pagination
+        // It's includedin every message but there's always a chance that the payload empty is
+        messagesMatchId = matchId;
+
+        // Build URL
+        QUrl url(QString(MATCHES_ENDPOINT) + "/" + matchId + QString(MESSAGES_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("count", "100");
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else if(messagesFetchLock) {
+        qWarning() << "Messages fetching is locked";
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve messages data";
+    }
+}
+
+void API::postMessage(QString matchId, QString message, QString userId)
 {
 
 }
@@ -557,15 +603,15 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     }
 }
 
-MessageListModel *API::messagesList() const
+MessageListModel *API::messages() const
 {
-    return m_messagesList;
+    return m_messages;
 }
 
-void API::setMessagesList(MessageListModel *messagesList)
+void API::setMessages(MessageListModel *messages)
 {
-    m_messagesList = messagesList;
-    emit this->messagesListChanged();
+    m_messages = messages;
+    emit this->messagesChanged();
 }
 
 bool API::hasRecommendations() const
@@ -831,9 +877,13 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder recommendations data received";
                 this->parseRecommendations(jsonObject);
             }
-            else if(reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive) && !reply->url().toString().contains(MESSAGES_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder matches data received";
                 this->parseMatches(jsonObject);
+            }
+            else if(reply->url().toString().contains(MESSAGES_ENDPOINT, Qt::CaseInsensitive) && reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder messages data received";
+                this->parseMessages(jsonObject);
             }
             else if(reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive) && !reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder like data received";
@@ -1184,10 +1234,11 @@ void API::parseMatches(QJsonObject json)
         qDebug() << "\tLatest message:" << latestMessage;
     }
 
+    matchesTempList.append(matchesList);
+
     // Handle pagination if available
     if(matchesData.value("next_page_token") != QJsonValue::Undefined) {
         qDebug() << "Pagination detected in matches, fetching next page...";
-        matchesTempList.append(matchesList);
         this->getMatches(matchesData["next_page_token"].toString());
     }
     else {
@@ -1266,6 +1317,50 @@ void API::parseUnmatch(QJsonObject json)
 {
     qDebug() << "Unmatching OK, refreshing matches...";
     this->getMatchesAll();
+}
+
+void API::parseMessages(QJsonObject json)
+{
+    QJsonObject messagesData = json["data"].toObject();
+    QList<Message*> messagesList;
+    foreach(QJsonValue item, messagesData["messages"].toArray()) {
+        QJsonObject message = item.toObject();
+        Message* msg = new Message(
+                    message["_id"].toString(),
+                message["match_id"].toString(),
+                message["message"].toString(),
+                QDateTime::fromString(message["sent_date"].toString(), Qt::ISODate),
+                message["from"].toString(),
+                message["to"].toString()
+                );
+        messagesList.append(msg);
+    }
+
+    messagesTempList.append(messagesList);
+
+    // Handle pagination if available
+    if(messagesData.value("next_page_token") != QJsonValue::Undefined) {
+        qDebug() << "Pagination detected in messages, fetching next page...";
+        this->getMessages(messagesMatchId, messagesData["next_page_token"].toString());
+    }
+    else {
+        qDebug() << "Last page fetched, all messages loaded";
+        // Profile is always loaded before messages but we check it to be sure
+        if(this->profile() != NULL) {
+            std::reverse(messagesTempList.begin(), messagesTempList.end());
+            this->setMessages(new MessageListModel(messagesTempList, this->profile()->id()));
+            messagesTempList.clear();
+        }
+        else {
+            qCritical() << "Profile data is NULL, can't determine user id for messages";
+            //: Error shown to the user when profile data wasn't succesfull retrieved. It's impossible then to get the messages between the user and it's matches.
+            //% "Messages couldn't be retrieved due missing profile information"
+            emit this->errorOccurred(qtTrId("sailfinder-messaging-error"));
+        }
+    }
+
+    // Unlock messages fetching
+    messagesFetchLock = false;
 }
 
 QString API::token() const

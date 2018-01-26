@@ -238,5 +238,22 @@
         <source>Be the first one to start the conversation!</source>
         <translation>Be the first one to start the conversation!</translation>
     </message>
+    <message id="sailfinder-messaging-error">
+        <source>Messages couldn&apos;t be retrieved due missing profile information</source>
+        <extracomment>Error shown to the user when profile data wasn&apos;t succesfull retrieved. It&apos;s impossible then to get the messages between the user and it&apos;s matches.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-not-available">
+        <source>Not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-minutes-ago">
+        <source>%L0 minute(s) ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-hours-ago">
+        <source>%L0 hour(s) ago</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

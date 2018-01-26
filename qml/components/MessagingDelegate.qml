@@ -60,9 +60,19 @@ ListItem {
             }
             font.pixelSize: Theme.fontSizeTiny
             color: model.authorIsUser? Theme.primaryColor: "black"
+            visible: text.length > 0
             text: {
-                var timestamp = new Date().toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm") //model.timestamp.toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm")
-                var status = ""
+                //% "Not available"
+                var timestamp = qsTrId("sailfinder-not-available")
+                var status = "";
+
+                if(model.timestamp != undefined) {
+                    timestamp = model.timestamp.toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm")
+                }
+                else {
+                    console.warn("Timestamp unavailable")
+                }
+
                 // Status is only needed for our messages, not the other person
                 if(model.readMessage && model.receivedMessage && model.authorIsUser) {
                     status = " ✓✓"

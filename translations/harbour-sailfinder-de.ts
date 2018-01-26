@@ -26,32 +26,38 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-logout-error">
-        <location filename="../src/api.cpp" line="486"/>
+        <location filename="../src/api.cpp" line="532"/>
         <source>Logout error, please try again later</source>
         <extracomment>Error shown to the user when logging out of Facebook failed</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-ssl-error">
-        <location filename="../src/api.cpp" line="755"/>
+        <location filename="../src/api.cpp" line="801"/>
         <source>SSL error, please check your device is running with the correct date and time</source>
         <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-error">
-        <location filename="../src/api.cpp" line="777"/>
+        <location filename="../src/api.cpp" line="823"/>
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-authentication-requested">
-        <location filename="../src/api.cpp" line="782"/>
+        <location filename="../src/api.cpp" line="828"/>
         <source>Tinder token expired, refreshing now</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-json-error">
-        <location filename="../src/api.cpp" line="866"/>
+        <location filename="../src/api.cpp" line="916"/>
         <source>Invalid JSON data received, please try again later</source>
         <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-messaging-error">
+        <location filename="../src/api.cpp" line="1358"/>
+        <source>Messages couldn&apos;t be retrieved due missing profile information</source>
+        <extracomment>Error shown to the user when profile data wasn&apos;t succesfull retrieved. It&apos;s impossible then to get the messages between the user and it&apos;s matches.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-about">
@@ -181,17 +187,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-unmatch">
-        <location filename="../qml/pages/MatchesView.qml" line="97"/>
+        <location filename="../qml/pages/MatchesView.qml" line="98"/>
         <source>Unmatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-matches">
-        <location filename="../qml/pages/MatchesView.qml" line="110"/>
+        <location filename="../qml/pages/MatchesView.qml" line="111"/>
         <source>No matches!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-matches-text">
-        <location filename="../qml/pages/MatchesView.qml" line="112"/>
+        <location filename="../qml/pages/MatchesView.qml" line="113"/>
         <source>Swipe on some recommendations</source>
         <translation type="unfinished"></translation>
     </message>
@@ -290,18 +296,33 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-messaging-placeholder">
-        <location filename="../qml/pages/MessagingPage.qml" line="140"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="80"/>
         <source>Say hi to %0!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-messages-text">
-        <location filename="../qml/pages/MessagingPage.qml" line="147"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="87"/>
         <source>No messages yet :-(</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-messages-hint">
-        <location filename="../qml/pages/MessagingPage.qml" line="149"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="89"/>
         <source>Be the first one to start the conversation!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-not-available">
+        <location filename="../qml/components/MessagingDelegate.qml" line="66"/>
+        <source>Not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-minutes-ago">
+        <location filename="../qml/components/MessagingHeader.qml" line="43"/>
+        <source>%L0 minute(s) ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-hours-ago">
+        <location filename="../qml/components/MessagingHeader.qml" line="47"/>
+        <source>%L0 hour(s) ago</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

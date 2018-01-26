@@ -31,14 +31,15 @@ class MessageListModel : public QAbstractListModel
     public:
         enum Roles {
             IdRole = Qt::UserRole + 1,
-            MatchIdRole = Qt::UserRole + 2,
-            MessageRole = Qt::UserRole + 3,
-            TimestampRole = Qt::UserRole + 4,
-            FromPersonIdRole = Qt::UserRole + 5,
-            ToPersonIdRole = Qt::UserRole + 6
+            MessageRole = Qt::UserRole + 2,
+            TimestampRole = Qt::UserRole + 3,
+            AuthorRole = Qt::UserRole + 4,
+            AuthorIsUserRole = Qt::UserRole + 5,
+            ReadMessageRole = Qt::UserRole + 6,
+            ReceivedMessageRole = Qt::UserRole + 7
         };
 
-        explicit MessageListModel(QList<Message *> messageList);
+        explicit MessageListModel(QList<Message *> messageList, QString userId);
         explicit MessageListModel();
         ~MessageListModel();
 
@@ -46,15 +47,19 @@ class MessageListModel : public QAbstractListModel
         virtual QVariant data(const QModelIndex &index, int role) const;
         QList<Message *> messageList() const;
         void setMessageList(const QList<Message *> &messageList);
+        QString userId() const;
+        void setUserId(const QString &userId);
 
 protected:
         QHash<int, QByteArray> roleNames() const;
 
 signals:
         void messageListChanged();
+        void userIdChanged();
 
 private:
         QList<Message *> m_messageList = QList<Message *>();
+        QString m_userId = QString();
 };
 
 #endif // MESSAGELISTMODEL_H

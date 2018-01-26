@@ -9,6 +9,7 @@ Item {
     property date birthDate
     property int gender
     property string avatar
+    property date lastSeen
 
     anchors { top: parent.top; left: parent.left; right: parent.right }
     height: Theme.itemSizeMedium + Theme.paddingLarge
@@ -18,8 +19,9 @@ Item {
         anchors {
             right: avatar.left
             rightMargin: Theme.paddingLarge
-            top: parent.top
-            topMargin: Theme.paddingLarge
+            top: lastSeen.visible? parent.top: undefined
+            topMargin: lastSeen.visible? Theme.paddingLarge: 0
+            verticalCenter: lastSeen.visible? undefined: parent.verticalCenter
         }
         font.pixelSize: Theme.fontSizeLarge
         color: Theme.highlightColor
@@ -27,8 +29,28 @@ Item {
     }
     
     Label {
+        id: lastSeen
         anchors { top: title.bottom; topMargin: Theme.paddingSmall; right: avatar.left; rightMargin: Theme.paddingLarge }
-        text: "online"
+        visible: text.length > 0
+        text: {
+            if(lastSeen == undefined) {
+                return "";
+            }
+            else {
+                var difference = new Date().getTime() - lastSeen.getTime();
+                if(difference < 60*60) { // 60 seconds, 60 minutes = 1 hour
+                    //% "%L0 minute(s) ago"
+                    return qsTrId("sailfinder-minutes-ago").arg(difference/60);
+                }
+                else if(difference < 24*60*60) { // 60 seconds, 60 minutes, 24 hours = 1 day
+                    //% "%L0 hour(s) ago"
+                    return qsTrId("sailfinder-hours-ago").arg(difference/3600);
+                }
+                else {
+                    return lastSeen.toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm");
+                }
+            }
+        }
     }
     
     Avatar {
