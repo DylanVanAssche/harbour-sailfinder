@@ -26,30 +26,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-logout-error">
-        <location filename="../src/api.cpp" line="481"/>
+        <location filename="../src/api.cpp" line="486"/>
         <source>Logout error, please try again later</source>
         <extracomment>Error shown to the user when logging out of Facebook failed</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-ssl-error">
-        <location filename="../src/api.cpp" line="750"/>
+        <location filename="../src/api.cpp" line="755"/>
         <source>SSL error, please check your device is running with the correct date and time</source>
         <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-error">
-        <location filename="../src/api.cpp" line="772"/>
+        <location filename="../src/api.cpp" line="777"/>
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-authentication-requested">
-        <location filename="../src/api.cpp" line="777"/>
+        <location filename="../src/api.cpp" line="782"/>
         <source>Tinder token expired, refreshing now</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-json-error">
-        <location filename="../src/api.cpp" line="861"/>
+        <location filename="../src/api.cpp" line="866"/>
         <source>Invalid JSON data received, please try again later</source>
         <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
         <translation type="unfinished"></translation>
@@ -290,17 +290,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-messaging-placeholder">
-        <location filename="../qml/pages/MessagingPage.qml" line="172"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="140"/>
         <source>Say hi to %0!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-messages-text">
-        <location filename="../qml/pages/MessagingPage.qml" line="179"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="147"/>
         <source>No messages yet :-(</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-messages-hint">
-        <location filename="../qml/pages/MessagingPage.qml" line="181"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="149"/>
         <source>Be the first one to start the conversation!</source>
         <translation type="unfinished"></translation>
     </message>

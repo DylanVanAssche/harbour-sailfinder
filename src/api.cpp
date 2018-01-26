@@ -310,6 +310,11 @@ void API::getUpdates(QDateTime lastActivityDate)
     }
 }
 
+void API::getMessages(QString matchId)
+{
+
+}
+
 void API::likeUser(QString userId)
 {
     if(this->authenticated()) {

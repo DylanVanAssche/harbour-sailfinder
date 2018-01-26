@@ -68,7 +68,10 @@ Item {
                                                       ? Theme.highlightColor
                                                       : Theme.primaryColor)
         icon.scale: Theme.iconSizeSmall/icon.width
-        onPressed: buttonBuzz.play()
+        onPressed: {
+            buttonBuzz.play()
+            send(input.text)
+        }
     }
 
     Label {
@@ -88,7 +91,9 @@ Item {
     Rectangle {
         z: -1
         anchors.fill: parent
-        color: Theme.highlightDimmerColor
-        opacity: 0.9
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: Theme.rgba(Theme.highlightBackgroundColor, 0.3) }
+            GradientStop { position: 1.0; color: Theme.rgba(Theme.highlightBackgroundColor, 0.15) }
+        }
     }
 }

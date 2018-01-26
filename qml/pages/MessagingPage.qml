@@ -21,51 +21,19 @@ import "../components"
 import "../js/util.js" as Util
 
 Page {
+    id: page
+
     property string name
     property date birthDate
     property int gender
     property string avatar
 
-    Item {
+    MessagingHeader {
         id: messagingHeader
-        anchors { top: parent.top; left: parent.left; right: parent.right }
-        height: Theme.itemSizeMedium + Theme.paddingLarge
-
-        Rectangle {
-            anchors.fill: parent
-            z: -1
-            color: Theme.highlightDimmerColor
-            opacity: 0.9
-        }
-
-        Label {
-            id: title
-            anchors {
-                right: parent.right
-                rightMargin: Theme.horizontalPageMargin
-                top: parent.top
-                topMargin: Theme.paddingLarge
-            }
-            font.pixelSize: Theme.fontSizeLarge
-            color: Theme.highlightColor
-            text: Util.createHeaderMessages(name, birthDate, gender)
-        }
-
-        Label {
-            anchors { top: title.bottom; topMargin: Theme.paddingSmall; right: parent.right; rightMargin: Theme.horizontalPageMargin }
-            text: "online"
-        }
-
-        Avatar {
-            width: Theme.itemSizeMedium
-            height: width
-            anchors {
-                left: parent.left
-                leftMargin: Theme.paddingLarge*1.5
-                verticalCenter: parent.verticalCenter
-            }
-            source: avatar
-        }
+        name: page.name
+        birthDate: page.birthDate
+        gender: page.gender
+        avatar: page.avatar
     }
 
     SilicaListView {
@@ -156,7 +124,7 @@ Page {
         }
         clip: true
         spacing: Theme.paddingMedium
-        delegate: MessagesDelegate {
+        delegate: MessagingDelegate {
             width: ListView.view.width*0.75
         }
         onModelChanged: messagesListView.scrollToBottom()
