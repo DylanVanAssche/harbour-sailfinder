@@ -90,7 +90,7 @@ public:
     Q_INVOKABLE void getMatchesAll();
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     Q_INVOKABLE void getMessages(QString matchId);
-    Q_INVOKABLE void postMessage(QString matchId, QString message, QString userId);
+    Q_INVOKABLE void sendMessage(QString matchId, QString message, QString userId, QString tempMessageId);
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
     Q_INVOKABLE void superlikeUser(QString userId);
@@ -164,6 +164,7 @@ signals:
     void messagesChanged();
     void loggedOut();
     void updatesReady(QDateTime lastActivityDate, bool refetch);
+    void newMessage();
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -198,6 +199,7 @@ private:
     bool recommendationsFetchLock = false;
     bool updatesFetchLock = false;
     bool messagesFetchLock = false;
+    bool messagesSendLock = false;
     QList<Match *> matchesTempList = QList<Match*> ();
     QList<Message *> messagesTempList = QList<Message*> ();
     QString messagesMatchId = QString();
@@ -222,6 +224,7 @@ private:
     void parseLogout(QJsonObject json);
     void parseUnmatch(QJsonObject json);
     void parseMessages(QJsonObject json);
+    void parseSendMessage(QJsonObject json);
 };
 
 #endif // API_H

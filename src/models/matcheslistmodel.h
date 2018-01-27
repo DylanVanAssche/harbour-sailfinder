@@ -22,6 +22,7 @@
 #include <QtCore/QList>
 
 #include "match.h"
+#include "message.h"
 #include "enum.h"
 
 class MatchesListModel : public QAbstractListModel
@@ -56,6 +57,7 @@ class MatchesListModel : public QAbstractListModel
         virtual QVariant data(const QModelIndex &index, int role) const;
         QList<Match *> matchesList() const;
         void setMatchesList(const QList<Match *> &matchesList);
+        void updateMatchLastMessage(const QString &matchId, Message* lastMessage);
 
 protected:
         QHash<int, QByteArray> roleNames() const;

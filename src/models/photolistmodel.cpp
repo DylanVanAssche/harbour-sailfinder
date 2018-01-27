@@ -75,6 +75,8 @@ QList<Photo *> PhotoListModel::photoList() const
 
 void PhotoListModel::setPhotoList(const QList<Photo *> &photoList)
 {
+    emit this->beginResetModel();
     m_photoList = photoList;
     emit this->photoListChanged();
+    emit this->endResetModel();
 }

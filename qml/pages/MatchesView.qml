@@ -23,8 +23,10 @@ import "../js/util.js" as Util
 
 SilicaFlickable {
     property bool _intialFetchRequired: true
+    property string _userId
     signal headerChanged(string text)
 
+    id: matches
     width: parent.width
     height: parent.height
 
@@ -73,6 +75,10 @@ SilicaFlickable {
                 api.getMatchesAll()
             }
         }
+
+        onProfileChanged: {
+            _userId = api.profile.id
+        }
     }
 
     SilicaListView {
@@ -82,6 +88,7 @@ SilicaFlickable {
             id: contact
             width: ListView.view.width
             onRemoved: api.unmatch(model.matchId)
+            enabled: _userId.length > 0 // Only enable when all our data is received to send messages
             onClicked: pageStack.push(
                            Qt.resolvedUrl("MessagingPage.qml"),
                            {
@@ -89,7 +96,8 @@ SilicaFlickable {
                                birthDate: model.birthDate,
                                gender: model.gender,
                                avatar: model.avatar,
-                               matchId: model.matchId
+                               matchId: model.matchId,
+                               userId: matches._userId
                            }
                            )
             menu: ContextMenu {

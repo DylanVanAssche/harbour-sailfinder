@@ -17,6 +17,7 @@
 
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import "../js/util.js" as Util
 
 ListItem {
     contentHeight: column.height + Theme.paddingLarge
@@ -62,16 +63,8 @@ ListItem {
             color: model.authorIsUser? Theme.primaryColor: "black"
             visible: text.length > 0
             text: {
-                //% "Not available"
-                var timestamp = qsTrId("sailfinder-not-available")
+                var timestamp = Util.formatDate(model.timestamp)
                 var status = "";
-
-                if(model.timestamp != undefined) {
-                    timestamp = model.timestamp.toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm")
-                }
-                else {
-                    console.warn("Timestamp unavailable")
-                }
 
                 // Status is only needed for our messages, not the other person
                 if(model.readMessage && model.receivedMessage && model.authorIsUser) {

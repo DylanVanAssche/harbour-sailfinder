@@ -71,6 +71,7 @@ Item {
         onPressed: {
             buttonBuzz.play()
             send(input.text)
+            input.text = ""
         }
     }
 

@@ -28,6 +28,7 @@ Page {
     property int gender
     property string avatar
     property string matchId
+    property string userId
 
     Component.onCompleted: api.getMessages(matchId)
 
@@ -38,6 +39,13 @@ Page {
             console.debug(api.messages)
             messagesListView.model = api.messages
             noMessagesPlaceholder.enabled = messagesListView.count == 0
+            messagesListView.positionViewAtEnd()
+            busyStatus.running = false
+        }
+
+        onNewMessage: {
+            messagesListView.positionViewAtEnd()
+            busyStatus.running = false
         }
     }
 
@@ -67,8 +75,6 @@ Page {
         delegate: MessagingDelegate {
             width: ListView.view.width*0.75
         }
-        onModelChanged: messagesListView.positionViewAtEnd() // No animation is needed
-        Component.onCompleted: messagesListView.positionViewAtEnd() // No animation is needed
 
         VerticalScrollDecorator {}
     }
@@ -78,6 +84,10 @@ Page {
         anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
         //% "Say hi to %0!"
         placeHolderText: qsTrId("sailfinder-messaging-placeholder").arg(name)
+        onSend: {
+            busyStatus.running = Qt.application.active
+            api.sendMessage(matchId, text, userId, Math.random().toString())
+        }
     }
 
     ViewPlaceholder {
@@ -90,8 +100,9 @@ Page {
     }
 
     BusyIndicator {
+        id: busyStatus
         anchors.centerIn: parent
         size: BusyIndicatorSize.Large
-        running: Qt.application.active && api.busy
+        running: Qt.application.active
     }
 }

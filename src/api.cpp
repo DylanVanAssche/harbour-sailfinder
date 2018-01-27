@@ -356,9 +356,33 @@ void API::getMessages(QString matchId)
     }
 }
 
-void API::postMessage(QString matchId, QString message, QString userId)
+void API::sendMessage(QString matchId, QString message, QString userId, QString tempMessageId)
 {
+    if(this->authenticated() && !messagesSendLock) {
+        // Lock message sending
+        messagesSendLock = true;
 
+        // Build URL
+        QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
+        QUrlQuery parameters;
+
+        // Build POST payload
+        QVariantMap data;
+        data["matchId"] = matchId;
+        data["message"] = message;
+        data["tempMessageId"] = tempMessageId;
+        data["userId"] = userId;
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+        // Prepare & do request
+        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    }
+    else if(messagesSendLock) {
+        qWarning() << "Message sending is locked";
+    }
+    else {
+        qWarning() << "Not authenticated, can't send message data";
+    }
 }
 
 void API::likeUser(QString userId)
@@ -901,9 +925,13 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder logout data received";
                 this->parseLogout(jsonObject);
             }
-            else if(reply->url().toString().contains(MATCH_OPERATIONS_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(MATCH_OPERATIONS_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::DeleteOperation) {
                 qDebug() << "Tinder unmatch data received";
                 this->parseUnmatch(jsonObject);
+            }
+            else if(reply->url().toString().contains(MATCH_OPERATIONS_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::PostOperation) {
+                qDebug() << "Tinder send message data received";
+                this->parseSendMessage(jsonObject);
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
@@ -1361,6 +1389,34 @@ void API::parseMessages(QJsonObject json)
 
     // Unlock messages fetching
     messagesFetchLock = false;
+}
+
+void API::parseSendMessage(QJsonObject json)
+{
+    // Get our current messages and reverse them again
+    QList<Message *> oldMessages = this->messages()->messageList();
+
+    // Create and add new message
+    Message* newMessage = new Message(
+                json["_id"].toString(),
+            json["match_id"].toString(),
+            json["message"].toString(),
+            QDateTime::fromString(json["sent_date"].toString(), Qt::ISODate),
+            json["from"].toString(),
+            json["to"].toString()
+            );
+    oldMessages.append(newMessage);
+
+    // Update QAbstractListModel it's data
+    this->messages()->setMessageList(oldMessages);
+    qDebug() << "Added sended message to messagesList";
+
+    // Enforce view updates
+    emit this->newMessage();
+    this->matchesList()->updateMatchLastMessage(json["match_id"].toString(), newMessage);
+
+    // Unlock send messages
+    messagesSendLock = false;
 }
 
 QString API::token() const

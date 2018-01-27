@@ -88,8 +88,10 @@ QList<Message *> MessageListModel::messageList() const
 
 void MessageListModel::setMessageList(const QList<Message *> &messageList)
 {
+    emit this->beginResetModel();
     m_messageList = messageList;
     emit this->messageListChanged();
+    emit this->endResetModel();
 }
 
 QString MessageListModel::userId() const
