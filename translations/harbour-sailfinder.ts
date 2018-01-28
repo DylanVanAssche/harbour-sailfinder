@@ -162,13 +162,13 @@
         <source>%0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0.</source>
         <translation>%0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0.</translation>
     </message>
-    <message id="sailfinder-responsibility">
-        <source>Responsibility</source>
-        <translation>Responsibility</translation>
+    <message id="sailfinder-disclaimer">
+        <source>Disclaimer</source>
+        <translation>Disclaimer</translation>
     </message>
-    <message id="sailfinder-responsibility-text">
-        <source>%0 and it&apos;s developer can&apos;t be hold responsible for using %0. %0 and it&apos;s developer aren&apos;t affilated in any way with Tinder.</source>
-        <translation>%0 and it&apos;s developer can&apos;t be hold responsible for using %0. %0 and it&apos;s developer aren&apos;t affilated in any way with Tinder.</translation>
+    <message id="sailfinder-disclaimer-text">
+        <source>%0 and it&apos;s contributors aren&apos;t related to %1 in any way and they can&apos;t be hold responsible for anything. You agree automatically with this disclaimer by using the application, contribute to it, ...</source>
+        <translation>%0 and it&apos;s contributors aren&apos;t related to %1 in any way and they can&apos;t be hold responsible for anything. You agree automatically with this disclaimer by using the application, contribute to it, ...</translation>
     </message>
     <message id="sailfinder-developer-source">
         <source>Developer &amp; source code</source>
