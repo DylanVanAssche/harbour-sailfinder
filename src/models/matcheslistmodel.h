@@ -22,9 +22,10 @@
 #include <QtCore/QList>
 
 #include "match.h"
+#include "message.h"
 #include "enum.h"
 
-class MatchListModel : public QAbstractListModel
+class MatchesListModel : public QAbstractListModel
 {
     Q_OBJECT
 
@@ -39,26 +40,33 @@ class MatchListModel : public QAbstractListModel
             MatchIdRole = Qt::UserRole + 7,
             IsSuperlikeRole = Qt::UserRole + 8,
             IsDeadRole = Qt::UserRole + 9,
-            MessagesRole = Qt::UserRole + 10
+            AvatarRole = Qt::UserRole + 10,
+            MessagesPreviewRole = Qt::UserRole + 11,
+            UnreadCounterRole = Qt::UserRole + 12,
+            ReceivedMessageRole = Qt::UserRole + 13,
+            ReadMessageRole = Qt::UserRole + 14,
+            MentionedRole = Qt::UserRole + 15,
+            HasUnreadMessagesRole = Qt::UserRole + 16
         };
 
-        explicit MatchListModel(QList<Match *> matchList);
-        explicit MatchListModel();
-        ~MatchListModel();
+        explicit MatchesListModel(QList<Match *> matchesList);
+        explicit MatchesListModel();
+        ~MatchesListModel();
 
         virtual int rowCount(const QModelIndex&) const;
         virtual QVariant data(const QModelIndex &index, int role) const;
-        QList<Match *> matchList() const;
-        void setMatchList(const QList<Match *> &matchList);
+        QList<Match *> matchesList() const;
+        void setMatchesList(const QList<Match *> &matchesList);
+        void updateMatchLastMessage(const QString &matchId, Message* lastMessage);
 
 protected:
         QHash<int, QByteArray> roleNames() const;
 
 signals:
-        void matchListChanged();
+        void matchesListChanged();
 
 private:
-        QList<Match *> m_matchList;
+        QList<Match *> m_matchesList = QList<Match *>();
 };
 
 #endif // MATCHLISTMODEL_H

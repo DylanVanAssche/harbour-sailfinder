@@ -19,6 +19,14 @@ PhotoListModel::~PhotoListModel()
     }
 }
 
+Photo* PhotoListModel::getPhoto(int index)
+{
+    if(index < this->photoList().length() && index > 0) {
+        return this->photoList().at(index);
+    }
+    return new Photo(QString("NA"), QUrl(""));
+}
+
 int PhotoListModel::rowCount(const QModelIndex &) const
 {
     return this->photoList().length();
@@ -67,6 +75,8 @@ QList<Photo *> PhotoListModel::photoList() const
 
 void PhotoListModel::setPhotoList(const QList<Photo *> &photoList)
 {
+    emit this->beginResetModel();
     m_photoList = photoList;
     emit this->photoListChanged();
+    emit this->endResetModel();
 }

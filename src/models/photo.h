@@ -30,8 +30,8 @@ signals:
     void urlChanged();
 
 private:
-    QString m_id;
-    QUrl m_url;
+    QString m_id = QString();
+    QUrl m_url = QUrl();
 };
 
 #endif // PHOTO_H

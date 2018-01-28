@@ -49,12 +49,12 @@ signals:
     void photosChanged();
 
 private:
-    QDateTime m_birthDate;
-    QString m_name;
-    Sailfinder::Gender m_gender;
-    QString m_id;
-    QString m_bio;
-    PhotoListModel *m_photos;
+    QDateTime m_birthDate = QDateTime();
+    QString m_name = QString();
+    Sailfinder::Gender m_gender = Sailfinder::Gender::Female;
+    QString m_id = QString();
+    QString m_bio = QString();
+    PhotoListModel *m_photos = NULL;
 };
 
 #endif // PERSON_H

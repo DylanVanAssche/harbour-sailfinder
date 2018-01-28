@@ -107,27 +107,6 @@ QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
     return request;
 }
 
-void API::getMatches(bool withMessages)
-{
-    if(this->authenticated()) {
-        // Build URL
-        QUrl url(QString(MATCHES_ENDPOINT));
-        QUrlQuery parameters;
-        if(withMessages) {
-            parameters.addQueryItem("message", "1");
-        }
-        else {
-            parameters.addQueryItem("message", "0");
-        }
-
-        // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
-    }
-    else {
-        qWarning() << "Not authenticated, can't retrieve recommendations data";
-    }
-}
-
 /**
  * @class API
  * @brief Authenticate the user with the API
@@ -184,7 +163,10 @@ void API::getMeta(int latitude, int longitude)
  */
 void API::getProfile()
 {
-    if(this->authenticated()) {
+    if(this->authenticated() && !profileFetchLock) {
+        // Lock profile fetching
+        profileFetchLock = true;
+
         // Build URL
         QUrl url(QString(PROFILE_ENDPOINT));
         QUrlQuery parameters;
@@ -193,6 +175,9 @@ void API::getProfile()
         // Prepare & do request
         QNAM->get(this->prepareRequest(url, parameters));
     }
+    else if(profileFetchLock) {
+        qWarning() << "Profile fetching is locked";
+    }
     else {
         qWarning() << "Not authenticated, can't retrieve profile data";
     }
@@ -200,13 +185,19 @@ void API::getProfile()
 
 void API::getRecommendations()
 {
-    if(this->authenticated()) {
+    if(this->authenticated() && !recommendationsFetchLock) {
+        // Lock recommendations fetching
+        recommendationsFetchLock = true;
+
         // Build URL
         QUrl url(QString(RECS_ENDPOINT));
         QUrlQuery parameters;
 
         // Prepare & do request
         QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else if(recommendationsFetchLock) {
+        qWarning() << "Recommendations fetching is locked";
     }
     else {
         qWarning() << "Not authenticated, can't retrieve recommendations data";
@@ -223,9 +214,102 @@ void API::getMatchesWithoutMessages()
     this->getMatches(false);
 }
 
-void API::getUpdates(QDateTime lastActivityDate)
+void API::getMatchesAll()
+{
+    if(this->authenticated() && !matchFetchLock) {
+        // Lock matches fetching
+        matchFetchLock = true;
+
+        // Build URL
+        QUrl url(QString(MATCHES_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("count", "60");
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else if(matchFetchLock) {
+        qWarning() << "Skipping matches fetching since locked by other request";
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve matches data";
+    }
+}
+
+void API::getMatches(bool withMessages)
+{
+    if(this->authenticated() && !matchFetchLock) {
+        // Lock matches fetching
+        matchFetchLock = true;
+
+        // Build URL
+        QUrl url(QString(MATCHES_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("count", "60");
+        if(withMessages) {
+            parameters.addQueryItem("message", "1");
+        }
+        else {
+            parameters.addQueryItem("message", "0");
+        }
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else if(matchFetchLock) {
+        qWarning() << "Skipping matches fetching since locked by other request";
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve matches data";
+    }
+}
+
+void API::getMatches(QString pageToken)
 {
     if(this->authenticated()) {
+        // Lock matches fetching
+        matchFetchLock = true;
+
+        // Build URL
+        QUrl url(QString(MATCHES_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("count", "60");
+        parameters.addQueryItem("page_token", pageToken);
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve matches data";
+    }
+}
+
+void API::getMessages(QString matchId, QString pageToken)
+{
+    if(this->authenticated()) {
+        // Lock matches fetching
+        messagesFetchLock = true;
+
+        // Build URL
+        QUrl url(QString(MATCHES_ENDPOINT) + "/" + matchId + QString(MESSAGES_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("count", "100");
+        parameters.addQueryItem("page_token", pageToken);
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve messages data";
+    }
+}
+
+void API::getUpdates(QDateTime lastActivityDate)
+{
+    if(this->authenticated() && !updatesFetchLock) {
+        // Lock updates fetching
+        updatesFetchLock = true;
+
         // Build URL
         QUrl url(QString(UPDATES_ENDPOINT));
         QUrlQuery parameters;
@@ -238,8 +322,68 @@ void API::getUpdates(QDateTime lastActivityDate)
         // Prepare & do request
         QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
     }
+    else if(updatesFetchLock) {
+        qWarning() << "Updates fetching locked";
+        emit this->updatesReady(lastActivityDate, false); // Restarting updates timer on failure
+    }
     else {
         qWarning() << "Not authenticated, can't retrieve updates data";
+        emit this->updatesReady(lastActivityDate, false);
+    }
+}
+
+void API::getMessages(QString matchId)
+{
+    if(this->authenticated() && !messagesFetchLock) {
+        // Lock message fetching
+        messagesFetchLock = true;
+
+        // Save the matchId for pagination
+        // It's includedin every message but there's always a chance that the payload empty is
+        messagesMatchId = matchId;
+
+        // Build URL
+        QUrl url(QString(MATCHES_ENDPOINT) + "/" + matchId + QString(MESSAGES_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("count", "100");
+
+        // Prepare & do request
+        QNAM->get(this->prepareRequest(url, parameters));
+    }
+    else if(messagesFetchLock) {
+        qWarning() << "Messages fetching is locked";
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve messages data";
+    }
+}
+
+void API::sendMessage(QString matchId, QString message, QString userId, QString tempMessageId)
+{
+    if(this->authenticated() && !messagesSendLock) {
+        // Lock message sending
+        messagesSendLock = true;
+
+        // Build URL
+        QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
+        QUrlQuery parameters;
+
+        // Build POST payload
+        QVariantMap data;
+        data["matchId"] = matchId;
+        data["message"] = message;
+        data["tempMessageId"] = tempMessageId;
+        data["userId"] = userId;
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+        // Prepare & do request
+        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    }
+    else if(messagesSendLock) {
+        qWarning() << "Message sending is locked";
+    }
+    else {
+        qWarning() << "Not authenticated, can't send message data";
     }
 }
 
@@ -316,6 +460,140 @@ void API::nextRecommendation()
     }
 }
 
+void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable)
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(PROFILE_ENDPOINT));
+        QUrlQuery parameters;
+
+        // Build POST payload
+        QVariantMap data;
+        QVariantMap dataUser;
+        int genderFilter = -1;
+        bool updateRequired = false;
+
+        switch(interestedIn) {
+        case Sailfinder::Gender::All:
+            genderFilter = -1;
+            break;
+        case Sailfinder::Gender::Male:
+            genderFilter = 0;
+            break;
+        case Sailfinder::Gender::Female:
+            genderFilter = 1;
+            break;
+        default:
+            qCritical() << "Unknown interestedIn gender";
+            break;
+        }
+
+        // We only want to update different values
+        if(this->profile()->bio() != bio) {
+            qDebug() << "'Bio' is different";
+            dataUser["bio"] = bio;
+            updateRequired = true;
+        }
+
+        if(this->profile()->interestedIn() != interestedIn) {
+            qDebug() << "'Interested in' is different";
+            dataUser["gender_filter"] = genderFilter;
+            updateRequired = true;
+        }
+
+        if(this->profile()->distanceMax() != distanceMax) {
+            qDebug() << "'DistanceMax' is different";
+            dataUser["distance_filter"] = distanceMax;
+            updateRequired = true;
+        }
+
+        if(this->profile()->ageMin() != ageMin) {
+            qDebug() << "'Min age' different";
+            dataUser["age_filter_min"] = ageMin;
+            updateRequired = true;
+        }
+
+        if(this->profile()->ageMax() != ageMax) {
+            qDebug() << "'Max age' different";
+            dataUser["age_filter_max"] = ageMax;
+            updateRequired = true;
+        }
+
+        if(this->profile()->discoverable() != discoverable) {
+            qDebug() << "'Discoverable' different";
+            dataUser["discoverable"] = discoverable;
+            updateRequired = true;
+        }
+
+        data["user"] = dataUser;
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+        // Prepare & do request if update is required
+        if(updateRequired) {
+            QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        }
+        else {
+            qDebug() << "No profile data has been changed, skipping update...";
+        }
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve superlike data";
+    }
+}
+
+void API::logout()
+{
+    if(this->authenticated()) {
+        // Clear Webkit cache for Facebook authentication
+        const QString cachePath = SFOS.cacheLocation() + "/" + SFOS.appName() + "/.QtWebKit";
+        QDir webcache(cachePath);
+        if (webcache.exists()) {
+            if (webcache.removeRecursively()) {
+                qInfo() << "Succesfully cleared webview cache:" << cachePath;
+            }
+            else {
+                qCritical() << "Clearing webview cache failed:" << cachePath;
+                //: Error shown to the user when logging out of Facebook failed
+                //% "Logout error, please try again later"
+                emit this->errorOccurred(qtTrId("sailfinder-logout-error"));
+            }
+        }
+        else {
+            qWarning() << "Webview cache not found:" << cachePath << " logged in via SMS?";
+        }
+
+        // Build URL
+        QUrl url(QString(AUTH_LOGOUT_ENDPOINT));
+        QUrlQuery parameters;
+
+        // Build POST payload
+        // Empty POST data for this endpoint but it's required to use HTTP POST request
+        QVariantMap data;
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
+
+        // Prepare & do request
+        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve logout data";
+    }
+}
+
+void API::unmatch(QString matchId)
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNAM->deleteResource(this->prepareRequest(url, parameters));
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve unmatch data";
+    }
+}
+
 /**
  * @class API
  * @brief Parse the positioning
@@ -351,6 +629,28 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     }
 }
 
+MessageListModel *API::messages() const
+{
+    return m_messages;
+}
+
+void API::setMessages(MessageListModel *messages)
+{
+    m_messages = messages;
+    emit this->messagesChanged();
+}
+
+bool API::hasRecommendations() const
+{
+    return m_hasRecommendations;
+}
+
+void API::setHasRecommendations(bool hasRecommendations)
+{
+    m_hasRecommendations = hasRecommendations;
+    emit this->hasRecommendationsChanged();
+}
+
 Recommendation *API::recommendation() const
 {
     return m_recommendation;
@@ -362,12 +662,12 @@ void API::setRecommendation(Recommendation *recommendation)
     emit this->recommendationChanged();
 }
 
-MatchListModel *API::matchesList() const
+MatchesListModel *API::matchesList() const
 {
     return m_matchesList;
 }
 
-void API::setMatchesList(MatchListModel *matchesList)
+void API::setMatchesList(MatchesListModel *matchesList)
 {
     m_matchesList = matchesList;
     emit this->matchesListChanged();
@@ -524,7 +824,7 @@ void API::sslErrors(QNetworkReply* reply, QList<QSslError> sslError)
     qCritical() << "SSL error occured:" << reply->errorString() << sslError;
     //: Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.
     //% "SSL error, please check your device is running with the correct date and time"
-    emit this->errorOccurred(qtTrId("berail-ssl-error"));
+    emit this->errorOccurred(qtTrId("sailfinder-ssl-error"));
 }
 
 /**
@@ -539,6 +839,8 @@ void API::finished (QNetworkReply *reply)
     qInfo() << "Request finished:" << reply->url().toString();
     if(!this->networkEnabled()) {
         qCritical() << "Network inaccesible, can't retrieve API request!";
+        // Network offline, unlock all endpoints
+        this->unlockAll();
     }
     else if(reply->error()) {
         if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404 || reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 500)
@@ -557,6 +859,9 @@ void API::finished (QNetworkReply *reply)
             qCritical() << reply->errorString();
             emit this->errorOccurred(reply->errorString());
         }
+
+        // Unlock all on critical errors
+        this->unlockAll();
     }
     else if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 301 || reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 302) {
         qWarning() << "HTTP 301/302: Moved, following redirect...";
@@ -603,24 +908,37 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder recommendations data received";
                 this->parseRecommendations(jsonObject);
             }
-            else if(reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive) && !reply->url().toString().contains(MESSAGES_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder matches data received";
                 this->parseMatches(jsonObject);
             }
-            else if(reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(MESSAGES_ENDPOINT, Qt::CaseInsensitive) && reply->url().toString().contains(MATCHES_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder messages data received";
+                this->parseMessages(jsonObject);
+            }
+            else if(reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive) && !reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder like data received";
-                qDebug() << replyData;
                 this->parseLike(jsonObject);
             }
             else if(reply->url().toString().contains(PASS_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder pass data received";
-                qDebug() << replyData;
                 this->parsePass(jsonObject);
             }
-            else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(SUPERLIKE_ENDPOINT, Qt::CaseInsensitive) && reply->url().toString().contains(LIKE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder superlike data received";
-                qDebug() << replyData;
                 this->parseSuperlike(jsonObject);
+            }
+            else if(reply->url().toString().contains(AUTH_LOGOUT_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder logout data received";
+                this->parseLogout(jsonObject);
+            }
+            else if(reply->url().toString().contains(MATCH_OPERATIONS_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::DeleteOperation) {
+                qDebug() << "Tinder unmatch data received";
+                this->parseUnmatch(jsonObject);
+            }
+            else if(reply->url().toString().contains(MATCH_OPERATIONS_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::PostOperation) {
+                qDebug() << "Tinder send message data received";
+                this->parseSendMessage(jsonObject);
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
@@ -667,7 +985,51 @@ void API::parseMeta(QJsonObject json)
 
 void API::parseUpdates(QJsonObject json)
 {
-    // TODO: Parse the update data and update the models for matches, send notifications, ...
+    QJsonArray matchesArray = json["matches"].toArray();
+    bool refetch = false;
+    int newMatchesCount = 0;
+    int newMessagesCount = 0;
+
+    if(matchesArray.count() > 0) {
+        qDebug() << "Matches updates received";
+        foreach(QJsonValue item, matchesArray) {
+            QJsonObject match = item.toObject();
+            if(match["messages"].toArray().count() > 0) {
+                if(this->profile() != NULL) {
+                    qDebug() << "Counting new messages";
+                    foreach (QJsonValue item, match["messages"].toArray()) {
+                        QJsonObject message = item.toObject();
+                        if(message["to"].toString() == this->profile()->id()) {
+                            newMessagesCount++;
+                        }
+                    }
+                }
+                else {
+                    qCritical() << "Can't determine update messages origin since profile date is NULL";
+                }
+            }
+            else {
+                qDebug() << "Counting new matches";
+                newMatchesCount++;
+            }
+        }
+
+        if(newMatchesCount > 0) {
+            emit this->newMatch(newMatchesCount);
+        }
+
+        if(newMessagesCount > 0) {
+            emit this->newMessage(newMessagesCount);
+        }
+        refetch = true;
+    }
+
+    QJsonArray blocksArray = json["blocks"].toArray();
+    if(blocksArray.count() > 0) {
+        qDebug() << "Blocks data received";
+        refetch = true;
+    }
+
     QJsonObject pollingData = json["poll_interval"].toObject();
     this->setStandardPollInterval(pollingData["standard"].toInt());
     this->setPersistentPollInterval(pollingData["persistent"].toInt());
@@ -675,120 +1037,73 @@ void API::parseUpdates(QJsonObject json)
     qDebug() << "Updates data:";
     qDebug() << "\tPolling interval standard:" << this->standardPollInterval();
     qDebug() << "\tPolling interval persitent:" << this->persistentPollInterval();
+    qDebug() << "\tMatches:" << newMatchesCount;
+    qDebug() << "\tMessages:" << newMessagesCount;
+    qDebug() << "\tBlocks:" << blocksArray.count();
+
+    emit this->updatesReady(QDateTime::fromString(json["last_activity_date"].toString(), Qt::ISODate), refetch);
+
+    // Unlock updates fetching
+    updatesFetchLock = false;
 }
 
 void API::parseProfile(QJsonObject json)
 {
-    QJsonObject user = json["data"].toObject()["user"].toObject();
-    QJsonObject likes = json["data"].toObject()["likes"].toObject();
-    QJsonObject superlikes = json["data"].toObject()["superlikes"].toObject();
     QList<Photo *> photoList;
     QList<School *> schoolList;
     QList<Job *> jobList;
-    bool canLike = likes["likes_remaining"].toInt() > 0;
-    bool canSuperlike = superlikes["remaining"].toInt() > 0;
-    int ageMin = user["age_filter_min"].toInt();
-    int ageMax = user["age_filter_max"].toInt();
-    QString bio = user["bio"].toString();
-    QDateTime birthDate = QDateTime::fromString(user["birth_date"].toString(), Qt::ISODate);
-    int distanceMax = user["distance_filter"].toInt();
-    bool discoverable = user["discoverable"].toBool();
-    Sailfinder::Gender gender = Sailfinder::Gender::Female;
-    if(user["gender"].toInt() == 0) { // Default female, change if needed
-        gender = Sailfinder::Gender::Male;
+
+    // Only update when 'likes' included
+    if(json["data"].toObject().value("likes") != QJsonValue::Undefined) {
+        QJsonObject likes = json["data"].toObject()["likes"].toObject();
+        bool canLike = likes["likes_remaining"].toInt() > 0;
+        this->setCanLike(canLike);
+        qDebug() << "\tCan like:" << canLike;
     }
 
-    Sailfinder::Gender interestedIn = Sailfinder::Gender::Female;
-    if(user["interested_in"].toArray().count() > 1) { // Both genders
-        interestedIn = Sailfinder::Gender::All;
-    }
-    else if(user["interested_in"].toArray().at(0) == 0) { // Change to male only
-        interestedIn = Sailfinder::Gender::Male;
-    }
-    QString name = user["name"].toString();
-    QString id = user["_id"].toString();
-    double latitude = user["pos"].toObject()["lat"].toDouble();
-    double longitude = user["pos"].toObject()["lon"].toDouble();
-    QGeoCoordinate position;
-    position.setLatitude(latitude);
-    position.setLongitude(longitude);
-
-    foreach(QJsonValue item, user["photos"].toArray()) {
-        QJsonObject photo = item.toObject();
-        photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
+    // Only update when 'super_likes' included
+    if(json["data"].toObject().value("super_likes") != QJsonValue::Undefined) {
+        QJsonObject superlikes = json["data"].toObject()["super_likes"].toObject();
+        bool canSuperlike = superlikes["remaining"].toInt() > 0;
+        this->setCanSuperlike(canSuperlike);
+        qDebug() << "\tCan superlike:" << canSuperlike << "remaining:" << superlikes["remaining"].toInt();
     }
 
-    foreach(QJsonValue item, user["schools"].toArray()) {
-        QJsonObject school = item.toObject();
-        // Name is needed but ID might be missing sometimes!
-        if(school.value("id") != QJsonValue::Undefined) {
-            schoolList.append(new School(school["id"].toString(), school["name"].toString()));
-        }
-        else {
-            qWarning() << "School id is missing";
-            schoolList.append(new School(school["name"].toString()));
-        }
-    }
-
-    foreach(QJsonValue item, user["jobs"].toArray()) {
-        QJsonObject job = item.toObject();
-        // Name is needed but ID might be missing sometimes!
-        if(job.value("id") != QJsonValue::Undefined) {
-            jobList.append(new Job(job["id"].toString(), job["name"].toString()));
-        }
-        else {
-            qWarning() << "Job id is missing";
-            jobList.append(new Job(job["name"].toString()));
-        }
-    }
-
-    qDebug() << "Profile data:";
-    qDebug() << "\tName:" << name;
-    qDebug() << "\tBirthdate:" << birthDate;
-    qDebug() << "\tBio:" << bio;
-    qDebug() << "\tAge min:" << ageMin;
-    qDebug() << "\tAge max:" << ageMax;
-    qDebug() << "\tGender:" << (int)(gender);
-    qDebug() << "\tDistance max:" << distanceMax;
-    qDebug() << "\tInterested in:" << (int)(interestedIn);
-    qDebug() << "\tPosition:" << position;
-    qDebug() << "\tDiscoverable:" << discoverable;
-    qDebug() << "\tPhotos:" << photoList;
-    qDebug() << "\tSchools:" << schoolList;
-    qDebug() << "\tJobs:" << jobList;
-    qDebug() << "\tCan like:" << canLike;
-    qDebug() << "\tCan superlike:" << canSuperlike;
-
-    this->setCanLike(canLike);
-    this->setCanSuperlike(canSuperlike);
-    this->setProfile(new User(id, name, birthDate, gender, bio, schoolList, jobList, photoList, ageMin, ageMax, distanceMax, interestedIn, position, discoverable));
-}
-
-void API::parseRecommendations(QJsonObject json)
-{
-    QList<Recommendation *> recsList;
-    foreach(QJsonValue item, json["results"].toArray()) {
-        QList<Photo *> photoList;
-        QList<School *> schoolList;
-        QList<Job *> jobList;
-        QJsonObject recommendation = item.toObject()["user"].toObject();
-        int distance = recommendation["distance_mi"].toInt();
-        QString contentHash = recommendation["content_hash"].toString();
-        int sNumber = recommendation["s_number"].toInt();
+    // Only update when 'user' included
+    if(json["data"].toObject().value("user") != QJsonValue::Undefined) {
+        QJsonObject user = json["data"].toObject()["user"].toObject();
+        int ageMin = user["age_filter_min"].toInt();
+        int ageMax = user["age_filter_max"].toInt();
+        QString bio = user["bio"].toString();
+        QDateTime birthDate = QDateTime::fromString(user["birth_date"].toString(), Qt::ISODate);
+        int distanceMax = user["distance_filter"].toInt();
+        bool discoverable = user["discoverable"].toBool();
         Sailfinder::Gender gender = Sailfinder::Gender::Female;
-        if(recommendation["gender"].toInt() == 0) { // Default female, change if needed
+        if(user["gender"].toInt() == (int)Sailfinder::Gender::Male) { // Default female, change if needed
             gender = Sailfinder::Gender::Male;
         }
-        QString id = recommendation["_id"].toString();
-        QString bio = recommendation["bio"].toString();
-        QDateTime birthDate = QDateTime::fromString(recommendation["birth_date"].toString(), Qt::ISODate);
-        QString name = recommendation["name"].toString();
-        foreach(QJsonValue item, recommendation["photos"].toArray()) {
+
+        Sailfinder::Gender interestedIn = Sailfinder::Gender::All;
+        if(user["gender_filter"].toInt() == (int)Sailfinder::Gender::Male) { // Both genders
+            interestedIn = Sailfinder::Gender::Male;
+        }
+        else if(user["gender_filter"].toInt() == (int)Sailfinder::Gender::Female) { // Change to male only
+            interestedIn = Sailfinder::Gender::Female;
+        }
+        QString name = user["name"].toString();
+        QString id = user["_id"].toString();
+        double latitude = user["pos"].toObject()["lat"].toDouble();
+        double longitude = user["pos"].toObject()["lon"].toDouble();
+        QGeoCoordinate position;
+        position.setLatitude(latitude);
+        position.setLongitude(longitude);
+
+        foreach(QJsonValue item, user["photos"].toArray()) {
             QJsonObject photo = item.toObject();
             photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
         }
 
-        foreach(QJsonValue item, recommendation["schools"].toArray()) {
+        foreach(QJsonValue item, user["schools"].toArray()) {
             QJsonObject school = item.toObject();
             // Name is needed but ID might be missing sometimes!
             if(school.value("id") != QJsonValue::Undefined) {
@@ -800,7 +1115,7 @@ void API::parseRecommendations(QJsonObject json)
             }
         }
 
-        foreach(QJsonValue item, recommendation["jobs"].toArray()) {
+        foreach(QJsonValue item, user["jobs"].toArray()) {
             QJsonObject job = item.toObject();
             // Name is needed but ID might be missing sometimes!
             if(job.value("id") != QJsonValue::Undefined) {
@@ -812,26 +1127,123 @@ void API::parseRecommendations(QJsonObject json)
             }
         }
 
-        recsList.append(new Recommendation(id, name, birthDate, gender, bio, schoolList, jobList, photoList, contentHash, sNumber, distance));
-
-        qDebug() << "Recommendation data:";
+        qDebug() << "Profile data:";
         qDebug() << "\tName:" << name;
-        qDebug() << "\tID:" << id;
         qDebug() << "\tBirthdate:" << birthDate;
         qDebug() << "\tBio:" << bio;
-        qDebug() << "\tDistance:" << distance;
+        qDebug() << "\tAge min:" << ageMin;
+        qDebug() << "\tAge max:" << ageMax;
+        qDebug() << "\tGender:" << (int)(gender);
+        qDebug() << "\tDistance max:" << distanceMax;
+        qDebug() << "\tInterested in:" << (int)(interestedIn);
+        qDebug() << "\tPosition:" << position;
+        qDebug() << "\tDiscoverable:" << discoverable;
         qDebug() << "\tPhotos:" << photoList;
         qDebug() << "\tSchools:" << schoolList;
         qDebug() << "\tJobs:" << jobList;
-        qDebug() << "\tContentHash:" << contentHash;
-        qDebug() << "\tSNumber:" << sNumber;
-        qDebug() << "\tGender:" << (int)(gender);
+
+        this->setProfile(new User(id, name, birthDate, gender, bio, schoolList, jobList, photoList, ageMin, ageMax, distanceMax, interestedIn, position, discoverable));
+    }
+
+    // Unlock profile fetching
+    profileFetchLock = false;
+}
+
+void API::parseRecommendations(QJsonObject json)
+{
+    QList<Recommendation *> recsList;
+    if(json.value("message") == QJsonValue::Undefined) {
+        foreach(QJsonValue item, json["results"].toArray()) {
+            QList<Photo *> photoList;
+            QList<School *> schoolList;
+            QList<Job *> jobList;
+            QJsonObject recommendation = item.toObject()["user"].toObject();
+            int distance = recommendation["distance_mi"].toInt();
+            QString contentHash = recommendation["content_hash"].toString();
+            int sNumber = recommendation["s_number"].toInt();
+            Sailfinder::Gender gender = Sailfinder::Gender::Female;
+            if(recommendation["gender"].toInt() == (int)Sailfinder::Gender::Male) { // Default female, change if needed
+                gender = Sailfinder::Gender::Male;
+            }
+            QString id = recommendation["_id"].toString();
+            QString bio = recommendation["bio"].toString();
+            QDateTime birthDate = QDateTime::fromString(recommendation["birth_date"].toString(), Qt::ISODate);
+            QString name = recommendation["name"].toString();
+            foreach(QJsonValue item, recommendation["photos"].toArray()) {
+                QJsonObject photo = item.toObject();
+                photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
+            }
+
+            foreach(QJsonValue item, recommendation["schools"].toArray()) {
+                QJsonObject school = item.toObject();
+                // Name is needed but ID might be missing sometimes!
+                if(school.value("id") != QJsonValue::Undefined) {
+                    schoolList.append(new School(school["id"].toString(), school["name"].toString()));
+                }
+                else {
+                    qWarning() << "School id is missing";
+                    schoolList.append(new School(school["name"].toString()));
+                }
+            }
+
+            foreach(QJsonValue item, recommendation["jobs"].toArray()) {
+                QJsonObject job = item.toObject();
+                // Name is needed but ID might be missing sometimes!
+                if(job.value("id") != QJsonValue::Undefined) {
+                    jobList.append(new Job(job["id"].toString(), job["name"].toString()));
+                }
+                else {
+                    qWarning() << "Job id is missing";
+                    jobList.append(new Job(job["name"].toString()));
+                }
+            }
+
+            recsList.append(new Recommendation(id, name, birthDate, gender, bio, schoolList, jobList, photoList, contentHash, sNumber, distance));
+
+            qDebug() << "Recommendation data:";
+            qDebug() << "\tName:" << name;
+            qDebug() << "\tID:" << id;
+            qDebug() << "\tBirthdate:" << birthDate;
+            qDebug() << "\tBio:" << bio;
+            qDebug() << "\tDistance:" << distance;
+            qDebug() << "\tPhotos:" << photoList;
+            qDebug() << "\tSchools:" << schoolList;
+            qDebug() << "\tJobs:" << jobList;
+            qDebug() << "\tContentHash:" << contentHash;
+            qDebug() << "\tSNumber:" << sNumber;
+            qDebug() << "\tGender:" << (int)(gender);
+        }
+
+        this->setHasRecommendations(true);
+        qDebug() << "Has recommendations:" << this->hasRecommendations();
+    }
+    else {
+        QString msg = json["message"].toString();
+        if(msg == "recs timeout") {
+            qWarning() << "Recommendations timeout received";
+            this->setHasRecommendations(false);
+            qDebug() << "Has recommendations:" << this->hasRecommendations();
+            emit this->recommendationTimeOut();
+        }
+        if(msg == "recs exhausted") {
+            qWarning() << "Recommendations exhausted received";
+            this->setHasRecommendations(false);
+            qDebug() << "Has recommendations:" << this->hasRecommendations();
+        }
+        else {
+            qCritical() << "Unknown recommendation message:" << json["message"].toString();
+        }
     }
 
     // Reset the iterator, set the recs list and update the 'recommendation' property
     this->setRecsList(recsList);
     recommendationCounter = 0;
-    this->nextRecommendation();
+    if(this->hasRecommendations()) {
+        this->nextRecommendation();
+    }
+
+    // Unlock recommendations fetching
+    recommendationsFetchLock = false;
 }
 
 void API::parseMatches(QJsonObject json)
@@ -840,7 +1252,7 @@ void API::parseMatches(QJsonObject json)
     QJsonObject matchesData = json["data"].toObject();
     foreach(QJsonValue item, matchesData["matches"].toArray()) {
         QList<Photo *> photoList;
-        QList<Message *> messageList;
+        Message* latestMessage = NULL;
         QJsonObject match = item.toObject();
         QJsonObject person = match["person"].toObject();
 
@@ -848,15 +1260,18 @@ void API::parseMatches(QJsonObject json)
         QString matchId = match["_id"].toString();
         bool isDead = match["dead"].toBool();
         bool isSuperlike = match["is_super_like"].toBool();
-
-        foreach(QJsonValue item, match["messages"].toArray()) {
-            QJsonObject message = item.toObject();
-            messageList.append(new Message(message["_id"].toString(),
-                               message["match_id"].toString(),
+        
+        if(!match["messages"].toArray().empty()) {
+            // Matches only return 1 message (last message as preview) if available
+            QJsonObject message = match["messages"].toArray().at(0).toObject();
+            latestMessage = new Message(
+                        message["_id"].toString(),
+                    message["match_id"].toString(),
                     message["message"].toString(),
                     QDateTime::fromString(message["sent_date"].toString(), Qt::ISODate),
                     message["from"].toString(),
-                    message["to"].toString()));
+                    message["to"].toString()
+                    );
         }
 
         // Person with who the user matched with data
@@ -865,7 +1280,7 @@ void API::parseMatches(QJsonObject json)
         QString bio = person["bio"].toString();
         QDateTime birthDate = QDateTime::fromString(person["birth_date"].toString(), Qt::ISODate);
         Sailfinder::Gender gender = Sailfinder::Gender::Female;
-        if(person["gender"].toInt() == 0) { // Default female, change if needed
+        if(person["gender"].toInt() == (int)Sailfinder::Gender::Male) { // Default female, change if needed
             gender = Sailfinder::Gender::Male;
         }
 
@@ -874,18 +1289,34 @@ void API::parseMatches(QJsonObject json)
             photoList.append(new Photo(photo["id"].toString(), photo["url"].toString()));
         }
 
-        matchesList.append(new Match(id, name, birthDate, gender, bio, photoList, matchId, isSuperlike, isDead, messageList));
+        matchesList.append(new Match(id, name, birthDate, gender, bio, photoList, matchId, isSuperlike, isDead, latestMessage));
         qDebug() << "Match data:";
         qDebug() << "\tName:" << name;
         qDebug() << "\tGender:" << (int)(gender);
-        qDebug() << "\tbirthDate:" << birthDate;
+        qDebug() << "\tBirthDate:" << birthDate;
         qDebug() << "\tBio:" << bio;
         qDebug() << "\tPhotos:" << photoList;
         qDebug() << "\tMatch ID:" << matchId;
         qDebug() << "\tSuperlike:" << isSuperlike;
         qDebug() << "\tDead:" << isDead;
+        qDebug() << "\tLatest message:" << latestMessage;
     }
 
+    matchesTempList.append(matchesList);
+
+    // Handle pagination if available
+    if(matchesData.value("next_page_token") != QJsonValue::Undefined) {
+        qDebug() << "Pagination detected in matches, fetching next page...";
+        this->getMatches(matchesData["next_page_token"].toString());
+    }
+    else {
+        qDebug() << "Last page fetched, all matches loaded";
+        this->setMatchesList(new MatchesListModel(matchesTempList));
+        matchesTempList.clear();
+    }
+
+    // Unlock matches fetching
+    matchFetchLock = false;
 }
 
 void API::parseLike(QJsonObject json)
@@ -896,7 +1327,7 @@ void API::parseLike(QJsonObject json)
     }
     else if(json["match"].isObject()) {
         qDebug() << "Recommendation was a pending match";
-        emit this->newMatch();
+        emit this->newMatch(1);
     }
     else {
         qCritical() << "Unknown JSON response for liking recommendation";
@@ -919,7 +1350,7 @@ void API::parsePass(QJsonObject json)
 void API::parseSuperlike(QJsonObject json)
 {
     // Handle matching
-    if(json.value("limit_exceeded") == QJsonValue::Undefined) {
+    if(json.value("limit_exceeded") != QJsonValue::Undefined) {
         if(json["match"].isBool()) {
             qDebug() << "Recommendation was not a pending match";
         }
@@ -936,11 +1367,107 @@ void API::parseSuperlike(QJsonObject json)
     }
 
     // Handle out of superlikes
+    qDebug() << "SUPERLIKE REMAINING" << json["super_likes"].toObject()["remaining"].toInt();
     bool canSuperlike = json["super_likes"].toObject()["remaining"].toInt() > 0;
     this->setCanSuperlike(canSuperlike);
 
     qDebug() << "Recommendation succesfully superliked";
     this->nextRecommendation();
+}
+
+void API::parseLogout(QJsonObject json)
+{
+    qDebug() << "Logging out";
+    emit this->loggedOut();
+}
+
+void API::parseUnmatch(QJsonObject json)
+{
+    qDebug() << "Unmatching OK, refreshing matches...";
+    this->getMatchesAll();
+}
+
+void API::parseMessages(QJsonObject json)
+{
+    QJsonObject messagesData = json["data"].toObject();
+    QList<Message*> messagesList;
+    foreach(QJsonValue item, messagesData["messages"].toArray()) {
+        QJsonObject message = item.toObject();
+        Message* msg = new Message(
+                    message["_id"].toString(),
+                message["match_id"].toString(),
+                message["message"].toString(),
+                QDateTime::fromString(message["sent_date"].toString(), Qt::ISODate),
+                message["from"].toString(),
+                message["to"].toString()
+                );
+        messagesList.append(msg);
+    }
+
+    messagesTempList.append(messagesList);
+
+    // Handle pagination if available
+    if(messagesData.value("next_page_token") != QJsonValue::Undefined) {
+        qDebug() << "Pagination detected in messages, fetching next page...";
+        this->getMessages(messagesMatchId, messagesData["next_page_token"].toString());
+    }
+    else {
+        qDebug() << "Last page fetched, all messages loaded";
+        // Profile is always loaded before messages but we check it to be sure
+        if(this->profile() != NULL) {
+            std::reverse(messagesTempList.begin(), messagesTempList.end());
+            this->setMessages(new MessageListModel(messagesTempList, this->profile()->id()));
+            messagesTempList.clear();
+        }
+        else {
+            qCritical() << "Profile data is NULL, can't determine user id for messages";
+            //: Error shown to the user when profile data wasn't succesfull retrieved. It's impossible then to get the messages between the user and it's matches.
+            //% "Messages couldn't be retrieved due missing profile information"
+            emit this->errorOccurred(qtTrId("sailfinder-messaging-error"));
+        }
+    }
+
+    // Unlock messages fetching
+    messagesFetchLock = false;
+}
+
+void API::parseSendMessage(QJsonObject json)
+{
+    // Get our current messages and reverse them again
+    QList<Message *> oldMessages = this->messages()->messageList();
+
+    // Create and add new message
+    Message* newMessage = new Message(
+                json["_id"].toString(),
+            json["match_id"].toString(),
+            json["message"].toString(),
+            QDateTime::fromString(json["sent_date"].toString(), Qt::ISODate),
+            json["from"].toString(),
+            json["to"].toString()
+            );
+    oldMessages.append(newMessage);
+
+    // Update QAbstractListModel it's data
+    this->messages()->setMessageList(oldMessages);
+    qDebug() << "Added sended message to messagesList";
+
+    // Enforce view updates
+    emit this->newMessage(0);
+    this->matchesList()->updateMatchLastMessage(json["match_id"].toString(), newMessage);
+
+    // Unlock send messages
+    messagesSendLock = false;
+}
+
+void API::unlockAll()
+{
+    matchFetchLock = false;
+    profileFetchLock = false;
+    recommendationsFetchLock = false;
+    updatesFetchLock = false;
+    messagesFetchLock = false;
+    messagesSendLock = false;
+    qWarning() << "All endpoints unlocked!";
 }
 
 QString API::token() const

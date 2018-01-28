@@ -27,6 +27,7 @@ class PhotoListModel : public QAbstractListModel
         explicit PhotoListModel();
         ~PhotoListModel();
 
+        Q_INVOKABLE Photo* getPhoto(int index);
         virtual int rowCount(const QModelIndex&) const;
         virtual QVariant data(const QModelIndex &index, int role) const;
         QList<Photo *> photoList() const;
@@ -39,7 +40,7 @@ signals:
         void photoListChanged();
 
 private:
-        QList<Photo *> m_photoList;
+        QList<Photo *> m_photoList = QList<Photo *>();
 };
 
 #endif // PHOTOLISTMODEL_H

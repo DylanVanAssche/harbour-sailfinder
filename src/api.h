@@ -24,25 +24,34 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkConfigurationManager>
 #include <QtNetwork/QNetworkDiskCache>
+#include <QtCore/QUrl>
+#include <QtCore/QUrlQuery>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
 #include <QtCore/QVariantMap>
 #include <QtCore/QList>
+#include <QtCore/QScopedPointer>
 #include <QtPositioning/QGeoSatelliteInfoSource>
 #include <QtPositioning/QGeoPositionInfoSource>
+#include <stdlib.h>
 
 #include "os.h"
 #include "models/user.h"
 #include "models/photo.h"
 #include "models/recommendation.h"
 #include "models/match.h"
-#include "models/matchlistmodel.h"
+#include "models/matcheslistmodel.h"
 #include "models/message.h"
+#include "models/messagelistmodel.h"
 
 #define POSITION_MAX_UPDATE 10
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
+#define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
 #define META_ENDPOINT "https://api.gotinder.com/v2/meta"
 #define UPDATES_ENDPOINT "https://api.gotinder.com/updates"
 #define RECS_ENDPOINT "https://api.gotinder.com/recs/core"
@@ -51,6 +60,8 @@
 #define LIKE_ENDPOINT "https://api.gotinder.com/like"
 #define PASS_ENDPOINT "https://api.gotinder.com/pass"
 #define SUPERLIKE_ENDPOINT "/super"
+#define MESSAGES_ENDPOINT "/messages"
+#define MATCH_OPERATIONS_ENDPOINT "https://api.gotinder.com/user/matches"
 
 class API : public QObject
 {
@@ -64,11 +75,13 @@ class API : public QObject
     Q_PROPERTY(bool canShowCommonConnections READ canShowCommonConnections NOTIFY canShowCommonConnectionsChanged)
     Q_PROPERTY(bool canLike READ canLike NOTIFY canLikeChanged)
     Q_PROPERTY(bool canSuperlike READ canSuperlike NOTIFY canSuperlikeChanged)
+    Q_PROPERTY(bool hasRecommendations READ hasRecommendations NOTIFY hasRecommendationsChanged)
     Q_PROPERTY(User* profile READ profile NOTIFY profileChanged)
-    Q_PROPERTY(MatchListModel* matchesList READ matchesList NOTIFY matchesListChanged)
+    Q_PROPERTY(MatchesListModel* matchesList READ matchesList NOTIFY matchesListChanged)
     Q_PROPERTY(Recommendation* recommendation READ recommendation NOTIFY recommendationChanged)
     Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
+    Q_PROPERTY(MessageListModel* messages READ messages WRITE setMessages NOTIFY messagesChanged)
 
 public:
     explicit API(QObject *parent = 0);
@@ -79,11 +92,17 @@ public:
     Q_INVOKABLE void getRecommendations();
     Q_INVOKABLE void getMatchesWithMessages();
     Q_INVOKABLE void getMatchesWithoutMessages();
+    Q_INVOKABLE void getMatchesAll();
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
+    Q_INVOKABLE void getMessages(QString matchId);
+    Q_INVOKABLE void sendMessage(QString matchId, QString message, QString userId, QString tempMessageId);
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
     Q_INVOKABLE void superlikeUser(QString userId);
     Q_INVOKABLE void nextRecommendation();
+    Q_INVOKABLE void updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable);
+    Q_INVOKABLE void logout();
+    Q_INVOKABLE void unmatch(QString matchId);
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -114,10 +133,14 @@ public:
     void setCanSuperlike(bool canSuperlike);
     QList<Recommendation *> recsList() const;
     void setRecsList(const QList<Recommendation *> &recsList);
-    MatchListModel *matchesList() const;
-    void setMatchesList(MatchListModel *matchesList);
+    MatchesListModel *matchesList() const;
+    void setMatchesList(MatchesListModel *matchesList);
     Recommendation *recommendation() const;
     void setRecommendation(Recommendation *recommendation);
+    bool hasRecommendations() const;
+    void setHasRecommendations(bool hasRecommendations);
+    MessageListModel *messages() const;
+    void setMessages(MessageListModel *messages);
 
 signals:
     void busyChanged();
@@ -136,11 +159,17 @@ signals:
     void authenticatedChanged();
     void errorOccurred(const QString &text);
     void authenticationRequested(const QString &text);
-    void newMatch();
+    void newMatch(int count);
     void newSuperMatch();
     void matchesListChanged();
     void recsListChanged();
     void recommendationChanged();
+    void recommendationTimeOut();
+    void hasRecommendationsChanged();
+    void messagesChanged();
+    void loggedOut();
+    void updatesReady(QDateTime lastActivityDate, bool refetch);
+    void newMessage(int count);
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -149,32 +178,45 @@ public slots:
     void positionUpdated(const QGeoPositionInfo &info);
 
 private:
-    QString m_token;
-    bool m_isNewUser;
-    bool m_authenticated;
-    bool m_canEditJobs;
-    bool m_canEditSchools;
-    bool m_canAddPhotosFromFacebook;
-    bool m_canShowCommonConnections;
-    bool m_canLike;
-    bool m_canSuperlike;
-    bool m_busy;
-    bool m_networkEnabled;
-    QList<Recommendation *> m_recsList;
-    MatchListModel* m_matchesList;
-    User* m_profile;
-    Recommendation* m_recommendation;
-    int m_standardPollInterval;
-    int m_persistentPollInterval;
-    int positionUpdateCounter;
-    int recommendationCounter;
-    QGeoPositionInfoSource* positionSource;
-    QNetworkAccessManager* QNAM;
-    QNetworkDiskCache* QNAMCache;
-    QGeoPositionInfoSource *source;
+    QString m_token = QString();
+    bool m_isNewUser = false;
+    bool m_authenticated = false;
+    bool m_canEditJobs = false;
+    bool m_canEditSchools = false;
+    bool m_canAddPhotosFromFacebook = false;
+    bool m_canShowCommonConnections = false;
+    bool m_canLike = false;
+    bool m_canSuperlike = false;
+    bool m_hasRecommendations = false;
+    bool m_busy = false;
+    bool m_networkEnabled = false;
+    QList<Recommendation *> m_recsList = QList<Recommendation *>();
+    MatchesListModel* m_matchesList = NULL;
+    MessageListModel* m_messages = NULL;
+    User* m_profile = NULL;
+    Recommendation* m_recommendation = NULL;
+    int m_standardPollInterval = 0;
+    int m_persistentPollInterval = 0;
+    int positionUpdateCounter = 0;
+    int recommendationCounter = 0;
+    bool matchFetchLock = false;
+    bool profileFetchLock = false;
+    bool recommendationsFetchLock = false;
+    bool updatesFetchLock = false;
+    bool messagesFetchLock = false;
+    bool messagesSendLock = false;
+    QList<Match *> matchesTempList = QList<Match*> ();
+    QList<Message *> messagesTempList = QList<Message*> ();
+    QString messagesMatchId = QString();
+    QGeoPositionInfoSource* positionSource = NULL;
+    QNetworkAccessManager* QNAM = NULL;
+    QNetworkDiskCache* QNAMCache = NULL;
+    QGeoPositionInfoSource *source = NULL;
     OS SFOS;
     QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters);
     void getMatches(bool withMessages);
+    void getMatches(QString pageToken);
+    void getMessages(QString matchId, QString pageToken);
     void parseLogin(QJsonObject json);
     void parseMeta(QJsonObject json);
     void parseUpdates(QJsonObject json);
@@ -184,6 +226,11 @@ private:
     void parseLike(QJsonObject json);
     void parsePass(QJsonObject json);
     void parseSuperlike(QJsonObject json);
+    void parseLogout(QJsonObject json);
+    void parseUnmatch(QJsonObject json);
+    void parseMessages(QJsonObject json);
+    void parseSendMessage(QJsonObject json);
+    void unlockAll();
 };
 
 #endif // API_H

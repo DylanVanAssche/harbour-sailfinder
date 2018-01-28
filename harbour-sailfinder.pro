@@ -18,7 +18,8 @@
 # The name of your application
 TARGET = harbour-sailfinder
 
-CONFIG += sailfishapp
+CONFIG += sailfishapp \
+    c++11
 
 # Disable warnings
 CONFIG += warn_off
@@ -55,17 +56,31 @@ SOURCES += src/harbour-sailfinder.cpp \
     src/models/joblistmodel.cpp \
     src/models/photolistmodel.cpp \
     src/models/messagelistmodel.cpp \
-    src/models/matchlistmodel.cpp
+    src/models/matcheslistmodel.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
-    rpm/harbour-sailfinder.changes.in \
-    rpm/harbour-sailfinder.changes.run.in \
+    qml/pages/MainPage.qml \
+    qml/pages/AboutPage.qml \
+    qml/pages/MatchesView.qml \
+    qml/pages/ProfileView.qml \
+    qml/pages/RecommendationsView.qml \
+    qml/components/NavigationBar.qml \
+    qml/components/NavigationBarDelegate.qml \
+    qml/components/PhotoGridLayout.qml \
+    qml/components/RecommendationsBar.qml \
+    qml/components/ContactsDelegate.qml \
+    qml/components/Avatar.qml \
+    qml/components/Spacer.qml \
+    qml/components/RecommendationsBar.qml \
+    qml/js/facebook.js \
+    qml/css/facebook.css \
     rpm/harbour-sailfinder.spec \
     rpm/harbour-sailfinder.yaml \
     translations/*.ts \
-    harbour-sailfinder.desktop
+    harbour-sailfinder.desktop \
+    rpm/harbour-sailfinder.changes
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
@@ -75,13 +90,14 @@ DEFINES += APP_VERSION=\"\\\"$${VERSION}\\\"\"
 # to disable building translations every time, comment out the
 # following CONFIG line
 CONFIG += sailfishapp_i18n \
-sailfishapp_i18n_idbased
+    sailfishapp_i18n_idbased
 
 # German translation is enabled as an example. If you aren't
 # planning to localize your app, remember to comment out the
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
-TRANSLATIONS += translations/harbour-sailfinder-de.ts
+TRANSLATIONS += translations/harbour-sailfinder.ts \
+translations/harbour-sailfinder-de.ts
 
 HEADERS += \
     src/api.h \
@@ -100,4 +116,4 @@ HEADERS += \
     src/models/joblistmodel.h \
     src/models/photolistmodel.h \
     src/models/messagelistmodel.h \
-    src/models/matchlistmodel.h
+    src/models/matcheslistmodel.h

@@ -50,11 +50,11 @@ signals:
     void schoolsChanged();
 
 private:
-    QString m_contentHash;
-    int m_sNumber;
-    int m_distance;
-    SchoolListModel* m_schools;
-    JobListModel* m_jobs;
+    QString m_contentHash = QString();
+    int m_sNumber = 0;
+    int m_distance = 0;
+    SchoolListModel* m_schools = NULL;
+    JobListModel* m_jobs = NULL;
 };
 
 #endif // RECOMMENDATION_H

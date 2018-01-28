@@ -72,6 +72,8 @@ QList<School *> SchoolListModel::schoolList() const
 
 void SchoolListModel::setSchoolList(const QList<School *> &schoolList)
 {
+    emit this->beginResetModel();
     m_schoolList = schoolList;
     emit this->schoolListChanged();
+    emit this->endResetModel();
 }

@@ -72,6 +72,8 @@ QList<Job *> JobListModel::jobList() const
 
 void JobListModel::setJobList(const QList<Job *> &jobList)
 {
+    emit this->beginResetModel();
     m_jobList = jobList;
     emit this->jobListChanged();
+    emit this->endResetModel();
 }

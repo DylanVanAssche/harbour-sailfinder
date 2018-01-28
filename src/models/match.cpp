@@ -5,7 +5,7 @@ Match::Match(QObject *parent) : Person(parent)
 
 }
 
-Match::Match(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gender, QString bio, QList<Photo *> photos, QString matchId, bool isSuperlike, bool isDead, QList<Message *> messages)
+Match::Match(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gender, QString bio, QList<Photo *> photos, QString matchId, bool isSuperlike, bool isDead, Message* message)
 {
     this->setId(id);
     this->setName(name);
@@ -16,7 +16,7 @@ Match::Match(QString id, QString name, QDateTime birthDate, Sailfinder::Gender g
     this->setMatchId(matchId);
     this->setIsSuperlike(isSuperlike);
     this->setIsDead(isDead);
-    this->setMessages(new MessageListModel(messages));
+    this->setMessage(message);
 }
 
 QString Match::matchId() const
@@ -52,13 +52,13 @@ void Match::setIsDead(bool value)
     emit this->isDeadChanged();
 }
 
-MessageListModel *Match::messages() const
+Message *Match::message() const
 {
-    return m_messages;
+    return m_message;
 }
 
-void Match::setMessages(MessageListModel *messages)
+void Match::setMessage(Message *message)
 {
-    m_messages = messages;
-    emit this->messagesChanged();
+    m_message = message;
+    emit this->messageChanged();
 }

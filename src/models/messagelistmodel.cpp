@@ -17,14 +17,15 @@
 
 #include "messagelistmodel.h"
 
-MessageListModel::MessageListModel(QList<Message *> messageList)
+MessageListModel::MessageListModel(QList<Message *> messageList, QString userId)
 {
     this->setMessageList(messageList);
+    this->setUserId(userId);
 }
 
 MessageListModel::MessageListModel()
 {
-
+    
 }
 
 MessageListModel::~MessageListModel()
@@ -45,11 +46,12 @@ QHash<int, QByteArray> MessageListModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
-    roles[MatchIdRole] = "matchId";
     roles[MessageRole] = "message";
     roles[TimestampRole] = "timestamp";
-    roles[FromPersonIdRole] = "fromPersonId";
-    roles[ToPersonIdRole] = "toPersonId";
+    roles[AuthorRole] = "author";
+    roles[AuthorIsUserRole] = "authorIsUser";
+    roles[ReadMessageRole] = "readMessage";
+    roles[ReceivedMessageRole] = "receivedMessage";
     return roles;
 }
 
@@ -62,16 +64,18 @@ QVariant MessageListModel::data(const QModelIndex &index, int role) const
     switch(role) {
     case IdRole:
         return QVariant(this->messageList().at(index.row())->id());
-    case MatchIdRole:
-        return QVariant(this->messageList().at(index.row())->matchId());
     case MessageRole:
         return QVariant(this->messageList().at(index.row())->message());
     case TimestampRole:
         return QVariant(this->messageList().at(index.row())->timestamp());
-    case FromPersonIdRole:
-        return QVariant(this->messageList().at(index.row())->fromPersonId());
-    case ToPersonIdRole:
-        return QVariant(this->messageList().at(index.row())->toPersonId());
+    case AuthorRole:
+        return QVariant(QString(""));
+    case AuthorIsUserRole:
+        return QVariant(this->messageList().at(index.row())->fromPersonId() != this->userId());
+    case ReceivedMessageRole:
+        return QVariant(false); // Unsupported by Tinder
+    case ReadMessageRole:
+        return QVariant(false); // Unsupported by Tinder
     default:
         return QVariant();
     }
@@ -84,6 +88,19 @@ QList<Message *> MessageListModel::messageList() const
 
 void MessageListModel::setMessageList(const QList<Message *> &messageList)
 {
+    emit this->beginResetModel();
     m_messageList = messageList;
     emit this->messageListChanged();
+    emit this->endResetModel();
+}
+
+QString MessageListModel::userId() const
+{
+    return m_userId;
+}
+
+void MessageListModel::setUserId(const QString &userId)
+{
+    m_userId = userId;
+    emit this->userIdChanged();
 }

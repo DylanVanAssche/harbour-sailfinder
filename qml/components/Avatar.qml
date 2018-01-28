@@ -14,31 +14,23 @@
 *   You should have received a copy of the GNU General Public License
 *   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef LOGGER_H
-#define LOGGER_H
 
-#include <QtGlobal>
-#include <QtDebug>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QString>
-#include <QtCore/QTextStream>
-#include <QtCore/QDebug>
-#include <QtCore/QDateTime>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
-#include <QtCore/QIODevice>
+import QtQuick 2.0
+import Sailfish.Silica 1.0
+import QtGraphicalEffects 1.0
 
-#include "os.h"
+Image {
+    id: image
+    width: Theme.itemSizeLarge
+    height: width
 
-#define LINE_LENGTH 100
-
-static bool clearLog = true;
-static QString name = QString();
-static QString version = QString();
-static QString compileDate = QString();
-static QString compileTime = QString();
-static QString logpath = QString();
-void handler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-bool enableLogger(bool enabled);
-
-#endif // LOGGER_H
+    layer.enabled: true
+    layer.effect: OpacityMask {
+        maskSource: Rectangle {
+            anchors.centerIn: parent
+            width: image.width
+            height: image.width
+            radius: width/2
+        }
+    }
+}

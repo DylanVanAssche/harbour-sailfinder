@@ -33,8 +33,8 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDebug>
 
-#define MAX_BODY_LENGTH 100
-#define MAX_PREVIEW_LENGTH 40
+#define MAX_BODY_LENGTH 200
+#define MAX_PREVIEW_LENGTH 100
 
 class OS: public QObject {
     Q_OBJECT
@@ -82,9 +82,9 @@ class OS: public QObject {
 
     private:
         QList<QPair<QString, QString>> extractFileData(QString location, QStringList querryList);
-        QString m_release;
-        QString m_version;
-        QString m_device;
+        QString m_release = QString();
+        QString m_version = QString();
+        QString m_device = QString();
 };
 
 #endif // OS_H

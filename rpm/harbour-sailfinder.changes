@@ -1,3 +1,15 @@
+* Wed Jan 28 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-1
+- [NEW] C++ backend (high performance and object oriented)
+- [NEW] New API taken in use
+- [NEW] Notifications for new matches and messages
+- [NEW] Refreshed UI
+- [IMPROVEMENT] Following the Qt Model-Delegate-View design principles
+- [IMPROVEMENT] Handling network outage better using DBus
+- [IMPROVEMENT] Better handling of location updates
+- [IMPROVEMENT] Updated about page
+- [STORE] Updated screenshots
+- [STORE] Updated README
+
 * Mon Apr 24 2017 Dylan Van Assche <dylan.van.assche@protonmail.com> 3.1-14
 - [MINOR BUGFIX] Open Sailfinder on the right tab when clicked on a notification (Github issue #119)
 
@@ -55,4 +67,3 @@
 - [MAJOR UPGRADE] QT5.6 compatible (Sailfish OS 2.1.0.X), only Sailfish OS 2.1.0.X and higher are supported
 - [LANGUAGES] English(UK), Dutch and Turkish languages added
 - [REMOVE] Share URL is now deprecated by Tinder
-

@@ -17,37 +17,118 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+//import Nemo.DBus 2.0
+import org.nemomobile.dbus 2.0
+import Harbour.Sailfinder.SFOS 1.0
+import "../components"
+import "../js/util.js" as Util
 
 Page {
-    onStatusChanged: status===PageStatus.Active? getData(): undefined
-    property var recommendation
+    SilicaFlickable {
+        anchors.fill: parent
+        contentHeight: Screen.height
 
-    function getData() {
-        api.getRecommendations();
-        /*api.getProfile();
-        api.getUpdates(new Date("2017-07-07T16:58:55.217Z"));
-        api.getMatchesWithMessages();
-        api.getMatchesWithoutMessages();*/
-    }
+        PullDownMenu {
+            busy: api.busy
 
-    Connections {
-        target: api
-        onProfileChanged: {
-            console.debug("Tinder profile in QML")
-        }
-        onRecommendationChanged: {
-            console.debug("Tinder recs in QML")
+            MenuItem {
+                //% "About"
+                text: qsTrId("sailfinder-about")
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+            }
         }
 
-    }
+        PageHeader {
+            id: header
+            title: {
+                switch(swipeView.currentIndex) {
+                case 0:
+                    return swipeView._recommendationsHeader;
+                case 1:
+                    return swipeView._matchesHeader;
+                case 2:
+                    return swipeView._profileHeader;
+                default:
+                    return "Unknown header";
+                }
+            }
 
-    Button {
-        anchors.centerIn: parent
-        text: "PASS"
-        onClicked:
-        {
-            console.debug(JSON.stringify(api.recommendation))
-            api.passUser(api.recommendation.id)
+            BusyIndicator {
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.horizontalPageMargin
+                    verticalCenter: parent.verticalCenter
+                }
+                size: BusyIndicatorSize.Small
+                running: Qt.application.active && api.busy
+            }
+        }
+
+        SFOS {
+            id: sfos
+        }
+
+        DBusAdaptor {
+            service: sfos.appName.replace("-", ".")
+            iface: sfos.appName.replace("-", ".")
+            path: "/"
+            xml: '  <interface name="' + sfos.appName.replace("-", ".") + '">\n' +
+                 '    <method name="activate" />\n' +
+                 '  </interface>\n'
+
+            function activate(category) {
+                if(category == "sailfinder-new-match") {
+                    swipeView.currentIndex = 1;
+                    app.activate();
+                    console.debug("Notification activation: " + category);
+                }
+                if(category == "sailfinder-new-message") {
+                    swipeView.currentIndex = 1;
+                    app.activate();
+                    console.debug("Notification activation: " + category);
+                }
+                else {
+                    console.warn("Notification activation doesn't match with our categories: " + category);
+                }
+            }
+        }
+
+        SlideshowView {
+            //% "Recommendations"
+            property string _recommendationsHeader: qsTrId("sailfinder-recommendations")
+            //% "Matches"
+            property string _matchesHeader: qsTrId("sailfinder-matches")
+            //% "Profile"
+            property string _profileHeader: qsTrId("sailfinder-profile")
+
+            id: swipeView
+            itemWidth: width
+            itemHeight: height
+            clip: true
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: header.bottom
+                bottom: bar.top
+            }
+            model: VisualItemModel {
+                RecommendationsView {
+                    onHeaderChanged: swipeView._recommendationsHeader = text
+                }
+                MatchesView {
+                    onHeaderChanged: swipeView._matchesHeader = text
+                }
+                ProfileView {
+                    onHeaderChanged: swipeView._profileHeader = text
+                }
+            }
+        }
+
+        NavigationBar {
+            id: bar
+            anchors.bottom: parent.bottom
+            currentIndex: swipeView.currentIndex
+            onNewIndex: swipeView.currentIndex = index
         }
     }
 }

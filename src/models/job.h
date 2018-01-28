@@ -24,8 +24,8 @@ signals:
     void nameChanged();
 
 private:
-    QString m_id;
-    QString m_name;
+    QString m_id = QString();
+    QString m_name = QString();
 };
 
 #endif // JOB_H
