@@ -66,6 +66,7 @@ DISTFILES += qml/harbour-sailfinder.qml \
     qml/pages/MatchesView.qml \
     qml/pages/ProfileView.qml \
     qml/pages/RecommendationsView.qml \
+    qml/pages/MessagingPage.qml \
     qml/components/NavigationBar.qml \
     qml/components/NavigationBarDelegate.qml \
     qml/components/PhotoGridLayout.qml \
@@ -74,7 +75,11 @@ DISTFILES += qml/harbour-sailfinder.qml \
     qml/components/Avatar.qml \
     qml/components/Spacer.qml \
     qml/components/RecommendationsBar.qml \
+    qml/components/MessagingBar.qml \
+    qml/components/MessagingDelegate.qml \
+    qml/components/MessagingHeader.qml \
     qml/js/facebook.js \
+    qml/js/util.js \
     qml/css/facebook.css \
     rpm/harbour-sailfinder.spec \
     rpm/harbour-sailfinder.yaml \
@@ -96,8 +101,7 @@ CONFIG += sailfishapp_i18n \
 # planning to localize your app, remember to comment out the
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
-TRANSLATIONS += translations/harbour-sailfinder.ts \
-translations/harbour-sailfinder-de.ts
+TRANSLATIONS += translations/harbour-sailfinder.ts
 
 HEADERS += \
     src/api.h \

@@ -40,7 +40,7 @@ SilicaFlickable {
             matchesListView.model = api.matchesList
             headerChanged(Util.createHeaderMatches(matchesListView.count))
             noMatchesText.enabled = matchesListView.count == 0
-            busyStatus = false
+            busyStatus.running = false
             _intialFetchRequired = false
         }
 

@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         qApp->setApplicationVersion(QString(APP_VERSION));
 
         // Set application version and enable logging
-        enableLogger(false);
+        enableLogger(true);
 
         // Enable default translations
         QTranslator *translator = new QTranslator(qApp);

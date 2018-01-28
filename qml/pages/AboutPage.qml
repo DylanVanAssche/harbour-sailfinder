@@ -55,12 +55,12 @@ Page {
                 text: qsTrId("sailfinder-privacy-licensing-text").arg(sfos.appNamePretty)
             }
 
-            //% "Responsibility"
-            SectionHeader { text: qsTrId("sailfinder-responsibility") }
+            //% "Disclaimer"
+            SectionHeader { text: qsTrId("sailfinder-disclaimer") }
 
             TextLabel {
-                //% "%0 and it's developer can't be hold responsible for using %0. %0 and it's developer aren't affilated in any way with Tinder."
-                text: qsTrId("sailfinder-responsibility-text").arg(sfos.appNamePretty)
+                //% "%0 and it's contributors aren't related to %1 in any way and they can't be hold responsible for anything. You agree automatically with this disclaimer by using the application, contribute to it, ..."
+                text: qsTrId("sailfinder-disclaimer-text").arg(sfos.appNamePretty).arg("Tinder")
             }
 
             //% "Developer & source code"
