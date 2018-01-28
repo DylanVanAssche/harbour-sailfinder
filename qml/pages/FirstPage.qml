@@ -132,5 +132,12 @@ Page {
         visible: false
         running: Qt.application.active && visible
     }
+
+    Label {
+        anchors { top: tinderLogin.bottom; topMargin: Theme.paddingMedium; horizontalCenter: parent.horizontalCenter }
+        visible: tinderLogin.visible
+        //% "Logging in"
+        text: qsTrId("sailfinder-logging-in")
+    }
 }
 

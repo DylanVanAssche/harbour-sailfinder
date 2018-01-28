@@ -324,9 +324,11 @@ void API::getUpdates(QDateTime lastActivityDate)
     }
     else if(updatesFetchLock) {
         qWarning() << "Updates fetching locked";
+        emit this->updatesReady(lastActivityDate, false); // Restarting updates timer on failure
     }
     else {
         qWarning() << "Not authenticated, can't retrieve updates data";
+        emit this->updatesReady(lastActivityDate, false);
     }
 }
 
@@ -837,6 +839,8 @@ void API::finished (QNetworkReply *reply)
     qInfo() << "Request finished:" << reply->url().toString();
     if(!this->networkEnabled()) {
         qCritical() << "Network inaccesible, can't retrieve API request!";
+        // Network offline, unlock all endpoints
+        this->unlockAll();
     }
     else if(reply->error()) {
         if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404 || reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 500)
@@ -855,6 +859,9 @@ void API::finished (QNetworkReply *reply)
             qCritical() << reply->errorString();
             emit this->errorOccurred(reply->errorString());
         }
+
+        // Unlock all on critical errors
+        this->unlockAll();
     }
     else if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 301 || reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 302) {
         qWarning() << "HTTP 301/302: Moved, following redirect...";
@@ -980,14 +987,46 @@ void API::parseUpdates(QJsonObject json)
 {
     QJsonArray matchesArray = json["matches"].toArray();
     bool refetch = false;
+    int newMatchesCount = 0;
+    int newMessagesCount = 0;
 
     if(matchesArray.count() > 0) {
-        emit this->newMatch(matchesArray.count());
+        qDebug() << "Matches updates received";
+        foreach(QJsonValue item, matchesArray) {
+            QJsonObject match = item.toObject();
+            if(match["messages"].toArray().count() > 0) {
+                if(this->profile() != NULL) {
+                    qDebug() << "Counting new messages";
+                    foreach (QJsonValue item, match["messages"].toArray()) {
+                        QJsonObject message = item.toObject();
+                        if(message["to"].toString() == this->profile()->id()) {
+                            newMessagesCount++;
+                        }
+                    }
+                }
+                else {
+                    qCritical() << "Can't determine update messages origin since profile date is NULL";
+                }
+            }
+            else {
+                qDebug() << "Counting new matches";
+                newMatchesCount++;
+            }
+        }
+
+        if(newMatchesCount > 0) {
+            emit this->newMatch(newMatchesCount);
+        }
+
+        if(newMessagesCount > 0) {
+            emit this->newMessage(newMessagesCount);
+        }
         refetch = true;
     }
 
     QJsonArray blocksArray = json["blocks"].toArray();
     if(blocksArray.count() > 0) {
+        qDebug() << "Blocks data received";
         refetch = true;
     }
 
@@ -998,7 +1037,8 @@ void API::parseUpdates(QJsonObject json)
     qDebug() << "Updates data:";
     qDebug() << "\tPolling interval standard:" << this->standardPollInterval();
     qDebug() << "\tPolling interval persitent:" << this->persistentPollInterval();
-    qDebug() << "\tMatches:" << matchesArray.count();
+    qDebug() << "\tMatches:" << newMatchesCount;
+    qDebug() << "\tMessages:" << newMessagesCount;
     qDebug() << "\tBlocks:" << blocksArray.count();
 
     emit this->updatesReady(QDateTime::fromString(json["last_activity_date"].toString(), Qt::ISODate), refetch);
@@ -1412,11 +1452,22 @@ void API::parseSendMessage(QJsonObject json)
     qDebug() << "Added sended message to messagesList";
 
     // Enforce view updates
-    emit this->newMessage();
+    emit this->newMessage(0);
     this->matchesList()->updateMatchLastMessage(json["match_id"].toString(), newMessage);
 
     // Unlock send messages
     messagesSendLock = false;
+}
+
+void API::unlockAll()
+{
+    matchFetchLock = false;
+    profileFetchLock = false;
+    recommendationsFetchLock = false;
+    updatesFetchLock = false;
+    messagesFetchLock = false;
+    messagesSendLock = false;
+    qWarning() << "All endpoints unlocked!";
 }
 
 QString API::token() const

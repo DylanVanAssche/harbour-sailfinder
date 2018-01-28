@@ -19,6 +19,11 @@
         <source>Something went wrong, please try again later</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-logging-in">
+        <location filename="../qml/pages/FirstPage.qml" line="140"/>
+        <source>Logging in</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="sailfinder-positioning-error">
         <location filename="../src/api.cpp" line="51"/>
         <source>Positioning unavailable, check if location services are enabled</source>
@@ -26,36 +31,36 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-logout-error">
-        <location filename="../src/api.cpp" line="556"/>
+        <location filename="../src/api.cpp" line="558"/>
         <source>Logout error, please try again later</source>
         <extracomment>Error shown to the user when logging out of Facebook failed</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-ssl-error">
-        <location filename="../src/api.cpp" line="825"/>
+        <location filename="../src/api.cpp" line="827"/>
         <source>SSL error, please check your device is running with the correct date and time</source>
         <extracomment>Error shown to the user when an SSL error occurs due a bad certificate or incorrect time settings.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-error">
-        <location filename="../src/api.cpp" line="847"/>
+        <location filename="../src/api.cpp" line="851"/>
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-api-authentication-requested">
-        <location filename="../src/api.cpp" line="852"/>
+        <location filename="../src/api.cpp" line="856"/>
         <source>Tinder token expired, refreshing now</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-json-error">
-        <location filename="../src/api.cpp" line="944"/>
+        <location filename="../src/api.cpp" line="951"/>
         <source>Invalid JSON data received, please try again later</source>
         <extracomment>Error shown to the user when the data is invalid JSON data</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-messaging-error">
-        <location filename="../src/api.cpp" line="1386"/>
+        <location filename="../src/api.cpp" line="1426"/>
         <source>Messages couldn&apos;t be retrieved due missing profile information</source>
         <extracomment>Error shown to the user when profile data wasn&apos;t succesfull retrieved. It&apos;s impossible then to get the messages between the user and it&apos;s matches.</extracomment>
         <translation type="unfinished"></translation>
@@ -66,7 +71,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-recommendations">
-        <location filename="../qml/pages/MainPage.qml" line="83"/>
+        <location filename="../qml/pages/MainPage.qml" line="98"/>
         <location filename="../qml/pages/RecommendationsView.qml" line="53"/>
         <location filename="../qml/pages/RecommendationsView.qml" line="67"/>
         <source>Recommendations</source>
@@ -74,88 +79,88 @@
     </message>
     <message id="sailfinder-matches">
         <location filename="../qml/js/util.js" line="22"/>
-        <location filename="../qml/pages/MainPage.qml" line="85"/>
+        <location filename="../qml/pages/MainPage.qml" line="100"/>
         <source>Matches</source>
         <extracomment>Header for matches</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-profile">
-        <location filename="../qml/pages/MainPage.qml" line="87"/>
+        <location filename="../qml/pages/MainPage.qml" line="102"/>
         <source>Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-remaining-characters">
-        <location filename="../qml/pages/ProfileView.qml" line="116"/>
+        <location filename="../qml/pages/ProfileView.qml" line="129"/>
         <source>%L0/%L1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-bio-hint">
-        <location filename="../qml/pages/ProfileView.qml" line="118"/>
+        <location filename="../qml/pages/ProfileView.qml" line="131"/>
         <source>Type your biography here</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-discovery">
-        <location filename="../qml/pages/ProfileView.qml" line="122"/>
+        <location filename="../qml/pages/ProfileView.qml" line="135"/>
         <source>Discovery</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-discoverable">
-        <location filename="../qml/pages/ProfileView.qml" line="127"/>
+        <location filename="../qml/pages/ProfileView.qml" line="140"/>
         <source>Discoverable</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-discoverable-text">
-        <location filename="../qml/pages/ProfileView.qml" line="131"/>
+        <location filename="../qml/pages/ProfileView.qml" line="144"/>
         <source>Disable discovery to hide your profile for other people. This has no effect on your current matches.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-interested-in">
-        <location filename="../qml/pages/ProfileView.qml" line="138"/>
+        <location filename="../qml/pages/ProfileView.qml" line="151"/>
         <source>Interested in</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-female">
-        <location filename="../qml/pages/ProfileView.qml" line="144"/>
+        <location filename="../qml/pages/ProfileView.qml" line="157"/>
         <source>Female</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-male">
-        <location filename="../qml/pages/ProfileView.qml" line="142"/>
+        <location filename="../qml/pages/ProfileView.qml" line="155"/>
         <source>Male</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-everyone">
-        <location filename="../qml/pages/ProfileView.qml" line="146"/>
+        <location filename="../qml/pages/ProfileView.qml" line="159"/>
         <source>Everyone</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-min-age">
-        <location filename="../qml/pages/ProfileView.qml" line="159"/>
+        <location filename="../qml/pages/ProfileView.qml" line="172"/>
         <source>Min age</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-max-age">
-        <location filename="../qml/pages/ProfileView.qml" line="178"/>
+        <location filename="../qml/pages/ProfileView.qml" line="191"/>
         <source>Max age</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-search-radius">
-        <location filename="../qml/pages/ProfileView.qml" line="197"/>
+        <location filename="../qml/pages/ProfileView.qml" line="210"/>
         <source>Search radius</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-radius-km">
-        <location filename="../qml/pages/ProfileView.qml" line="199"/>
+        <location filename="../qml/pages/ProfileView.qml" line="212"/>
         <source>%L0 km</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-account">
-        <location filename="../qml/pages/ProfileView.qml" line="203"/>
+        <location filename="../qml/pages/ProfileView.qml" line="216"/>
         <source>Account</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-logout">
-        <location filename="../qml/pages/ProfileView.qml" line="208"/>
+        <location filename="../qml/pages/ProfileView.qml" line="221"/>
         <source>Logout</source>
         <translation type="unfinished"></translation>
     </message>
@@ -166,38 +171,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-new-match">
-        <location filename="../qml/pages/MatchesView.qml" line="50"/>
+        <location filename="../qml/pages/MatchesView.qml" line="51"/>
         <source>New match!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-new-match-hint">
-        <location filename="../qml/pages/MatchesView.qml" line="52"/>
+        <location filename="../qml/pages/MatchesView.qml" line="53"/>
         <source>You have received a new match! Go say hi!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-new-matches">
-        <location filename="../qml/pages/MatchesView.qml" line="60"/>
+        <location filename="../qml/pages/MatchesView.qml" line="61"/>
         <source>New matches!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-new-matches-hint">
-        <location filename="../qml/pages/MatchesView.qml" line="62"/>
+        <location filename="../qml/pages/MatchesView.qml" line="63"/>
         <source>You have received %L0 new matches! Go say hi!</source>
         <oldsource>You have received %L0 new match! Go say hi!</oldsource>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-new-messages">
+        <location filename="../qml/pages/MatchesView.qml" line="87"/>
+        <source>New messages!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-new-messages-hint">
+        <location filename="../qml/pages/MatchesView.qml" line="89"/>
+        <source>You have received %L0 new messages!</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="sailfinder-unmatch">
-        <location filename="../qml/pages/MatchesView.qml" line="106"/>
+        <location filename="../qml/pages/MatchesView.qml" line="134"/>
         <source>Unmatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-matches">
-        <location filename="../qml/pages/MatchesView.qml" line="119"/>
+        <location filename="../qml/pages/MatchesView.qml" line="147"/>
         <source>No matches!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-matches-text">
-        <location filename="../qml/pages/MatchesView.qml" line="121"/>
+        <location filename="../qml/pages/MatchesView.qml" line="149"/>
         <source>Swipe on some recommendations</source>
         <translation type="unfinished"></translation>
     </message>
@@ -295,39 +310,43 @@
         <source>Please come back later</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-new-message">
+        <location filename="../qml/pages/MatchesView.qml" line="77"/>
+        <source>New message!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-new-message-hint">
+        <location filename="../qml/pages/MatchesView.qml" line="79"/>
+        <source>You have received a new message!</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="sailfinder-messaging-placeholder">
-        <location filename="../qml/pages/MessagingPage.qml" line="86"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="102"/>
         <source>Say hi to %0!</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-messages-text">
-        <location filename="../qml/pages/MessagingPage.qml" line="97"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="113"/>
         <source>No messages yet :-(</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-no-messages-hint">
-        <location filename="../qml/pages/MessagingPage.qml" line="99"/>
+        <location filename="../qml/pages/MessagingPage.qml" line="115"/>
         <source>Be the first one to start the conversation!</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="sailfinder-not-available">
-        <location filename="../qml/js/util.js" line="33"/>
-        <source>Not available</source>
-        <extracomment>When it&apos;s impossible to determine a timestamp, this message is returned to the user</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
     <message id="sailfinder-just-now">
-        <location filename="../qml/js/util.js" line="40"/>
+        <location filename="../qml/js/util.js" line="35"/>
         <source>Just now</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-minutes-ago">
-        <location filename="../qml/js/util.js" line="44"/>
+        <location filename="../qml/js/util.js" line="39"/>
         <source>%L0 minute(s) ago</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-hours-ago">
-        <location filename="../qml/js/util.js" line="48"/>
+        <location filename="../qml/js/util.js" line="43"/>
         <source>%L0 hour(s) ago</source>
         <translation type="unfinished"></translation>
     </message>

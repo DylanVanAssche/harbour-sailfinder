@@ -12,27 +12,29 @@ Item {
     property date lastSeen
 
     anchors { top: parent.top; left: parent.left; right: parent.right }
-    height: Theme.itemSizeMedium + Theme.paddingLarge
+    height: Math.max(Theme.itemSizeMedium + Theme.paddingLarge, column.height + Theme.paddingLarge)
     
-    Label {
-        id: title
+    Column {
+        id: column
         anchors {
             right: avatar.left
             rightMargin: Theme.paddingLarge
-            top: lastSeen.visible? parent.top: undefined
-            topMargin: lastSeen.visible? Theme.paddingLarge: 0
-            verticalCenter: lastSeen.visible? undefined: parent.verticalCenter
+            verticalCenter: parent.verticalCenter
         }
-        font.pixelSize: Theme.fontSizeLarge
-        color: Theme.highlightColor
-        text: Util.createHeaderMessages(header.name, header.birthDate, header.gender)
-    }
-    
-    Label {
-        id: lastSeen
-        anchors { top: title.bottom; topMargin: Theme.paddingSmall; right: avatar.left; rightMargin: Theme.paddingLarge }
-        visible: text.length > 0
-        text: Util.formatDate(lastSeen)
+
+        Label {
+            anchors.right: parent.right
+            font.pixelSize: Theme.fontSizeLarge
+            color: Theme.highlightColor
+            text: Util.createHeaderMessages(header.name, header.birthDate, header.gender)
+        }
+
+        Label {
+            anchors.right: parent.right
+            visible: text.length > 0
+            text: Util.formatDate(lastSeen)
+            onTextChanged: console.debug("Last seen visible: " + visible)
+        }
     }
     
     Avatar {

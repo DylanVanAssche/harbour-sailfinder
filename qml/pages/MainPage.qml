@@ -52,6 +52,16 @@ Page {
                     return "Unknown header";
                 }
             }
+
+            BusyIndicator {
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.horizontalPageMargin
+                    verticalCenter: parent.verticalCenter
+                }
+                size: BusyIndicatorSize.Small
+                running: Qt.application.active && api.busy
+            }
         }
 
         SFOS {
@@ -68,6 +78,11 @@ Page {
 
             function activate(category) {
                 if(category == "sailfinder-new-match") {
+                    swipeView.currentIndex = 1;
+                    app.activate();
+                    console.debug("Notification activation: " + category);
+                }
+                if(category == "sailfinder-new-message") {
                     swipeView.currentIndex = 1;
                     app.activate();
                     console.debug("Notification activation: " + category);

@@ -27,12 +27,7 @@ function createHeaderMessages(name, birthDate, gender) {
 }
 
 function formatDate(date) {
-    if(date == undefined) {
-        //: When it's impossible to determine a timestamp, this message is returned to the user
-        //% "Not available"
-        return qsTrId("sailfinder-not-available");
-    }
-    else {
+    if(!isNaN(date.getTime())) {
         var difference = new Date().getTime() - date.getTime();
         difference = difference / 1000 // convert from miliseconds to seconds
         if(difference < 60) { // Less then a minute ago
@@ -51,4 +46,11 @@ function formatDate(date) {
             return date.toLocaleString(Qt.locale(), "dd/MM/yyyy HH:mm");
         }
     }
+    console.warn("Timestamp is undefined or not a Date object");
+    return "";
+}
+
+function getUTCDate() {
+    var now = new Date();
+    return new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
 }

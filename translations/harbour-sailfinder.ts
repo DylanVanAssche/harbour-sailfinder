@@ -243,11 +243,6 @@
         <extracomment>Error shown to the user when profile data wasn&apos;t succesfull retrieved. It&apos;s impossible then to get the messages between the user and it&apos;s matches.</extracomment>
         <translation>Messages couldn&apos;t be retrieved due missing profile information</translation>
     </message>
-    <message id="sailfinder-not-available">
-        <source>Not available</source>
-        <extracomment>When it&apos;s impossible to determine a timestamp, this message is returned to the user</extracomment>
-        <translation>Not available</translation>
-    </message>
     <message id="sailfinder-minutes-ago">
         <source>%L0 minute(s) ago</source>
         <translation>%L0 minute(s) ago</translation>
@@ -259,6 +254,26 @@
     <message id="sailfinder-just-now">
         <source>Just now</source>
         <translation>Just now</translation>
+    </message>
+    <message id="sailfinder-new-message">
+        <source>New message!</source>
+        <translation>New message!</translation>
+    </message>
+    <message id="sailfinder-new-message-hint">
+        <source>You have received a new message!</source>
+        <translation>You have received a new message!</translation>
+    </message>
+    <message id="sailfinder-logging-in">
+        <source>Logging in</source>
+        <translation>Logging in</translation>
+    </message>
+    <message id="sailfinder-new-messages">
+        <source>New messages!</source>
+        <translation>New messages!</translation>
+    </message>
+    <message id="sailfinder-new-messages-hint">
+        <source>You have received %L0 new messages!</source>
+        <translation>You have received %L0 new messages!</translation>
     </message>
 </context>
 </TS>

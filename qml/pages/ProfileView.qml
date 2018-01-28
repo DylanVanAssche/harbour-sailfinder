@@ -62,6 +62,18 @@ SilicaFlickable {
             }
         }
     }
+
+    Connections {
+        target: app
+        onNetworkStatusChanged: {
+            if(app.networkStatus == true) {
+                console.debug("Restarting updates timer after network failure")
+                // Fetch immediately when becoming online again
+                api.getUpdates(temp.lastActivityDate)
+                updatesTimer.restart() // After network failure, restart timer
+            }
+        }
+    }
     
     Connections {
         target: api
@@ -91,7 +103,8 @@ SilicaFlickable {
         }
 
         onUpdatesReady: {
-            temp.lastActivityDate = new Date()
+            temp.lastActivityDate = Util.getUTCDate()
+            console.debug("Last Activity Date: " + temp.lastActivityDate)
             updatesTimer.restart()
         }
     }

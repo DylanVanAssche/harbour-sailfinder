@@ -44,6 +44,10 @@ Page {
         }
 
         onNewMessage: {
+            if(count > 0) { // Messages from other people needs updating, not our own
+                api.getMessages(matchId)
+            }
+
             messagesListView.positionViewAtEnd()
             busyStatus.running = false
         }

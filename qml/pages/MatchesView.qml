@@ -40,6 +40,7 @@ SilicaFlickable {
             matchesListView.model = api.matchesList
             headerChanged(Util.createHeaderMatches(matchesListView.count))
             noMatchesText.enabled = matchesListView.count == 0
+            busyStatus = false
             _intialFetchRequired = false
         }
 
@@ -67,9 +68,36 @@ SilicaFlickable {
             api.getMatchesAll()
         }
 
+        onNewMessage: {
+            // When new messages are received count is > 0
+            // When we send a message then count == 0
+            if(count == 1) {
+                sfos.createNotification(
+                            //% "New message!"
+                            qsTrId("sailfinder-new-message"),
+                            //% "You have received a new message!"
+                            qsTrId("sailfinder-new-message-hint"),
+                            "social",
+                            "sailfinder-new-message"
+                            )
+            }
+            else if(count > 1){
+                sfos.createNotification(
+                            //% "New messages!"
+                            qsTrId("sailfinder-new-messages"),
+                            //% "You have received %L0 new messages!"
+                            qsTrId("sailfinder-new-messages-hint").arg(count),
+                            "social",
+                            "sailfinder-new-message"
+                            )
+            }
+        }
+
         onUpdatesReady: {
             // Wait for refetch or do intial fetch when updates are received
             // Avoiding double intial fetch when updates are received at launch
+            console.debug("Refetch: " + refetch)
+            console.debug("Initial fetch: " + _intialFetchRequired)
             if(refetch || _intialFetchRequired) {
                 console.debug("Matches or Blocks updated, refetching...")
                 api.getMatchesAll()
@@ -120,5 +148,12 @@ SilicaFlickable {
         //% "Swipe on some recommendations"
         hintText: qsTrId("sailfinder-no-matches-text")
         enabled: false
+    }
+
+    BusyIndicator {
+        id: busyStatus
+        anchors.centerIn: parent
+        size: BusyIndicatorSize.Large
+        running: Qt.application.active
     }
 }

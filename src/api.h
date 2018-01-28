@@ -24,9 +24,14 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkConfigurationManager>
 #include <QtNetwork/QNetworkDiskCache>
+#include <QtCore/QUrl>
+#include <QtCore/QUrlQuery>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
 #include <QtCore/QVariantMap>
 #include <QtCore/QList>
 #include <QtCore/QScopedPointer>
@@ -164,7 +169,7 @@ signals:
     void messagesChanged();
     void loggedOut();
     void updatesReady(QDateTime lastActivityDate, bool refetch);
-    void newMessage();
+    void newMessage(int count);
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -225,6 +230,7 @@ private:
     void parseUnmatch(QJsonObject json);
     void parseMessages(QJsonObject json);
     void parseSendMessage(QJsonObject json);
+    void unlockAll();
 };
 
 #endif // API_H

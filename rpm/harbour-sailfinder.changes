@@ -1,9 +1,12 @@
-* Wed Jan 17 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-1
+* Wed Jan 28 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-1
 - [NEW] C++ backend (high performance and object oriented)
 - [NEW] New API taken in use
-- [NEW] Refreshed the UI
+- [NEW] Notifications for new matches and messages
+- [NEW] Refreshed UI
 - [IMPROVEMENT] Following the Qt Model-Delegate-View design principles
 - [IMPROVEMENT] Handling network outage better using DBus
+- [IMPROVEMENT] Better handling of location updates
+- [IMPROVEMENT] Updated about page
 - [STORE] Updated screenshots
 - [STORE] Updated README
 
