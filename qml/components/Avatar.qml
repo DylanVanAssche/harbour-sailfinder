@@ -23,6 +23,21 @@ Image {
     id: image
     width: Theme.itemSizeLarge
     height: width
+    onStatusChanged: {
+        if(status == Image.Error) {
+            console.warn("Can't load image")
+            errorText.visible = true
+            loadIndicator.running = false
+        }
+        else if(status == Image.Ready) {
+            errorText.visible = false
+            loadIndicator.running = false
+        }
+        else {
+            errorText.visible = false
+            loadIndicator.running = Qt.application.active
+        }
+    }
 
     layer.enabled: true
     layer.effect: OpacityMask {
@@ -32,5 +47,21 @@ Image {
             height: image.width
             radius: width/2
         }
+    }
+
+    Label {
+        id: errorText
+        anchors.centerIn: parent
+        visible: false
+        font.pixelSize: Theme.fontSizeMedium
+        font.bold: true
+        //% "Oops!"
+        text: qsTrId("sailfinder-oops")
+    }
+
+    BusyIndicator {
+        id: loadIndicator
+        size: BusyIndicatorSize.Medium
+        anchors.centerIn: parent
     }
 }

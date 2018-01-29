@@ -76,9 +76,11 @@ Item {
                             loadIndicator.running = false
                         }
                         else if(status == Image.Ready) {
+                            errorText.visible = false
                             loadIndicator.running = false
                         }
                         else {
+                            errorText.visible = false
                             loadIndicator.running = Qt.application.active
                         }
                     }
