@@ -65,7 +65,6 @@ SilicaFlickable {
                             "sailfinder-new-match"
                             )
             }
-            api.getMatchesAll()
         }
 
         onNewMessage: {

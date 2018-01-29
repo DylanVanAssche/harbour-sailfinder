@@ -1,4 +1,7 @@
-* Wed Jan 28 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-1
+* Mon Jan 29 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-2
+- [MINOR BUGFIX] Liking people resulted in double notifications
+
+* Sun Jan 28 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-1
 - [NEW] C++ backend (high performance and object oriented)
 - [NEW] New API taken in use
 - [NEW] Notifications for new matches and messages

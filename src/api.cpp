@@ -1327,7 +1327,7 @@ void API::parseLike(QJsonObject json)
     }
     else if(json["match"].isObject()) {
         qDebug() << "Recommendation was a pending match";
-        emit this->newMatch(1);
+        // Updating is done using /updates
     }
     else {
         qCritical() << "Unknown JSON response for liking recommendation";
