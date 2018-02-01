@@ -1,4 +1,4 @@
-* Mon Jan 29 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-2
+* Mon Feb 1 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-2
 - [MINOR BUGFIX] Liking people resulted in double notifications
 - [MINOR BUGIFX] Error text is not shown anymore when image is loaded after retry
 - [IMPROVEMENT] Avatar image error handling
