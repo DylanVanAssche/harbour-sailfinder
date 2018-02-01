@@ -2,6 +2,7 @@
 - [MINOR BUGFIX] Liking people resulted in double notifications
 - [MINOR BUGIFX] Error text is not shown anymore when image is loaded after retry
 - [IMPROVEMENT] Avatar image error handling
+- [TRANSLATIONS] Added Dutch translations
 
 * Sun Jan 28 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-1
 - [NEW] C++ backend (high performance and object oriented)
