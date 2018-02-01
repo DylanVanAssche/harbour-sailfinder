@@ -1,7 +1,7 @@
 Name: harbour-sailfinder
 Summary: Sailfinder
-Version: 3.1
-Release: 14
+Version: 4.0
+Release: 2
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
 Group: Qt/Qt
@@ -11,11 +11,12 @@ License: GPLv3
 # Usually this line does not need to be modified.
 Sources:
 - '%{name}-%{version}.tar.bz2'
-Description: |
-  Sailfinder is an unofficial Tinder client for Sailfish OS.
+Description: Sailfinder is a Sailfish OS application to have fun on Tinder.
 Configure: none
 # The qtc5 builder inserts macros to allow QtCreator to have fine
 # control over qmake/make execution
+QMakeOptions:
+- VERSION=%{version}
 Builder: qtc5
 
 # This section specifies build dependencies that are resolved using pkgconfig.
@@ -26,12 +27,15 @@ PkgConfigBR:
   - Qt5Qml
   - Qt5Quick
 
+# Build dependencies without a pkgconfig setup can be listed here
+# PkgBR:
+#   - package-needed-to-build
+
 # Runtime dependencies which are not automatically detected
 Requires:
   - sailfishsilica-qt5 >= 0.10.9 
-  - pyotherside-qml-plugin-python3-qt5 >= 1.2.0
-  - nemo-qml-plugin-configuration-qt5 >= 0.0.1 #Jolla Harbour only 2.1.0.X and higher
-  - nemo-qml-plugin-notifications-qt5 >= 0.0.1
+  - nemo-qml-plugin-thumbnailer-qt5
+  - nemo-qml-plugin-configuration-qt5
 
 # All installed files
 Files:
@@ -39,3 +43,6 @@ Files:
   - '%{_datadir}/%{name}'
   - '%{_datadir}/applications/%{name}.desktop'
   - '%{_datadir}/icons/hicolor/*/apps/%{name}.png'
+
+# For more information about yaml and what's supported in Sailfish OS
+# build system, please see https://wiki.merproject.org/wiki/Spectacle

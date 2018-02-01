@@ -1,39 +1,121 @@
+/*
+*   This file is part of Sailfinder.
+*
+*   Sailfinder is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Sailfinder is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import Harbour.Sailfinder.SFOS 1.0
+import "../components"
 
 Page {
+    SFOS {
+        id: sfos
+    }
+
     SilicaFlickable {
         anchors.fill: parent
-        contentHeight: aboutColumn.height
+        contentHeight: column.height
 
         VerticalScrollDecorator {}
 
         Column {
-            id: aboutColumn
+            id: column
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: Theme.paddingMedium
 
-            PageHeader { title: qsTr("About") }
+            //% "About %0 V%1"
+            PageHeader { title: qsTrId("sailfinder-version").arg(sfos.appNamePretty).arg(sfos.appVersion) }
 
-            SectionHeader { text: qsTr("What's") + " Sailfinder?" }
-            TextLabel { labelText: "Sailfinder " + qsTr("is an unofficial Tinder client for Sailfish OS. You can use almost all the features of the official client on your Sailfish OS smartphone!") }
+            //% "What's %0?"
+            SectionHeader { text: qsTrId("sailfinder-what-is").arg(sfos.appNamePretty) }
 
-            SectionHeader { text: qsTr("Privacy & licensing") }
-            TextLabel { labelText: "Sailfinder " + qsTr("will never collect any personal information about the user, but this can't be guaranteed from any third-party company used in Sailfinder.") }
-            TextLabel { labelText: qsTr("This application is released under GPLv3. The source code and the license is available in the Github repo of") +  " Sailfinder." }
+            TextLabel {
+                //% "%0 is an opensource application to have fun on Tinder with your Sailfish OS smartphone!"
+                text: qsTrId("sailfinder-what-is-text").arg(sfos.appNamePretty)
+            }
 
-            SectionHeader { text: qsTr("Developer & source code") }
-            GlassButton { link: "https://github.com/modulebaan"; iconSource: "../resources/images/icon-github.png"; iconText: "Dylan Van Assche"; itemScale: 0.75 }
-            GlassButton { link: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XTDV5P8JQTHT4"; iconSource: "../resources/images/icon-paypal.png"; iconText: qsTr("Donate with Paypal"); itemScale: 0.75 }
-            GlassButton { link: "https://github.com/modulebaan/harbour-sailfinder"; iconSource: "../resources/images/icon-code.png"; iconText: qsTr("Source code"); itemScale: 0.75 }
-            TextLabel { labelText: "Sailfinder " + qsTr("can be translated into your language but for that we need your help! You can translate this app on") + " Transifex:" }
-            GlassButton { link: "https://www.transifex.com/dylanvanassche/harbour-sailfinder/"; iconSource: "../resources/images/icon-translate.png"; iconText: "Transifex " + qsTr("project"); itemScale: 0.75 }
+            //% "Privacy & licensing"
+            SectionHeader { text: qsTrId("sailfinder-privacy-licensing") }
 
-            SectionHeader { text: qsTr("Powered by") }
-            GlassButton { link: "http://fontawesome.io/"; iconSource: "../resources/images/icon-fontawesome.png"; iconText: "FontAwesome icons"; itemScale: 0.75 }
-            GlassButton { link: "https://be.linkedin.com/in/sam-goedgezelschap-06a516106"; iconSource: "../resources/images/icon-linkedin.png"; iconText: "Sam Goedgezelschap"; itemScale: 0.75 }
-            GlassButton { link: "https://github.com/paomedia/small-n-flat/"; iconSource: "../resources/images/icon-github.png"; iconText: "Paomedia icons"; itemScale: 0.75 }
-            GlassButton { link: "http://gitlab.unique-conception.org/thebootroo/mitakuuluu-ui-ng"; iconSource: "../resources/images/icon-gitlab.png"; iconText: "mitakuuluu-ui-ng"; itemScale: 0.75 }
+            TextLabel {
+                //% "%0 will never collect any personal information about the user, but this can't be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0."
+                text: qsTrId("sailfinder-privacy-licensing-text").arg(sfos.appNamePretty)
+            }
+
+            //% "Disclaimer"
+            SectionHeader { text: qsTrId("sailfinder-disclaimer") }
+
+            TextLabel {
+                //% "%0 and it's contributors aren't related to %1 in any way and they can't be hold responsible for anything. You agree automatically with this disclaimer by using the application, contribute to it, ..."
+                text: qsTrId("sailfinder-disclaimer-text").arg(sfos.appNamePretty).arg("Tinder")
+            }
+
+            //% "Developer & source code"
+            SectionHeader { text: qsTrId("sailfinder-developer-source") }
+
+            GlassButton {
+                link: "https://github.com/dylanvanassche"
+                source: "qrc:///images/icon-github.png"
+                text: "Dylan Van Assche"
+            }
+
+            GlassButton {
+                link: "https://paypal.me/minitreintje"
+                source: "qrc:///images/icon-paypal.png"
+                //% "Donate with %0"
+                text: qsTrId("sailfinder-donate-with").arg("PayPal")
+            }
+
+            GlassButton {
+                link: "https://github.com/dylanvanassche/harbour-sailfinder"
+                source: "qrc:///images/icon-code.png"
+                //% "Source code"
+                text: qsTrId("sailfinder-source")
+            }
+
+            //% "Translations"
+            SectionHeader { text: qsTrId("sailfinder-translations") }
+
+            TextLabel {
+                //% "%0 can be translated into your language but for that we need your help! You can translate this app on %1"
+                text: qsTrId("sailfinder-translations-text").arg(sfos.appNamePretty).arg("Transifex:")
+            }
+
+            GlassButton {
+                link: "https://www.transifex.com/dylanvanassche/harbour-sailfinder"
+                source: "qrc:///images/icon-translate.png"
+                //% "%0 project"
+                text: qsTrId("sailfinder-translations-project").arg("Transifex")
+            }
+
+            //% "Powered by"
+            SectionHeader { text: qsTrId("sailfinder-powered-by") }
+
+            GlassButton {
+                link: "https://fontawesome.io/"
+                source: "qrc:///images/icon-fontawesome.png"
+                //% "%0 icons"
+                text: qsTrId("sailfinder-icons").arg("FontAwesome")
+            }
+
+            GlassButton {
+                link: "https://be.linkedin.com/in/sam-goedgezelschap-06a516106"
+                source: "qrc:///images/icon-linkedin.png"
+                text: "Sam Goedgezelschap"
+            }
         }
     }
 }

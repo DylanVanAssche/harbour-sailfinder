@@ -1,186 +1,143 @@
+/*
+*   This file is part of Sailfinder.
+*
+*   Sailfinder is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Sailfinder is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "js/auth.js" as Auth
+import QtWebKit 3.0
 
 Page {
-    id: login
-    property bool authenticating
-    property bool tokenExpired
-    property bool verifying
-    property int phoneVerification
+    property string fbToken
+    property bool logout
 
-    Component.onCompleted: {
-        returnToLogin? tokenExpired=true: undefined //Enforce login with credentials
-        returnToLogin = false //Reset to previous state
-    }
-    onAuthenticatingChanged: {
-        if(authenticating) {
-            Auth.auth(email.text, password.text); //Ask user for credentials
-            settings.saveEmail = remember.checked
-            remember.checked? parameters.facebookEmail = email.text: undefined
+    id: page
+
+    onFbTokenChanged: {
+        if(fbToken.length > 0) {
+            tinderLogin.visible = true
+            api.login(fbToken)
+        }
+        else {
+            tinderLogin.visible = false
         }
     }
 
-    Connections {   // Workaround: modules aren't fully imported yet so we need a signal to make our first Python call
+    Connections {
+        target: api
+        onAuthenticatedChanged: {
+            if(api.authenticated) {
+                console.debug("Tinder token successfully retrieved")
+                pageStack.replace(Qt.resolvedUrl("../pages/MainPage.qml"))
+            }
+        }
+    }
+
+    Connections {
         target: app
-        onPythonReadyChanged: pythonReady? Auth.auth("", ""): undefined //Load from cache
-    }
-
-    SilicaFlickable {
-        anchors.fill: parent
-        contentHeight: column.height
-
-        VerticalScrollDecorator {}
-
-        Column {
-            id: column
-            anchors { left: parent.left; right: parent.right }
-            spacing: Theme.paddingMedium
-
-            PageHeader { title: qsTr("Login") }
-
-            //Account header with logo and app name
-            AccountHeader {}
-
-            //Spacer
-            Item {
-                width: parent.width
-                height: Theme.itemSizeExtraSmall
-            }
-
-            TextField {
-                id: email
-                anchors { left: parent.left; right: parent.right }
-                opacity: (authenticating || !tokenExpired)? 0.0: 1.0
-                visible: opacity==0? false: true
-                label: qsTr("Facebook e-mail"); placeholderText: label
-                EnterKey.enabled: text || inputMethodComposing
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: password.focus = true
-                inputMethodHints: Qt.ImhEmailCharactersOnly
-                text: settings.saveEmail? parameters.facebookEmail: ""
-
-                Behavior on opacity { FadeAnimation {} }
-            }
-
-            PasswordField {
-                id: password
-                anchors { left: parent.left; right: parent.right }
-                opacity: (authenticating || !tokenExpired)? 0.0: 1.0
-                visible: opacity==0? false: true
-                label: qsTr("Facebook password"); placeholderText: label
-                EnterKey.enabled: (text || inputMethodComposing) && email.text
-                EnterKey.text: qsTr("Login")
-                EnterKey.onClicked: {
-                    focus = false
-                    authenticating = true
-                }
-
-                Behavior on opacity { FadeAnimation {} }
-            }
-
-            TextSwitch {
-                id: remember
-                opacity: (authenticating || !tokenExpired)? 0.0: 1.0
-                visible: opacity==0? false: true
-                text: qsTr("Remember e-mail")
-                checked: settings.saveEmail
-                description: qsTr("Your Facebook email will be stored unencrypted on your device.")
-
-                Behavior on opacity { FadeAnimation {} }
-            }
-
-            TextLabel { labelText: qsTr("Verify your account by entering your phone number in international format below") + ":"; visible: phoneVerification==1  && !verifying }
-            TextLabel { labelText: qsTr("Enter your received SMS code below") + ":"; visible: phoneVerification==2 && !verifying }
-
-            TextField {
-                id: phoneNumber
-                anchors { left: parent.left; right: parent.right }
-                visible: phoneVerification==1 && !verifying
-                label: qsTr("Phonenumber"); placeholderText: qsTr("+[country][number]")
-                validator: RegExpValidator { regExp: /^[0-9\+\-\#\*\ ]{6,}$/ }
-                color: errorHighlight? "red" : Theme.primaryColor
-                EnterKey.enabled: !errorHighlight && !verifying
-                EnterKey.text: qsTr("OK")
-                EnterKey.onClicked: Auth.requestSMS(text)
-                focus: visible
-                inputMethodHints: Qt.ImhDialableCharactersOnly
-            }
-
-            TextField {
-                id: code
-                anchors { left: parent.left; right: parent.right }
-                visible: phoneVerification==2 && !verifying
-                label: qsTr("SMS code"); placeholderText: label
-                validator: RegExpValidator { regExp: /^\d+$/  }///^[0-9]+$/
-                color: errorHighlight || text.length!=6? "red" : Theme.primaryColor
-                EnterKey.enabled: !errorHighlight && text.length == 6 && !verifying
-                EnterKey.text: qsTr("OK")
-                EnterKey.onClicked: Auth.verify(text)
-                focus: visible
-                inputMethodHints: Qt.ImhDigitsOnly
-            }
-
-            BusyIndicator {
-                anchors { centerIn: parent }
-                size: BusyIndicatorSize.Large
-                running: verifying && Qt.application.active
-                visible: running
-            }
-
-            Button { // Confirm SMS verification
-                text: qsTr("OK")
-                enabled: phoneVerification==1? !phoneNumber.errorHighlight: !code.errorHighlight && code.text.length == 6 && !verifying
-                anchors { horizontalCenter: parent.horizontalCenter }
-                opacity: (phoneVerification==1 || phoneVerification==2) && !verifying? 1.0: 0.0
-                visible: opacity==0? false: true
-                onClicked: {
-                    switch(phoneVerification) {
-                    case 1:
-                        Auth.requestSMS(phoneNumber.text);
-                        break;
-
-                    case 2:
-                        Auth.verify(code.text);
-                        break;
-                    }
-                }
-
-                Behavior on opacity { FadeAnimation {} }
-            }
-
-            Button {
-                text: qsTr("Login")
-                enabled: email.text && password.text
-                anchors { horizontalCenter: parent.horizontalCenter }
-                opacity: (authenticating || !tokenExpired)? 0.0: 1.0
-                visible: opacity==0? false: true
-                onClicked: authenticating = true
-
-                Behavior on opacity { FadeAnimation {} }
-            }
-
-            Label {
-                anchors { horizontalCenter: parent.horizontalCenter }
-                opacity: (authenticating || !tokenExpired) && !phoneVerification? 1.0: 0.0
-                visible: opacity==0? false: true
-                text: qsTr("Authenticating") + "..."
-                font.pixelSize: Theme.fontSizeLarge
-
-                Behavior on opacity { FadeAnimation {} }
-            }
-
-            ProgressBar {
-                width: parent.width
-                minimumValue: 0
-                maximumValue: 100
-                opacity: (authenticating || !tokenExpired) && !phoneVerification? 1.0: 0.0
-                visible: opacity==0? false: true
-                value: authenticatingProgress
-                label: authenticatingText
-
-                Behavior on opacity { FadeAnimation {} }
+        onNetworkStatusChanged: {
+            if(app.networkStatus) {
+                console.debug("Network recovered, reloading webview")
+                webview.reload()
             }
         }
+    }
+
+    SilicaWebView {
+        property real devicePixelRatio: {
+            if (Screen.width <= 540) {
+                return 1.5;
+            }
+            else if (Screen.width > 540 && Screen.width <= 768) {
+                return 2.0;
+            }
+            else {
+                return 3.0;
+            }
+        }
+
+        id: webview
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        clip: true
+        experimental.preferences.javascriptEnabled: true
+        experimental.preferences.navigatorQtObjectEnabled: true
+        experimental.preferences.developerExtrasEnabled: true
+        experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
+        experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
+        experimental.customLayoutWidth: page.width / devicePixelRatio
+        experimental.overview: true
+        experimental.userAgent: app.fbUserAgent
+        experimental.onMessageReceived: {
+            var msg = JSON.parse(message.data);
+            switch(msg.type) {
+            case 0: // FB_TOKEN
+                console.debug("Successfully retrieved Facebook access token: " + msg.data);
+                fbToken = msg.data;
+                errorFacebookLogin.enabled = false;
+                opacity = 0.0;
+                break;
+            case 1: // ERROR
+                console.error("Can't retrieve Facebook access token: " + msg.data);
+                fbToken = "";
+                errorFacebookLogin.enabled = true;
+                opacity = 1.0;
+                break;
+            case 42: // DEBUG
+                console.debug(msg.data);
+                break;
+            }
+        }
+        url: app.fbAuthUrl
+        Component.onCompleted: {
+            if(logout) {
+                console.debug("Clearing cookies due logout")
+                webview.experimental.deleteAllCookies();
+                webview.reload()
+            }
+        }
+
+        Behavior on opacity { FadeAnimation {} }
+
+        ViewPlaceholder {
+            id: errorFacebookLogin
+            //% "Oops!"
+            text: qsTrId("sailfinder-oops")
+            //% "Something went wrong, please try again later"
+            hintText: qsTrId("sailfinder-error")
+        }
+    }
+
+    BusyIndicator {
+        id: tinderLogin
+        size: BusyIndicatorSize.Large
+        anchors.centerIn: parent
+        visible: false
+        running: Qt.application.active && visible
+    }
+
+    Label {
+        anchors { top: tinderLogin.bottom; topMargin: Theme.paddingMedium; horizontalCenter: parent.horizontalCenter }
+        visible: tinderLogin.visible
+        //% "Logging in"
+        text: qsTrId("sailfinder-logging-in")
     }
 }
+

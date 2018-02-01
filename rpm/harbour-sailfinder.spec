@@ -13,17 +13,16 @@ Name:       harbour-sailfinder
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailfinder
-Version:    3.1
-Release:    14
+Version:    4.0
+Release:    2
 Group:      Qt/Qt
 License:    GPLv3
 URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-sailfinder.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
-Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.2.0
-Requires:   nemo-qml-plugin-configuration-qt5 >= 0.0.1
-Requires:   nemo-qml-plugin-notifications-qt5 >= 0.0.1
+Requires:   nemo-qml-plugin-thumbnailer-qt5
+Requires:   nemo-qml-plugin-configuration-qt5
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
@@ -31,8 +30,7 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 
 %description
-Sailfinder is an unofficial Tinder client for Sailfish OS.
-
+Sailfinder is a Sailfish OS application to have fun on Tinder.
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -44,7 +42,8 @@ Sailfinder is an unofficial Tinder client for Sailfish OS.
 # >> build pre
 # << build pre
 
-%qtc_qmake5 
+%qtc_qmake5  \
+    VERSION=%{version}
 
 %qtc_make %{?_smp_mflags}
 

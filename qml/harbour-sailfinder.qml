@@ -1,242 +1,104 @@
+/*
+*   This file is part of Sailfinder.
+*
+*   Sailfinder is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Sailfinder is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import io.thp.pyotherside 1.3
+import Harbour.Sailfinder.API 1.0
+import Harbour.Sailfinder.SFOS 1.0
+//import Nemo.DBus 2.0
+import org.nemomobile.dbus 2.0
 import org.nemomobile.configuration 1.0
 import "pages"
-import "./pages/js/util.js" as Util
-import "./pages/js/updates.js" as Updates
 
 ApplicationWindow
 {
+    property bool networkStatus
+
     id: app
     initialPage: Component { FirstPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
-    allowedOrientations: Orientation.All
-    _defaultPageOrientations: Orientation.All    
-    onCleanup: { // Reset to initial state, except 'pythonReady' since it's already loaded
-        authenticatingText = qsTr("Authenticating") + "..."
-        headerRecs = qsTr("Recommendations")
-        headerMatches = qsTr("Matches")
-        headerProfile = qsTr("Profile")
-        headerSocial = "" //qsTr("Social") // Sailfinder V3.X
-        cover = { background: "../resources/images/cover-background.png", text: "Sailfinder" }
-        coverText = "Sailfinder"
-        coverBackground = "../resources/images/cover-background.png"
-        coverBackgroundRecs = "../resources/images/cover-background.png"
-        coverBackgroundMatches = "../resources/images/cover-background.png"
-        coverBackgroundProfile = "../resources/images/cover-background.png"
-        coverBackgroundSocial = "../resources/images/cover-background.png"
-        loadingMatches = true
-        cachingMatches = true
-        loadingRecs = true
-        cachingRecs = true
-        loadingProfile = true
-        cachingProfile = true
-        //loadingSocial = true // Sailfinder V3.X
-        //cachingSocial = true
-        recsData = {}
-        matchesData = {}
-        likedMessagesData = {}
-        blocksData = {}
-        profileData = {}
-        //socialData = {} // Sailfinder V3.X
-        numberOfMatches = 0
-        authenticatingProgress = 0
-        banned = false
-        parameters.wasOutOfLikes = false
-        parameters.last_activity_date = ""
-    }
-    // Signals
-    signal cleanup()
-    signal refreshMatches()
-    signal refreshRecs()
-    signal forceSwipeviewIndex(int swipeIndex)
-
-    // Globals
-    readonly property string version: "V3.1";
-    property string userId
-    property string authenticatingText: qsTr("Authenticating") + "..."
-    property string headerRecs: qsTr("Recommendations")
-    property string headerMatches: qsTr("Matches")
-    property string headerProfile: qsTr("Profile")
-    property string headerSocial: "" //qsTr("Social") // Sailfinder V3.X
-    property string coverText: "Sailfinder"
-    property string coverBackground: "../resources/images/cover-background.png"
-    property string coverBackgroundRecs: "../resources/images/cover-background.png"
-    property string coverBackgroundMatches: "../resources/images/cover-background.png"
-    property string coverBackgroundProfile: "../resources/images/cover-background.png"
-    property string coverBackgroundSocial: "../resources/images/cover-background.png"
-    property bool loadingRecs: true //On launch we need to load and cache them all
-    property bool cachingRecs: true
-    property bool loadingMatches: true
-    property bool cachingMatches: true
-    property bool loadingProfile: true
-    property bool cachingProfile: true
-    //property bool loadingSocial: true // Sailfinder V3.X
-    //property bool cachingSocial: true
-    property int numberOfMatches
-    property int authenticatingProgress
-    property bool banned
-    property bool pythonReady
-    property bool returnToLogin
-    property var recsData
-    property var matchesData
-    property var likedMessagesData
-    property var blocksData
-    property var profileData
-    //property var socialData // Sailfinder V3.X
-
-    // Check for new data/notifications
-    Timer {
-        id: incrementalUpdateTimer
-        interval: Util.parseInterval(settings.refreshInterval)
-        running: false
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: Updates.get(false)
+    allowedOrientations: defaultAllowedOrientations
+    onNetworkStatusChanged: {
+        if(networkStatus == false) {
+            //% "Network connection failure"
+            sfos.createToaster(qsTrId("sailfinder-not-connected"), "icon-s-high-importance", "sailfinder-network")
+        }
     }
 
-    // Notifications & toaster init
-    Toaster { id: toaster }
-    NotificationManager { id: notificationSwipeAgain; onActivateApp: {app.activate(); forceSwipeviewIndex(0) }}
-    NotificationManager { id: notificationLiked; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
-    NotificationManager { id: notificationMatches; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
-    NotificationManager { id: notificationMessages; onActivateApp: {app.activate(); forceSwipeviewIndex(1) } }
-    //NotificationManager { id: notificationSocial; onActivateApp: {app.activate(); forceSwipeviewIndex(3) } } //Sailfinder V3.X
+    readonly property string fbAuthUrl: "https://m.facebook.com/login.php?skip_api_login=1&api_key=464891386855067&signed_next=1&next=https%3A%2F%2Fm.facebook.com%2Fv2.8%2Fdialog%2Foauth%3Fchannel%3Dhttps%253A%252F%252Fstaticxx.facebook.com%252Fconnect%252Fxd_arbiter%252Fr%252FlY4eZXm_YWu.js%253Fversion%253D42%2523cb%253Df2ef0d47f1ab162%2526domain%253Dtinder.com%2526origin%253Dhttps%25253A%25252F%25252Ftinder.com%25252Ff1a5e2552acd812%2526relation%253Dopener%26redirect_uri%3Dhttps%253A%252F%252Fstaticxx.facebook.com%252Fconnect%252Fxd_arbiter%252Fr%252FlY4eZXm_YWu.js%253Fversion%253D42%2523cb%253Df3e527820f87b8a%2526domain%253Dtinder.com%2526origin%253Dhttps%25253A%25252F%25252Ftinder.com%25252Ff1a5e2552acd812%2526relation%253Dopener%2526frame%253Df3c57eb25aa9564%26display%3Dtouch%26scope%3Duser_birthday%252Cuser_photos%252Cuser_education_history%252Cemail%252Cuser_relationship_details%252Cuser_friends%252Cuser_work_history%252Cuser_likes%26response_type%3Dtoken%252Csigned_request%26domain%3Dtinder.com%26origin%3D2%26client_id%3D464891386855067%26ret%3Dlogin%26sdk%3Djoey%26logger_id%3D2ae3adb2-6198-e6b6-452e-e3f58a61ccea&cancel_url=https%3A%2F%2Fstaticxx.facebook.com%2Fconnect%2Fxd_arbiter%2Fr%2FlY4eZXm_YWu.js%3Fversion%3D42%23cb%3Df3e527820f87b8a%26domain%3Dtinder.com%26origin%3Dhttps%253A%252F%252Ftinder.com%252Ff1a5e2552acd812%26relation%3Dopener%26frame%3Df3c57eb25aa9564%26error%3Daccess_denied%26error_code%3D200%26error_description%3DPermissions%2Berror%26error_reason%3Duser_denied%26e2e%3D%257B%257D&display=touch&locale=nl_NL&logger_id=2ae3adb2-6198-e6b6-452e-e3f58a61ccea&_rdr"
+    readonly property string fbUserAgent: "Mozilla/5.0 (PlayStation 4 4.71) AppleWebKit/601.2 (KHTML, like Gecko)" //"Mozilla/5.0 (Linux; Android 8.0.0; Nexus 6P Build/OPR6.170623.013) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.116 Mobile Safari/537.36"
 
-    // App settings
+    readonly property real fadeOutValue: 0.2
+
+    API {
+        id: api
+    }
+
+    SFOS {
+        id: sfos
+    }
+
     ConfigurationGroup {
         id: settings
         path: "/apps/harbour-sailfinder/settings"
-
-        property bool saveEmail: true
-        property bool showBio: true
-        property bool showSchool: true
-        property bool showJob: true
-        property bool showFriends: true
-        property bool showInstagram: true
-        property bool showSpotify: true
-        property bool showNotifications: true
-        property bool logging: false
-        property int refreshInterval: 1 //Normal refresh interval
-        property int imageFormat: 1 //320x320 image size
     }
 
-    // App rememberd parameters
     ConfigurationGroup {
-        id: parameters
-        path: "/apps/harbour-sailfinder/parameters"
+        id: temp
+        path: "/apps/harbour-sailfinder/temp"
 
-        property bool wasOutOfLikes //Only show notification when we were out of likes, not on every launch
-        property string last_activity_date
-        property string facebookEmail
+        property date lastActivityDate: new Date()
+        Component.onCompleted: console.debug("Last activity date:" + temp.lastActivityDate)
     }
 
-    Python {
-        id: python
-        property bool _networkWasLost
+    DBusInterface {
+        bus: DBus.SystemBus
+        service: "net.connman"
+        path: "/"
+        iface: "net.connman.Manager"
+        signalsEnabled: true
+        Component.onCompleted: getStatus() // Init
 
-        Component.onCompleted: {
-            addImportPath(Qt.resolvedUrl("./backend")); //Add the import path for our QML/Python bridge 'app.py'
-            addImportPath(Qt.resolvedUrl("./backend/sailfinder")); //Add import path for our backend module 'sailfinder'
-            importModule("platform", function() {   //Add the right import path depending on the architecture of the processor
-                if (evaluate("platform.machine()") == "armv7l") {
-                    console.info("[INFO] ARM processor detected")
-                    addImportPath(Qt.resolvedUrl("./backend/lib/armv7l/"));
-                } else {
-                    console.info("[INFO] x86 processor detected")
-                    addImportPath(Qt.resolvedUrl("./backend/lib/i486/"));
-                }
-
-                importModule("app", function() {}); // Import "app" after we imported our platform specific modules
-                call("app.cache.clearMeta") // Empty cache
-                call("app.cache.clearLogger")
-                call("app.cache.clearRecs")
-                pythonReady = true
-            });
-
-            //Notify user of the current network state
-            setHandler("network", function (status) {
-                if(!status)
-                {
-                    toaster.previewBody = qsTr("Network down") + "!"
-                    toaster.publish()
-                    _networkWasLost = true
-                }
-                else if (_networkWasLost) {
-                    toaster.previewBody = qsTr("Network recovered") + "!"
-                    toaster.publish()
-                    _networkWasLost = false
-                }
-            });
-
-            //Notify user of the login progress
-            setHandler("loginProgress", function (progress) {
-                if(progress <= 50) {
-                    authenticatingText = qsTr("Facebook") + " - " + Math.round(progress) + "%"
+        // Methods
+        function getStatus() {
+            typedCall("GetProperties", [], function(properties) {
+                if(properties["State"] == "online") {
+                    networkStatus = true
                 }
                 else {
-                    authenticatingText = qsTr("Tinder") + " - " + Math.round(progress) + "%"
+                    networkStatus = false
                 }
-                authenticatingProgress = progress
-            });
-            setHandler("returnToLogin", function (result) {
-                if(result)
-                {
-                    pageStack.clear()
-                    returnToLogin = true //Enforce an Auth reload
-                    pageStack.push(Qt.resolvedUrl("pages/FirstPage.qml"))
-                }
-            });
-
-            // Recommendations progress & data
-            setHandler("recsProgress", function (progress) {
-                headerRecs = qsTr("Discovering") + " - " + Math.round(progress) + "%";
-                cachingRecs = true;
-            });
-            setHandler("recsData", function (recs) {
-                recsData = recs;
-                cachingRecs = false;
-            });
-
-            // Matches progress & data
-            setHandler("matchesProgress", function (progress) {
-                headerMatches = qsTr("Refreshing") + " - " + Math.round(progress) + "%";
-                cachingMatches = true;
-            });
-            setHandler("matchesData", function (data) {
-                matchesData = data;
-                cachingMatches = false;
-            });
-            setHandler("lastActive", function (date) {
-                parameters.last_activity_date = date; // Update last activity date
-                incrementalUpdateTimer.start() // Date is updated, start timer
-                console.info("[INFO] Updated LAST ACTIVE: " + parameters.last_activity_date);
-            });
-            setHandler("likedMessages", function (data) {
-                likedMessagesData = data;
-            });
-
-            // Profile progress & data
-            setHandler("profileProgress", function (progress) {
-                headerProfile = qsTr("Refreshing") + " - " + Math.round(progress) + "%";
-                cachingProfile = true;
-            });
-            setHandler("profileData", function (profile) {
-                profileData = profile;
-                app.userId = profile._id;
-                cachingProfile = false;
-            });
-
-            // Social progress & data
-            /*setHandler("socialProgress", function (progress) {
-                headerSocial = qsTr("Refreshing") + " - " + Math.round(progress) + "%";
-                cachingSocial = true;
-            }); // Sailfinder V3.X
-            setHandler("socialData", function (social) { socialData = social; cachingSocial = true });*/
+            },
+            function(trace) {
+                console.error("Network state couldn't be retrieved: " + trace)
+            })
         }
-        onError: console.error("[ERROR] %1".arg(traceback));
-        onReceived: console.info("[INFO] Message: " + JSON.stringify(data));
+
+        // Signals
+        function propertyChanged(name, value) {
+            if(name == "State") {
+                if(value == "online") {
+                    networkStatus = true
+                }
+                else {
+                    networkStatus = false
+                }
+            }
+        }
     }
 }
 
