@@ -124,7 +124,8 @@ SilicaFlickable {
                                gender: model.gender,
                                avatar: model.avatar,
                                matchId: model.matchId,
-                               userId: matches._userId
+                               userId: matches._userId,
+                               distance: -1 // Needs parsing TO DO
                            }
                            )
             menu: ContextMenu {

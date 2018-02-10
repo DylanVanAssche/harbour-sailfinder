@@ -1,7 +1,7 @@
 Name: harbour-sailfinder
 Summary: Sailfinder
-Version: 4.0
-Release: 3
+Version: 4.1
+Release: 1
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
 Group: Qt/Qt
@@ -34,7 +34,7 @@ PkgConfigBR:
 # Runtime dependencies which are not automatically detected
 Requires:
   - sailfishsilica-qt5 >= 0.10.9 
-  - nemo-qml-plugin-thumbnailer-qt5
+  - nemo-qml-plugin-notifications-qt5
   - nemo-qml-plugin-configuration-qt5
 
 # All installed files

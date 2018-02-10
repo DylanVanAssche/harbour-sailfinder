@@ -29,6 +29,7 @@ Page {
     property string avatar
     property string matchId
     property string userId
+    property int distance
 
     Component.onCompleted: api.getMessages(matchId)
 
@@ -47,7 +48,7 @@ Page {
             if(count > 0) { // Messages from other people needs updating, not our own
                 api.getMessages(matchId)
             }
-
+            noMessagesPlaceholder.enabled = messagesListView.count == 0
             messagesListView.positionViewAtEnd()
             busyStatus.running = false
         }
@@ -59,6 +60,7 @@ Page {
         birthDate: page.birthDate
         gender: page.gender
         avatar: page.avatar
+        distance: page.distance
     }
 
     SilicaListView {
