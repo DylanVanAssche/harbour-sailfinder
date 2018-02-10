@@ -61,7 +61,9 @@ ListItem {
         font.pixelSize: Theme.fontSizeExtraSmall
         font.italic: true
         truncationMode: TruncationMode.Fade
-        text: model.messagesPreview
+        // Strip all line breaks from strings in Javascript using RegExp
+        // https://stackoverflow.com/questions/10805125/how-to-remove-all-line-breaks-from-a-string
+        text: model.messagesPreview.replace(/(\r\n|\n|\r)/gm,"");
     }
 
     Rectangle {
