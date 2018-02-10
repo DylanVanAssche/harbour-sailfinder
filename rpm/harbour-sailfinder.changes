@@ -1,3 +1,6 @@
+* Mon Feb 9 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-3
+- [HOTFIX] /updates endpoint restricted payload fixed. Matches and updates should be working again!
+
 * Mon Feb 1 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-2
 - [MINOR BUGFIX] Liking people resulted in double notifications
 - [MINOR BUGIFX] Error text is not shown anymore when image is loaded after retry

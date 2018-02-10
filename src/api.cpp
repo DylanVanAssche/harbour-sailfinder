@@ -316,7 +316,7 @@ void API::getUpdates(QDateTime lastActivityDate)
 
         // Build POST payload
         QVariantMap data;
-        data["last_activity_date"] = lastActivityDate.toString(Qt::ISODate);
+        data["last_activity_date"] = lastActivityDate.toString(Qt::ISODate) + "Z"; // Qt::ISODate doesn't include the required 'Z'
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
