@@ -63,7 +63,7 @@ ListItem {
         truncationMode: TruncationMode.Fade
         // Strip all line breaks from strings in Javascript using RegExp
         // https://stackoverflow.com/questions/10805125/how-to-remove-all-line-breaks-from-a-string
-        text: model.messagesPreview.replace(/(\r\n|\n|\r)/gm,"");
+        text: model.messagesPreview.replace(/(\r\n|\n|\r)/gm," ");
     }
 
     Rectangle {

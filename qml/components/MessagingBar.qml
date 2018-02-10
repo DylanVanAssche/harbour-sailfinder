@@ -69,7 +69,7 @@ Item {
                                                       : Theme.primaryColor)
         icon.scale: Theme.iconSizeSmall/icon.width
         onPressed: {
-            buttonBuzz.play()
+            //buttonBuzz.play()
             send(input.text)
             input.text = ""
         }
