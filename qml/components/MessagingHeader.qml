@@ -10,6 +10,7 @@ Item {
     property int gender
     property string avatar
     property date lastSeen
+    property int distance
 
     anchors { top: parent.top; left: parent.left; right: parent.right }
     height: Math.max(Theme.itemSizeMedium + Theme.paddingLarge, column.height + Theme.paddingLarge)
@@ -26,7 +27,7 @@ Item {
             anchors.right: parent.right
             font.pixelSize: Theme.fontSizeLarge
             color: Theme.highlightColor
-            text: Util.createHeaderMessages(header.name, header.birthDate, header.gender)
+            text: Util.createHeaderMessages(header.name, header.birthDate, header.gender, header.distance)
         }
 
         Label {

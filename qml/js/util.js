@@ -2,18 +2,23 @@
 // Female = 1
 // Everyone = -1
 
-function createHeaderRecs(name, birthDate, gender) {
+function createHeaderRecs(name, birthDate, gender, distance) {
     var today = new Date();
     var age = today.getFullYear() - birthDate.getFullYear();
     var genderSymbol = "♀";
+    var distanceText = "";
     if(gender === 0) {
         genderSymbol = "♂";
     }
-    return name + " (" + age + ") " + genderSymbol;
+    if(distance > -1) { // Only show when distance is available
+        distanceText = " - " + distance + " km"
+    }
+
+    return name + " (" + age + ") " + genderSymbol + distanceText;
 }
 
 function createHeaderProfile(name, birthDate, gender) {
-    return createHeaderRecs(name, birthDate, gender);
+    return createHeaderRecs(name, birthDate, gender, -1);
 }
 
 function createHeaderMatches(count) {
@@ -22,8 +27,8 @@ function createHeaderMatches(count) {
     return qsTrId("sailfinder-matches") + " (" + count + ")";
 }
 
-function createHeaderMessages(name, birthDate, gender) {
-    return createHeaderRecs(name, birthDate, gender);
+function createHeaderMessages(name, birthDate, gender, distance) {
+    return createHeaderRecs(name, birthDate, gender, distance);
 }
 
 function formatDate(date) {

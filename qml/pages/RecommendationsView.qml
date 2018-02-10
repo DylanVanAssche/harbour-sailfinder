@@ -46,7 +46,7 @@ SilicaFlickable {
             column.visible = api.canLike
             exhaustedText.enabled = !api.canLike
             if(api.canLike) {
-                headerChanged(Util.createHeaderRecs(api.recommendation.name, api.recommendation.birthDate, api.recommendation.gender))
+                headerChanged(Util.createHeaderRecs(api.recommendation.name, api.recommendation.birthDate, api.recommendation.gender, api.recommendation.distance))
             }
             else {
                 //% "Recommendations"
