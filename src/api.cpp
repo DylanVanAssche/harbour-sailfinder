@@ -36,6 +36,11 @@ API::API(QObject *parent) : QObject(parent)
     connect(QNAM, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
     connect(QNAM, SIGNAL(finished(QNetworkReply*)), this, SLOT(finished(QNetworkReply*)));
 
+    // Initiate a new QTimer for QNAM timeout check
+    QNAMTimeoutTimer = new QTimer(this);
+    QNAMTimeoutTimer->setInterval(TIMEOUT_TIME);
+    connect(QNAMTimeoutTimer, SIGNAL(timeout()), this, SLOT(timeoutOccured()));
+
     // Start Location services
     positionUpdateCounter = 0;
     positionSource = QGeoPositionInfoSource::createDefaultSource(this);
@@ -125,7 +130,9 @@ void API::login(QString fbToken)
     QJsonDocument payload = QJsonDocument::fromVariant(data);
 
     // Prepare & do request
-    QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
 }
 
 /**
@@ -149,7 +156,9 @@ void API::getMeta(int latitude, int longitude)
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
-        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else {
         qWarning() << "Not authenticated, can't retrieve meta data";
@@ -173,7 +182,9 @@ void API::getProfile()
         parameters.addQueryItem("include","user,plus_control,boost,travel,tutorials,notifications,purchase,products,likes,super_likes,facebook,instagram,spotify,select");
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else if(profileFetchLock) {
         qWarning() << "Profile fetching is locked";
@@ -194,7 +205,9 @@ void API::getRecommendations()
         QUrlQuery parameters;
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else if(recommendationsFetchLock) {
         qWarning() << "Recommendations fetching is locked";
@@ -226,7 +239,9 @@ void API::getMatchesAll()
         parameters.addQueryItem("count", "60");
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else if(matchFetchLock) {
         qWarning() << "Skipping matches fetching since locked by other request";
@@ -254,7 +269,9 @@ void API::getMatches(bool withMessages)
         }
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else if(matchFetchLock) {
         qWarning() << "Skipping matches fetching since locked by other request";
@@ -277,7 +294,9 @@ void API::getMatches(QString pageToken)
         parameters.addQueryItem("page_token", pageToken);
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else {
         qWarning() << "Not authenticated, can't retrieve matches data";
@@ -297,7 +316,9 @@ void API::getMessages(QString matchId, QString pageToken)
         parameters.addQueryItem("page_token", pageToken);
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else {
         qWarning() << "Not authenticated, can't retrieve messages data";
@@ -320,7 +341,9 @@ void API::getUpdates(QDateTime lastActivityDate)
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
-        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else if(updatesFetchLock) {
         qWarning() << "Updates fetching locked";
@@ -348,7 +371,9 @@ void API::getMessages(QString matchId)
         parameters.addQueryItem("count", "100");
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else if(messagesFetchLock) {
         qWarning() << "Messages fetching is locked";
@@ -377,7 +402,9 @@ void API::sendMessage(QString matchId, QString message, QString userId, QString 
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
-        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else if(messagesSendLock) {
         qWarning() << "Message sending is locked";
@@ -395,7 +422,9 @@ void API::likeUser(QString userId)
         QUrlQuery parameters;
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else {
         qWarning() << "Not authenticated, can't retrieve like data";
@@ -410,7 +439,9 @@ void API::passUser(QString userId)
         QUrlQuery parameters;
 
         // Prepare & do request
-        QNAM->get(this->prepareRequest(url, parameters));
+        QNetworkReply* reply= QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else {
         qWarning() << "Not authenticated, can't retrieve pass data";
@@ -430,7 +461,9 @@ void API::superlikeUser(QString userId)
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
-        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else {
         qWarning() << "Not authenticated, can't retrieve superlike data";
@@ -530,7 +563,9 @@ void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sa
 
         // Prepare & do request if update is required
         if(updateRequired) {
-            QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+            QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+            connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+            connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         }
         else {
             qDebug() << "No profile data has been changed, skipping update...";
@@ -572,7 +607,9 @@ void API::logout()
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
-        QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else {
         qWarning() << "Not authenticated, can't retrieve logout data";
@@ -587,7 +624,9 @@ void API::unmatch(QString matchId)
         QUrlQuery parameters;
 
         // Prepare & do request
-        QNAM->deleteResource(this->prepareRequest(url, parameters));
+        QNetworkReply* reply = QNAM->deleteResource(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
     else {
         qWarning() << "Not authenticated, can't retrieve unmatch data";
@@ -837,6 +876,7 @@ void API::sslErrors(QNetworkReply* reply, QList<QSslError> sslError)
 void API::finished (QNetworkReply *reply)
 {
     qInfo() << "Request finished:" << reply->url().toString();
+    QNAMTimeoutTimer->stop(); // request complete
     if(!this->networkEnabled()) {
         qCritical() << "Network inaccesible, can't retrieve API request!";
         // Network offline, unlock all endpoints
@@ -954,6 +994,27 @@ void API::finished (QNetworkReply *reply)
 
     reply->deleteLater();
     this->setBusy(false);
+}
+
+void API::timeoutOccured()
+{
+    qDebug() << "Timeout detected, resetting network access";
+
+    QNAM->setNetworkAccessible(QNetworkAccessManager::NotAccessible);
+    this->unlockAll();
+    QNAM->setNetworkAccessible(QNetworkAccessManager::Accessible);
+
+    //: Error shown to the user when a network timeout was received
+    //% "Network timeout"
+    emit this->errorOccurred(qtTrId("sailfinder-timeout-error"));
+}
+
+void API::timeoutChecker(qint64 bytesReceived, qint64 bytesTotal)
+{
+    if(bytesReceived > -1 && bytesTotal > -1) {
+        qDebug() << "Progress:" << bytesReceived << " bytes received of " << bytesTotal << "bytes";
+        QNAMTimeoutTimer->start(); // restart timer
+    }
 }
 
 void API::parseLogin(QJsonObject json)

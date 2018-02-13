@@ -20,6 +20,8 @@ import Sailfish.Silica 1.0
 import QtGraphicalEffects 1.0
 
 Image {
+    signal clicked()
+
     id: image
     width: Theme.itemSizeLarge
     height: width
@@ -49,6 +51,8 @@ Image {
         }
     }
 
+    Component.onCompleted: touch.clicked.connect(clicked)
+
     Label {
         id: errorText
         anchors.centerIn: parent
@@ -63,5 +67,17 @@ Image {
         id: loadIndicator
         size: BusyIndicatorSize.Medium
         anchors.centerIn: parent
+    }
+
+    MouseArea {
+        id: touch
+        anchors.fill: parent
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: Theme.highlightColor
+        opacity: 0.33
+        visible: touch.pressed
     }
 }

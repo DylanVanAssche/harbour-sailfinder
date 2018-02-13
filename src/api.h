@@ -34,7 +34,7 @@
 #include <QtCore/QJsonValue>
 #include <QtCore/QVariantMap>
 #include <QtCore/QList>
-#include <QtCore/QScopedPointer>
+#include <QtCore/QTimer>
 #include <QtPositioning/QGeoSatelliteInfoSource>
 #include <QtPositioning/QGeoPositionInfoSource>
 #include <stdlib.h>
@@ -49,6 +49,7 @@
 #include "models/messagelistmodel.h"
 
 #define POSITION_MAX_UPDATE 10
+#define TIMEOUT_TIME 150 // 15 sec
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
 #define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
@@ -175,6 +176,8 @@ public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
     void sslErrors(QNetworkReply* reply, QList<QSslError> sslError);
     void finished(QNetworkReply *reply);
+    void timeoutChecker(qint64 bytesReceived, qint64 bytesTotal);
+    void timeoutOccured();
     void positionUpdated(const QGeoPositionInfo &info);
 
 private:
@@ -211,7 +214,8 @@ private:
     QGeoPositionInfoSource* positionSource = NULL;
     QNetworkAccessManager* QNAM = NULL;
     QNetworkDiskCache* QNAMCache = NULL;
-    QGeoPositionInfoSource *source = NULL;
+    QTimer* QNAMTimeoutTimer = NULL;
+    QGeoPositionInfoSource* source = NULL;
     OS SFOS;
     QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters);
     void getMatches(bool withMessages);

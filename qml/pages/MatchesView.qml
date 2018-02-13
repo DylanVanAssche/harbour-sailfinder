@@ -125,10 +125,18 @@ SilicaFlickable {
                                avatar: model.avatar,
                                matchId: model.matchId,
                                userId: matches._userId,
-                               distance: -1 // Needs parsing TO DO
+                               distance: -1, // distance and match will change when full profile API is added
+                               match: model
                            }
                            )
+            onAvatarClicked: pageStack.push(Qt.resolvedUrl("MatchProfilePage.qml"), {match: model})
             menu: ContextMenu {
+                MenuItem {
+                    //% "Profile"
+                    text: qsTrId("sailfinder-profile")
+                    onClicked: pageStack.push(Qt.resolvedUrl("MatchProfilePage.qml"), {match: model})
+                }
+
                 MenuItem {
                     //% "Unmatch"
                     text: qsTrId("sailfinder-unmatch")

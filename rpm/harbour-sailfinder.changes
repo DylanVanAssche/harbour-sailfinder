@@ -1,9 +1,10 @@
 * Mon Feb 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.1-1
 - [MINOR BUGFIX] Message preview text is now stripped
 - [MINOR BUGFIX] No Messages placeholder isn't visible anymore when sending the first message
-- [MINOR BUGFIX] Timeout timer prevents deadlocks when network connection is poor
-- [NEW] Show distance
-- [NEW] View matches their profile
+- [MINOR BUGFIX] Timeout timer prevents deadlocks when network connection is poor (beta)
+- [MINOR BUGFIX] PhotoGridLayout needs double pressing before activation for the first time
+- [NEW] Show distance for recommendations
+- [NEW] View matches their basic profile
 
 * Mon Feb 9 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-3
 - [HOTFIX] /updates endpoint restricted payload fixed. Matches and updates should be working again!

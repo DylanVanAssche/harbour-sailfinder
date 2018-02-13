@@ -30,6 +30,7 @@ Page {
     property string matchId
     property string userId
     property int distance
+    property var match // Until full profile API is added, fetching profile depends then on the matchId
 
     Component.onCompleted: api.getMessages(matchId)
 
@@ -61,6 +62,7 @@ Page {
         gender: page.gender
         avatar: page.avatar
         distance: page.distance
+        onClicked: pageStack.push(Qt.resolvedUrl("MatchProfilePage.qml"), {match: match})
     }
 
     SilicaListView {

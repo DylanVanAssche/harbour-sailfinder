@@ -275,5 +275,10 @@
         <source>You have received %L0 new messages!</source>
         <translation>Je hebt %L0 nieuwe berichten ontvangen!</translation>
     </message>
+    <message id="sailfinder-timeout-error">
+        <source>Network timeout</source>
+        <extracomment>Error shown to the user when a network timeout was received</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

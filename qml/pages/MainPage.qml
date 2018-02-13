@@ -24,6 +24,7 @@ import "../components"
 import "../js/util.js" as Util
 
 Page {
+
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: Screen.height

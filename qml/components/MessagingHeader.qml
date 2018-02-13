@@ -3,8 +3,8 @@ import Sailfish.Silica 1.0
 import "../components"
 import "../js/util.js" as Util
 
-Item {
-    id: header
+Item {  
+    signal clicked()
     property string name
     property date birthDate
     property int gender
@@ -12,9 +12,11 @@ Item {
     property date lastSeen
     property int distance
 
+    id: header
     anchors { top: parent.top; left: parent.left; right: parent.right }
     height: Math.max(Theme.itemSizeMedium + Theme.paddingLarge, column.height + Theme.paddingLarge)
-    
+    Component.onCompleted: avatar.clicked.connect(clicked)
+
     Column {
         id: column
         anchors {
