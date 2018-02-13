@@ -18,7 +18,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import Sailfish.Silica 1.0
-//import Nemo.Thumbnailer 1.0
 
 Item {
     property var photoListModel
@@ -86,12 +85,20 @@ Item {
                     }
 
                     MouseArea {
+                        id: touch
                         anchors.fill: parent
-                        enabled: image.status == Image.Ready
+                        enabled: image.status == Image.Ready && repeater.count > 1
                         onClicked: {
                             fullScreen.source = image.source
                             fullScreen.visible = true
                         }
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Theme.highlightColor
+                        opacity: 0.33
+                        visible: touch.pressed
                     }
                 }
 
@@ -121,11 +128,21 @@ Item {
         width: parent.width
         height: parent.width
         anchors.centerIn: parent
+        visible: false
         z: 1
 
         MouseArea {
+            id: touchFull
             anchors.fill: parent
+            enabled: repeater.count > 1
             onClicked: fullScreen.visible = false
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: Theme.highlightColor
+            opacity: 0.33
+            visible: touchFull.pressed
         }
     }
 }

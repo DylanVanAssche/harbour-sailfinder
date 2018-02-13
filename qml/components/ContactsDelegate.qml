@@ -20,10 +20,12 @@ import Sailfish.Silica 1.0
 
 ListItem {
     signal removed()
+    signal avatarClicked()
 
     contentHeight: Theme.itemSizeExtraLarge
     highlighted: model.mentioned
     ListView.onRemove: animateRemoval(this)
+    Component.onCompleted: avatar.clicked.connect(avatarClicked)
 
     function remove() {
         //% "Unmatching"

@@ -4,7 +4,7 @@
 
 function createHeaderRecs(name, birthDate, gender, distance) {
     var today = new Date();
-    var age = today.getFullYear() - birthDate.getFullYear();
+    var age = today.getFullYear() - birthDate.getFullYear() - 1; // Due the fuzzy birthDate feature the age is off by 1
     var genderSymbol = "♀";
     var distanceText = "";
     if(gender === 0) {
@@ -29,6 +29,10 @@ function createHeaderMatches(count) {
 
 function createHeaderMessages(name, birthDate, gender, distance) {
     return createHeaderRecs(name, birthDate, gender, distance);
+}
+
+function createHeaderMatchProfile(name, birthDate, gender) {
+    return createHeaderRecs(name, birthDate, gender, -1);
 }
 
 function formatDate(date) {
