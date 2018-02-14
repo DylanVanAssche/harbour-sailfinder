@@ -1,4 +1,4 @@
-* Mon Feb 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.1-2
+* Mon Feb 14 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.1-2
 - [MINOR BUGFIX] Location update is now correct
 - [STORE] Fixed Release build
 
