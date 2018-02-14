@@ -1,3 +1,7 @@
+* Mon Feb 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.1-2
+- [MINOR BUGFIX] Location update is now correct
+- [STORE] Fixed Release build
+
 * Mon Feb 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.1-1
 - [MINOR BUGFIX] Message preview text is now stripped
 - [MINOR BUGFIX] No Messages placeholder isn't visible anymore when sending the first message

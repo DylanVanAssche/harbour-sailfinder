@@ -33,13 +33,13 @@
 
 int main(int argc, char *argv[])
 {
-    // Set up qml engine.
+        // Set up qml engine.
         QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
         QScopedPointer<QQuickView> view(SailfishApp::createView());
         qApp->setApplicationVersion(QString(APP_VERSION));
 
         // Set application version and enable logging
-        enableLogger(false);
+        enableLogger(true);
 
         // Enable default translations
         QTranslator *translator = new QTranslator(qApp);

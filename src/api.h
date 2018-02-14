@@ -49,7 +49,7 @@
 #include "models/messagelistmodel.h"
 
 #define POSITION_MAX_UPDATE 10
-#define TIMEOUT_TIME 150 // 15 sec
+#define TIMEOUT_TIME 15000 // 15 sec
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
 #define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
@@ -88,7 +88,7 @@ public:
     explicit API(QObject *parent = 0);
     ~API();
     Q_INVOKABLE void login(QString fbToken);
-    Q_INVOKABLE void getMeta(int latitude, int longitude);
+    Q_INVOKABLE void getMeta(double latitude, double longitude);
     Q_INVOKABLE void getProfile();
     Q_INVOKABLE void getRecommendations();
     Q_INVOKABLE void getMatchesWithMessages();

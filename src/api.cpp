@@ -141,7 +141,7 @@ void API::login(QString fbToken)
  * @details Retrieve the meta data of the account, this can be used for several purposes. Also this endpoint is perfectly to test the validity of the API token.
  * @param latitude, longitude
  */
-void API::getMeta(int latitude, int longitude)
+void API::getMeta(double latitude, double longitude)
 {
     if(this->authenticated()) {
         // Build URL
@@ -150,9 +150,9 @@ void API::getMeta(int latitude, int longitude)
 
         // Build POST payload
         QVariantMap data;
+        data["force_fetch_resources"] = true;
         data["lat"] = latitude;
         data["lon"] = longitude;
-        data["force_fetch_resources"] = true;
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
