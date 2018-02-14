@@ -1,4 +1,4 @@
-# Sailbook's Code of Conduct
+# Sailfinder's Code of Conduct
 
 ## Our Pledge
 
