@@ -51,6 +51,7 @@
 #define POSITION_MAX_UPDATE 10
 #define TIMEOUT_TIME 15000 // 15 sec
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
+#define TINDER_APP_VERSION "1002219"
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
 #define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
 #define META_ENDPOINT "https://api.gotinder.com/v2/meta"

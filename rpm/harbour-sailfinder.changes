@@ -1,3 +1,10 @@
+* Wed May 2 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.2-2
+- [UPGRADE] Upgrade to the latest Tinder app version ID
+
+* Tue Apr 24 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.2-1
+- [IMPROVEMENT] Improvement on the login webview
+- [STORE] Correctly incremented version number
+
 * Sun Apr 22 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.1-3
 - [HOTFIX] Facebook login works again
 - [LIBS] Upgraded Nemo libs to their new import statement

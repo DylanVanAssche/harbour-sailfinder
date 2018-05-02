@@ -97,14 +97,14 @@ QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
     request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
     request.setRawHeader("accept", "*/*");
     request.setRawHeader("accept-language", "en-GB,en-US;q=0.9,en;q=0.8");
-    request.setRawHeader("app-version", "1000000");
+    request.setRawHeader("app-version", TINDER_APP_VERSION);
     request.setRawHeader("connection", "keep-alive");
     request.setRawHeader("dnt", "1");
     request.setRawHeader("host", "api.gotinder.com");
     request.setRawHeader("origin", "https://tinder.com");
     request.setRawHeader("platform", "web");
     request.setRawHeader("referer", "https://tinder.com");
-    if(url.toString() != AUTH_FACEBOOK_ENDPOINT) {
+    if(url.toString() != AUTH_FACEBOOK_ENDPOINT) { // not needed when we're authenticating
         request.setRawHeader("x-auth-token", this->token().toLocal8Bit());
     }
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
