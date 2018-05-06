@@ -56,18 +56,6 @@ Page {
     }
 
     SilicaWebView {
-        property real devicePixelRatio: {
-            if (Screen.width <= 540) {
-                return 1.5;
-            }
-            else if (Screen.width > 540 && Screen.width <= 768) {
-                return 2.0;
-            }
-            else {
-                return 3.0;
-            }
-        }
-
         id: webview
 
         anchors {
@@ -82,9 +70,8 @@ Page {
         experimental.preferences.developerExtrasEnabled: true
         experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
         experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
-        experimental.customLayoutWidth: page.width / devicePixelRatio
-        experimental.overview: true
         experimental.userAgent: app.fbUserAgent
+        experimental.preferredMinimumContentsWidth: 980 // Helps rendering desktop websites
         experimental.onMessageReceived: {
             var msg = JSON.parse(message.data);
             switch(msg.type) {

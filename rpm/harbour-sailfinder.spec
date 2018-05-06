@@ -13,11 +13,11 @@ Name:       harbour-sailfinder
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailfinder
-Version:    4.2
+Version:    4.3
 Release:    1
 Group:      Qt/Qt
 License:    GPLv3
-URL:        http://example.org/
+URL:        https://github.com/DylanVanAssche/harbour-sailfinder
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-sailfinder.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9

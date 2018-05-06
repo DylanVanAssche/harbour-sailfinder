@@ -1,4 +1,5 @@
-* Wed May 2 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.2-2
+* Sun May 6 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.3-1
+- [IMPROVEMENT] Improvement on the login webview for Jolla 1 and Jolla C devices
 - [UPGRADE] Upgrade to the latest Tinder app version ID
 
 * Tue Apr 24 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.2-1
