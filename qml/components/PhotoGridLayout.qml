@@ -21,6 +21,8 @@ import Sailfish.Silica 1.0
 
 Item {
     property var photoListModel
+    property bool editable
+    signal removed(string photoId)
 
     width: parent.width
     height: parent.width
@@ -91,6 +93,15 @@ Item {
                         onClicked: {
                             fullScreen.source = image.source
                             fullScreen.visible = true
+                            deleteOverlay.visible = false
+                        }
+                        onPressAndHold: {
+                            if(editable) {
+                                fullScreen.source = image.source
+                                fullScreen.visible = true
+                                deleteOverlay.photoId = model.id
+                                deleteOverlay.visible = true
+                            }
                         }
                     }
 
@@ -143,6 +154,26 @@ Item {
             color: Theme.highlightColor
             opacity: 0.33
             visible: touchFull.pressed
+        }
+
+        Rectangle {
+            property string photoId
+
+            id: deleteOverlay
+            anchors.fill: parent
+            visible: false
+            color: "black"
+            opacity: 0.77
+
+            IconButton {
+                anchors.centerIn: parent
+                icon.source: "qrc:///images/remove.png"
+                onClicked: {
+                    deleteOverlay.visible = false
+                    fullScreen.visible = false
+                    removed(deleteOverlay.photoId)
+                }
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ SilicaFlickable {
             if(swipeView.currentIndex != 2 && _hadFocus) {
                 console.debug("Flicking to different view, updating profile preferences...")
                 _hadFocus = false;
-                api.updateProfile(bio.text, ageMin.value, ageMax.value, distanceMax.value, interestedIn.currentIndex, discoverable.checked)
+                api.updateProfile(bio.text, ageMin.value, ageMax.value, distanceMax.value, interestedIn.currentIndex, discoverable.checked, optimizer.checked)
             }
             else {
                 _hadFocus = true;
@@ -116,6 +116,11 @@ SilicaFlickable {
 
         PhotoGridLayout {
             id: photoList
+            editable: true
+            onRemoved: {
+                console.debug("Removing photo: " + photoId)
+                api.removePhoto(photoId)
+            }
         }
 
         TextArea {
@@ -142,6 +147,16 @@ SilicaFlickable {
             enabled: !busy
             //% "Disable discovery to hide your profile for other people. This has no effect on your current matches."
             description: qsTrId("sailfinder-discoverable-text")
+        }
+
+        IconTextSwitch {
+            id: optimizer
+            //% "Optimizer"
+            text: qsTrId("sailfinder-optimizer")
+            busy: api.busy
+            enabled: !busy
+            //% "The photo optimizer will automatically show your best photo's first on your profile."
+            description: qsTrId("sailfinder-optimizer-text")
         }
 
         ComboBox {

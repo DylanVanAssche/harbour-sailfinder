@@ -39,5 +39,6 @@
         <file>images/like.png</file>
         <file>images/sources.txt</file>
         <file>images/superlike.png</file>
+        <file>images/remove.png</file>
     </qresource>
 </RCC>

@@ -5,7 +5,7 @@ User::User(QObject *parent) : Person(parent)
 
 }
 
-User::User(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gender, QString bio, QList<School *> schools, QList<Job *> jobs, QList<Photo *> photos, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, QGeoCoordinate position, bool discoverable)
+User::User(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gender, QString bio, QList<School *> schools, QList<Job *> jobs, QList<Photo *> photos, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, QGeoCoordinate position, bool discoverable, bool optimizer)
 {
     this->setId(id);
     this->setName(name);
@@ -21,6 +21,7 @@ User::User(QString id, QString name, QDateTime birthDate, Sailfinder::Gender gen
     this->setInterestedIn(interestedIn);
     this->setPosition(position);
     this->setDiscoverable(discoverable);
+    this->setOptimizer(optimizer);
 }
 
 int User::ageMin() const
@@ -109,4 +110,15 @@ void User::setJobs(JobListModel *jobs)
 {
     m_jobs = jobs;
     emit this->jobsChanged();
+}
+
+bool User::optimizer() const
+{
+    return m_optimizer;
+}
+
+void User::setOptimizer(bool optimizer)
+{
+    m_optimizer = optimizer;
+    emit this->optimizerChanged();
 }
