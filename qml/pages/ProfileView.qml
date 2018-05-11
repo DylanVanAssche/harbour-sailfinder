@@ -32,6 +32,8 @@ SilicaFlickable {
         api.getUpdates(temp.lastActivityDate)
     }
 
+    RemorsePopup { id: remorse }
+
     Timer {
         id: updatesTimer
         interval: 30000
@@ -79,6 +81,7 @@ SilicaFlickable {
         target: api
         onProfileChanged: {
             discoverable.checked = api.profile.discoverable
+            optimizer.checked = api.profile.optimizer
             interestedIn.currentIndex = api.profile.interestedIn
             distanceMax.value = api.profile.distanceMax
             ageMax.value = api.profile.ageMax
@@ -117,10 +120,10 @@ SilicaFlickable {
         PhotoGridLayout {
             id: photoList
             editable: true
-            onRemoved: {
-                console.debug("Removing photo: " + photoId)
+            //% "Removing photo"
+            onRemoved: remorse.execute(qsTrId("sailfinder-removing-photo"), function() {
                 api.removePhoto(photoId)
-            }
+            });
         }
 
         TextArea {
@@ -235,10 +238,10 @@ SilicaFlickable {
             //% "Logout"
             text: qsTrId("sailfinder-logout")
             opacity: enabled? 1.0: app.fadeOutValue
-            onClicked: {
-                console.debug("Logging out")
+            //% "Logging out"
+            onClicked: remorse.execute(qsTrId("sailfinder-logging-out"), function() {
                 api.logout()
-            }
+            });
         }
 
         Spacer {}

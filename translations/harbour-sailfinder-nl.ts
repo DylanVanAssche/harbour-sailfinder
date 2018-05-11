@@ -288,5 +288,13 @@
         <source>The photo optimizer will automatically show your best photo&apos;s first on your profile.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-logging-out">
+        <source>Logging out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-removing-photo">
+        <source>Removing photo</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

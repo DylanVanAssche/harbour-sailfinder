@@ -22,6 +22,7 @@ import Sailfish.Silica 1.0
 Item {
     property var photoListModel
     property bool editable
+    property bool _showRemoveButton
     signal removed(string photoId)
 
     width: parent.width
@@ -75,6 +76,7 @@ Item {
                             console.warn("Can't load image")
                             errorText.visible = true
                             loadIndicator.running = false
+                            _showRemoveButton = false
                         }
                         else if(status == Image.Ready) {
                             errorText.visible = false
@@ -83,6 +85,7 @@ Item {
                         else {
                             errorText.visible = false
                             loadIndicator.running = Qt.application.active
+                            _showRemoveButton = false
                         }
                     }
 
@@ -93,14 +96,14 @@ Item {
                         onClicked: {
                             fullScreen.source = image.source
                             fullScreen.visible = true
-                            deleteOverlay.visible = false
+                            _showRemoveButton = false
                         }
                         onPressAndHold: {
                             if(editable) {
                                 fullScreen.source = image.source
                                 fullScreen.visible = true
                                 deleteOverlay.photoId = model.id
-                                deleteOverlay.visible = true
+                                _showRemoveButton = true
                             }
                         }
                     }
@@ -161,15 +164,15 @@ Item {
 
             id: deleteOverlay
             anchors.fill: parent
-            visible: false
-            color: "black"
+            visible: editable? _showRemoveButton: false
+            color: Theme.highlightDimmerColor
             opacity: 0.77
 
             IconButton {
                 anchors.centerIn: parent
                 icon.source: "qrc:///images/remove.png"
                 onClicked: {
-                    deleteOverlay.visible = false
+                    _showRemoveButton = false
                     fullScreen.visible = false
                     removed(deleteOverlay.photoId)
                 }

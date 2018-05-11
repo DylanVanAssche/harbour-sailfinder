@@ -17,7 +17,7 @@
 
 import QtQuick 2.6
 import Sailfish.Silica 1.0
-//import QtFeedback 5.0
+import QtFeedback 5.0
 
 // Thanks to:
 // https://github.com/QtGram/harbour-sailorgram/blob/0.9/harbour-sailorgram/qml/components/message/input/MessageTextInput.qml
@@ -33,10 +33,10 @@ Item {
     height: timestamp.y + timestamp.height + Theme.paddingSmall
 
     // Harbour incompatible, needs a workaround for their to restrictive rules
-    /*ThemeEffect {
+    ThemeEffect {
         id: buttonBuzz
         effect: ThemeEffect.Press
-    }*/
+    }
 
     Timer {
         interval: 500
@@ -69,7 +69,7 @@ Item {
                                                       : Theme.primaryColor)
         icon.scale: Theme.iconSizeSmall/icon.width
         onPressed: {
-            //buttonBuzz.play()
+            buttonBuzz.play()
             send(input.text)
             input.text = ""
         }
