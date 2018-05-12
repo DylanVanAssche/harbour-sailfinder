@@ -296,5 +296,14 @@
         <source>Removing photo</source>
         <translation>Removing photo</translation>
     </message>
+    <message id="sailfinder-upload-photo">
+        <source>Upload photo</source>
+        <translation>Upload photo</translation>
+    </message>
+    <message id="sailfinder-upload-failed">
+        <source></source>
+        <oldsource>Photo upload failed!</oldsource>
+        <translation>Photo upload failed!</translation>
+    </message>
 </context>
 </TS>

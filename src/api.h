@@ -24,6 +24,8 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkConfigurationManager>
 #include <QtNetwork/QNetworkDiskCache>
+#include <QtNetwork/QHttpPart>
+#include <QtNetwork/QHttpMultiPart>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
 #include <QtCore/QObject>
@@ -36,6 +38,7 @@
 #include <QtCore/QList>
 #include <QtCore/QTimer>
 #include <QtCore/QBuffer>
+#include <QtCore/QFile>
 #include <QtPositioning/QGeoSatelliteInfoSource>
 #include <QtPositioning/QGeoPositionInfoSource>
 #include <stdlib.h>
@@ -66,6 +69,7 @@
 #define MESSAGES_ENDPOINT "/messages"
 #define MATCH_OPERATIONS_ENDPOINT "https://api.gotinder.com/user/matches"
 #define MEDIA_ENDPOINT "https://api.gotinder.com/media"
+#define IMAGE_ENDPOINT "https://api.gotinder.com/image"
 
 class API : public QObject
 {
@@ -214,6 +218,7 @@ private:
     bool messagesFetchLock = false;
     bool messagesSendLock = false;
     bool removePhotoLock = false;
+    bool uploadPhotoLock = false;
     QList<Match *> matchesTempList = QList<Match*> ();
     QList<Message *> messagesTempList = QList<Message*> ();
     QString messagesMatchId = QString();
@@ -241,6 +246,7 @@ private:
     void parseMessages(QJsonObject json);
     void parseSendMessage(QJsonObject json);
     void parseRemovePhoto(QJsonObject json);
+    void parseUploadPhoto(QJsonObject json);
     void unlockAll();
 };
 

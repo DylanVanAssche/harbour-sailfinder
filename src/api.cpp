@@ -647,7 +647,38 @@ void API::unmatch(QString matchId)
  */
 void API::uploadPhoto(QString path)
 {
+    if(this->authenticated() && !uploadPhotoLock) {
+        // Lock photo upload
+        uploadPhotoLock = true;
 
+        // Build URL
+        QUrl url(QString(IMAGE_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("client_photo_id", QString("{photoId}?client_photo_id=ProfilePhoto%1").arg(QDateTime::currentMSecsSinceEpoch()));
+        qDebug() << url;
+
+        // Build multipart
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        QHttpPart imagePart; // Create imagePart and set headers
+        imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"blob\""));
+        imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
+        QFile *file = new QFile(path); // Read image
+        file->open(QIODevice::ReadOnly);
+        imagePart.setBodyDevice(file); // Attach file to imagePart
+        file->setParent(multiPart); // Delete file when multiPart is deleted
+        multiPart->append(imagePart);
+
+        // Prepare & do request
+        QNetworkRequest request = this->prepareRequest(url, parameters);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data; boundary=" + multiPart->boundary()); // special content-type header
+        qDebug() << request.header(QNetworkRequest::ContentTypeHeader);
+        QNetworkReply* reply = QNAM->post(request, multiPart);
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        multiPart->setParent(reply); // Delete multiPart when reply is deleted
+
+        // TO DO: client_photo_id=%7BphotoId%7D?client_photo_id=ProfilePhoto1526045306000 in URL
+    }
 }
 
 /**
@@ -1043,6 +1074,10 @@ void API::finished (QNetworkReply *reply)
             else if(reply->url().toString().contains(MEDIA_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder remove picture data received";
                 this->parseRemovePhoto(jsonObject);
+            }
+            else if(reply->url().toString().contains(IMAGE_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder upload picture data received";
+                this->parseUploadPhoto(jsonObject);
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
@@ -1590,6 +1625,12 @@ void API::parseRemovePhoto(QJsonObject json)
 {
     this->getProfile(); // Requires a refresh after deletion of a photo
     removePhotoLock = false;
+}
+
+void API::parseUploadPhoto(QJsonObject json)
+{
+    this->getProfile(); // Requires a refresh after uploading of a photo
+    uploadPhotoLock = false;
 }
 
 void API::unlockAll()

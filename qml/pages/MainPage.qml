@@ -17,12 +17,31 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Sailfish.Pickers 1.0
 import Nemo.DBus 2.0
 import Harbour.Sailfinder.SFOS 1.0
 import "../components"
 import "../js/util.js" as Util
 
 Page {
+
+    Component {
+        id: imagePickerPage
+        ImagePickerPage {
+            onSelectedContentPropertiesChanged:
+            {
+                // Only JPEG or WEBP images are supported
+                if(selectedContentProperties.mimeType === "image/jpeg" || selectedContentProperties.mimeType === "image/jpg" || selectedContentProperties.mimeType === "image/webp") {
+                    api.uploadPhoto(selectedContentProperties.filePath)
+                }
+                else {
+                    //% Photo upload failed!
+                    console.debug("Photo MIME type isn't JPEG or WEBP!")
+                    sfos.createToaster(qsTrId("sailfinder-upload-failed"), "icon-s-high-importance", "sailfinder-upload")
+                }
+            }
+        }
+    }
 
     SilicaFlickable {
         anchors.fill: parent
@@ -35,6 +54,13 @@ Page {
                 //% "About"
                 text: qsTrId("sailfinder-about")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+            }
+
+            MenuItem {
+                //% "Upload photo"
+                text: qsTrId("sailfinder-upload-photo")
+                visible: swipeView.currentIndex == 2 // only in profile view
+                onClicked: pageStack.push(imagePickerPage)
             }
         }
 
