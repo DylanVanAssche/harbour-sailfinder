@@ -493,7 +493,7 @@ void API::nextRecommendation()
     }
 }
 
-void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable)
+void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable, bool optimizer)
 {
     if(this->authenticated()) {
         // Build URL
@@ -555,6 +555,12 @@ void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sa
         if(this->profile()->discoverable() != discoverable) {
             qDebug() << "'Discoverable' different";
             dataUser["discoverable"] = discoverable;
+            updateRequired = true;
+        }
+
+        if(this->profile()->optimizer() != optimizer) {
+            qDebug() << "Optimizer' different";
+            dataUser["photo_optimizer_enabled"] = optimizer;
             updateRequired = true;
         }
 
@@ -630,6 +636,91 @@ void API::unmatch(QString matchId)
     }
     else {
         qWarning() << "Not authenticated, can't retrieve unmatch data";
+    }
+}
+
+/**
+ * @class API
+ * @brief Upload photo
+ * @details Upload a photo to the user profile
+ * @param path
+ */
+void API::uploadPhoto(QString path)
+{
+    if(this->authenticated() && !uploadPhotoLock) {
+        // Lock photo upload
+        uploadPhotoLock = true;
+
+        // Build URL
+        QUrl url(QString(IMAGE_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("client_photo_id", QString("{photoId}?client_photo_id=ProfilePhoto%1").arg(QDateTime::currentMSecsSinceEpoch()));
+        qDebug() << url;
+
+        // Build multipart
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        QHttpPart imagePart; // Create imagePart and set headers
+        imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"blob\""));
+        imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
+        QFile *file = new QFile(path); // Read image
+        file->open(QIODevice::ReadOnly);
+        imagePart.setBodyDevice(file); // Attach file to imagePart
+        file->setParent(multiPart); // Delete file when multiPart is deleted
+        multiPart->append(imagePart);
+
+        // Prepare & do request
+        QNetworkRequest request = this->prepareRequest(url, parameters);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data; boundary=" + multiPart->boundary()); // special content-type header
+        qDebug() << request.header(QNetworkRequest::ContentTypeHeader);
+        QNetworkReply* reply = QNAM->post(request, multiPart);
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        multiPart->setParent(reply); // Delete multiPart when reply is deleted
+
+        // TO DO: client_photo_id=%7BphotoId%7D?client_photo_id=ProfilePhoto1526045306000 in URL
+    }
+}
+
+/**
+ * @class API
+ * @brief Upload photo
+ * @details Upload a photo to the user profile
+ * @warning: Tinder uses a body when performing a HTTP DELETE, this isn't supported by QNetworkAccessManager!
+ * @param path
+ */
+void API::removePhoto(QString photoId)
+{
+    if(this->authenticated() && !removePhotoLock) {
+        // Lock photo remover
+        removePhotoLock = true;
+
+        // Build URL
+        QUrl url(QString(MEDIA_ENDPOINT));
+        QUrlQuery parameters;
+
+        // Build POST payload
+        // https://stackoverflow.com/questions/34065735/qnetworkaccessmanager-how-to-send-patch-request
+        QVariantMap data;
+        QList<QVariant> assets;
+        assets.append(photoId);
+        data["assets"] = assets;
+        qDebug() << data;
+
+        QJsonDocument payload = QJsonDocument::fromVariant(data);
+        qDebug() << payload;
+        QBuffer *payloadBuffer = new QBuffer();
+        payloadBuffer->open(QBuffer::ReadWrite);
+        payloadBuffer->write(payload.toJson());
+        payloadBuffer->seek(0);
+
+        // Prepare & do custom request
+        QNetworkReply* reply = QNAM->sendCustomRequest(this->prepareRequest(url, parameters), "DELETE", payloadBuffer);
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        //payloadBuffer->deleteLater();
+    }
+    else {
+        qWarning() << "Not authenticated, can't remove photo";
     }
 }
 
@@ -980,6 +1071,14 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder send message data received";
                 this->parseSendMessage(jsonObject);
             }
+            else if(reply->url().toString().contains(MEDIA_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder remove picture data received";
+                this->parseRemovePhoto(jsonObject);
+            }
+            else if(reply->url().toString().contains(IMAGE_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder upload picture data received";
+                this->parseUploadPhoto(jsonObject);
+            }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
             }
@@ -1139,6 +1238,7 @@ void API::parseProfile(QJsonObject json)
         QDateTime birthDate = QDateTime::fromString(user["birth_date"].toString(), Qt::ISODate);
         int distanceMax = user["distance_filter"].toInt();
         bool discoverable = user["discoverable"].toBool();
+        bool optimizer = user["photo_optimizer_enabled"].toBool();;
         Sailfinder::Gender gender = Sailfinder::Gender::Female;
         if(user["gender"].toInt() == (int)Sailfinder::Gender::Male) { // Default female, change if needed
             gender = Sailfinder::Gender::Male;
@@ -1202,8 +1302,9 @@ void API::parseProfile(QJsonObject json)
         qDebug() << "\tPhotos:" << photoList;
         qDebug() << "\tSchools:" << schoolList;
         qDebug() << "\tJobs:" << jobList;
+        qDebug() << "\tOptimizer:" << optimizer;
 
-        this->setProfile(new User(id, name, birthDate, gender, bio, schoolList, jobList, photoList, ageMin, ageMax, distanceMax, interestedIn, position, discoverable));
+        this->setProfile(new User(id, name, birthDate, gender, bio, schoolList, jobList, photoList, ageMin, ageMax, distanceMax, interestedIn, position, discoverable, optimizer));
     }
 
     // Unlock profile fetching
@@ -1520,6 +1621,18 @@ void API::parseSendMessage(QJsonObject json)
     messagesSendLock = false;
 }
 
+void API::parseRemovePhoto(QJsonObject json)
+{
+    this->getProfile(); // Requires a refresh after deletion of a photo
+    removePhotoLock = false;
+}
+
+void API::parseUploadPhoto(QJsonObject json)
+{
+    this->getProfile(); // Requires a refresh after uploading of a photo
+    uploadPhotoLock = false;
+}
+
 void API::unlockAll()
 {
     matchFetchLock = false;
@@ -1528,6 +1641,7 @@ void API::unlockAll()
     updatesFetchLock = false;
     messagesFetchLock = false;
     messagesSendLock = false;
+    removePhotoLock = false;
     qWarning() << "All endpoints unlocked!";
 }
 

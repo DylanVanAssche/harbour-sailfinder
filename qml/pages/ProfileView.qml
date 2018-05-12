@@ -32,6 +32,8 @@ SilicaFlickable {
         api.getUpdates(temp.lastActivityDate)
     }
 
+    RemorsePopup { id: remorse }
+
     Timer {
         id: updatesTimer
         interval: 30000
@@ -44,7 +46,7 @@ SilicaFlickable {
             if(swipeView.currentIndex != 2 && _hadFocus) {
                 console.debug("Flicking to different view, updating profile preferences...")
                 _hadFocus = false;
-                api.updateProfile(bio.text, ageMin.value, ageMax.value, distanceMax.value, interestedIn.currentIndex, discoverable.checked)
+                api.updateProfile(bio.text, ageMin.value, ageMax.value, distanceMax.value, interestedIn.currentIndex, discoverable.checked, optimizer.checked)
             }
             else {
                 _hadFocus = true;
@@ -79,6 +81,7 @@ SilicaFlickable {
         target: api
         onProfileChanged: {
             discoverable.checked = api.profile.discoverable
+            optimizer.checked = api.profile.optimizer
             interestedIn.currentIndex = api.profile.interestedIn
             distanceMax.value = api.profile.distanceMax
             ageMax.value = api.profile.ageMax
@@ -116,6 +119,11 @@ SilicaFlickable {
 
         PhotoGridLayout {
             id: photoList
+            editable: true
+            //% "Removing photo"
+            onRemoved: remorse.execute(qsTrId("sailfinder-removing-photo"), function() {
+                api.removePhoto(photoId)
+            });
         }
 
         TextArea {
@@ -142,6 +150,16 @@ SilicaFlickable {
             enabled: !busy
             //% "Disable discovery to hide your profile for other people. This has no effect on your current matches."
             description: qsTrId("sailfinder-discoverable-text")
+        }
+
+        IconTextSwitch {
+            id: optimizer
+            //% "Optimizer"
+            text: qsTrId("sailfinder-optimizer")
+            busy: api.busy
+            enabled: !busy
+            //% "The photo optimizer will automatically show your best photo's first on your profile."
+            description: qsTrId("sailfinder-optimizer-text")
         }
 
         ComboBox {
@@ -220,10 +238,10 @@ SilicaFlickable {
             //% "Logout"
             text: qsTrId("sailfinder-logout")
             opacity: enabled? 1.0: app.fadeOutValue
-            onClicked: {
-                console.debug("Logging out")
+            //% "Logging out"
+            onClicked: remorse.execute(qsTrId("sailfinder-logging-out"), function() {
                 api.logout()
-            }
+            });
         }
 
         Spacer {}

@@ -278,7 +278,32 @@
     <message id="sailfinder-timeout-error">
         <source>Network timeout</source>
         <extracomment>Error shown to the user when a network timeout was received</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Network timeout</translation>
+    </message>
+    <message id="sailfinder-optimizer">
+        <source>Optimizer</source>
+        <translation>Optimizer</translation>
+    </message>
+    <message id="sailfinder-optimizer-text">
+        <source>The photo optimizer will automatically show your best photo&apos;s first on your profile.</source>
+        <translation>The photo optimizer will automatically show your best photo&apos;s first on your profile.</translation>
+    </message>
+    <message id="sailfinder-logging-out">
+        <source>Logging out</source>
+        <translation>Logging out</translation>
+    </message>
+    <message id="sailfinder-removing-photo">
+        <source>Removing photo</source>
+        <translation>Removing photo</translation>
+    </message>
+    <message id="sailfinder-upload-photo">
+        <source>Upload photo</source>
+        <translation>Upload photo</translation>
+    </message>
+    <message id="sailfinder-upload-failed">
+        <source></source>
+        <oldsource>Photo upload failed!</oldsource>
+        <translation>Photo upload failed!</translation>
     </message>
 </context>
 </TS>

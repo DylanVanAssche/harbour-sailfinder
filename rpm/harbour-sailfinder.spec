@@ -13,7 +13,7 @@ Name:       harbour-sailfinder
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailfinder
-Version:    4.3
+Version:    4.4
 Release:    1
 Group:      Qt/Qt
 License:    GPLv3

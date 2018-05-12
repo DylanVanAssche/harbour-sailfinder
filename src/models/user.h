@@ -20,6 +20,7 @@ class User : public Person
     Q_PROPERTY(Sailfinder::Gender interestedIn READ interestedIn WRITE setInterestedIn NOTIFY interestedInChanged)
     Q_PROPERTY(QGeoCoordinate position READ position NOTIFY positionChanged)
     Q_PROPERTY(bool discoverable READ discoverable WRITE setDiscoverable NOTIFY discoverableChanged)
+    Q_PROPERTY(bool optimizer READ optimizer WRITE setOptimizer NOTIFY optimizerChanged)
 
 public:
     explicit User(QObject *parent = 0);
@@ -36,7 +37,8 @@ public:
                   int distanceMax,
                   Sailfinder::Gender interestedIn,
                   QGeoCoordinate position,
-                  bool discoverable
+                  bool discoverable,
+                  bool optimizer
                   );
     int ageMin() const;
     void setAgeMin(int ageMin);
@@ -54,6 +56,8 @@ public:
     void setSchools(SchoolListModel *schools);
     JobListModel *jobs() const;
     void setJobs(JobListModel *jobs);
+    bool optimizer() const;
+    void setOptimizer(bool optimizer);
 
 signals:
     void ageMinChanged();
@@ -64,12 +68,14 @@ signals:
     void discoverableChanged();
     void jobsChanged();
     void schoolsChanged();
+    void optimizerChanged();
 
 private:
     int m_ageMin = 0;
     int m_ageMax = 0;
     int m_distanceMax = 0;
     bool m_discoverable = false;
+    bool m_optimizer = false;
     Sailfinder::Gender m_interestedIn = Sailfinder::Gender::Female;
     QGeoCoordinate m_position = QGeoCoordinate();
     SchoolListModel* m_schools = NULL;

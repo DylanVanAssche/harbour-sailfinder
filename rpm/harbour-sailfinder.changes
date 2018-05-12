@@ -1,3 +1,10 @@
+* Tue May 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-1
+- [NEW] Delete pictures from Tinder (hold a profile picture to show remove screen)
+- [NEW] Opt-in for Smart Photo's
+- [NEW] Moved to OBS for building RPM's
+- [LIBS] Moved to new Nemo import syntax
+- [IMPROVEMENT] Remorse action used when needed
+
 * Sun May 6 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.3-1
 - [IMPROVEMENT] Improvement on the login webview for Jolla 1 and Jolla C devices
 - [UPGRADE] Upgrade to the latest Tinder app version ID
