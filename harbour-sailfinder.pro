@@ -85,7 +85,8 @@ DISTFILES += qml/harbour-sailfinder.qml \
     harbour-sailfinder.desktop \
     rpm/harbour-sailfinder.changes \
     qml/js/authentication.js \
-    qml/css/authentication.css
+    qml/css/authentication.css \
+    qml/components/SchoolJobDelegate.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

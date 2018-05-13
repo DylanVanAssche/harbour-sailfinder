@@ -32,10 +32,18 @@ Page {
     Connections {
         target: api
         onFullMatchProfileFetched: {
+            // Enhance profile
             match.distance = distance
             match.schools = schools
             match.jobs = jobs
+
+            // Update view
             heading.title = Util.createHeaderMatchProfile(match.name, match.birthDate, match.gender, match.distance)
+            schoolsListView.model = match.schools
+            jobsListView.model = match.jobs
+            console.debug(schoolsListView.count)
+            console.debug(jobsListView.count)
+
             console.debug("Match profile enhanced!")
         }
     }
@@ -63,6 +71,27 @@ Page {
                 width: parent.width
                 readOnly: true
                 visible: text.length > 0
+            }
+
+            SilicaListView {
+                id: schoolsListView
+                width: parent.width
+                height: contentHeight
+                delegate: SchoolJobDelegate {
+                    icon: "qrc:///images/icon-school.png"
+                    title: model.name
+                }
+            }
+
+            SilicaListView {
+                id: jobsListView
+                width: parent.width
+                height: contentHeight
+                delegate: SchoolJobDelegate {
+                    icon: "qrc:///images/icon-job.png"
+                    name: model.name
+                    title: model.title
+                }
             }
         }
     }

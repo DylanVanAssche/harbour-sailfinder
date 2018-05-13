@@ -1670,7 +1670,6 @@ void API::parseFullMatchProfile(QJsonObject json)
 {
     QList<School *> schoolList;
     QList<Job *> jobList;
-    qDebug() << json;
 
     foreach(Match* match, this->matchesList()->matchesList()) {
         QJsonObject result = json["results"].toObject();
@@ -1693,14 +1692,30 @@ void API::parseFullMatchProfile(QJsonObject json)
             // Add jobs if available
             foreach(QJsonValue item, result["jobs"].toArray()) {
                 QJsonObject job = item.toObject();
-                // Name is needed but ID might be missing sometimes!
-                if(job.value("id") != QJsonValue::Undefined) {
-                    jobList.append(new Job(job["id"].toString(), job["name"].toString()));
+
+                QString companyName;
+                QString titleName;
+                QString id;
+                if(job.value("company") != QJsonValue::Undefined)
+                {
+                    QJsonObject company = job["company"].toObject();
+                    companyName = company["name"].toString();
+                    if(company.value("id") != QJsonValue::Undefined)
+                    {
+                        id = company["id"].toString();
+                    }
                 }
-                else {
-                    qWarning() << "Job id is missing";
-                    jobList.append(new Job(job["name"].toString()));
+
+                if(job.value("title") != QJsonValue::Undefined)
+                {
+                    QJsonObject title = job["title"].toObject();
+                    titleName = title["name"].toString();
+                    if(id.length() == 0 && title.value("id") != QJsonValue::Undefined)
+                    {
+                        id = title["id"].toString();
+                    }
                 }
+                jobList.append(new Job(id, companyName, titleName));
             }
 
             // Update match profile
