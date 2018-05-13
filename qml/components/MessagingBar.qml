@@ -32,7 +32,6 @@ Item {
     // Harbour incompatible: QML Qt Quick Controls isn't allowed
     height: timestamp.y + timestamp.height + Theme.paddingSmall
 
-    // Harbour incompatible, needs a workaround for their to restrictive rules
     ThemeEffect {
         id: buttonBuzz
         effect: ThemeEffect.Press
@@ -69,8 +68,8 @@ Item {
                                                       : Theme.primaryColor)
         icon.scale: Theme.iconSizeSmall/icon.width
         onPressed: {
-            buttonBuzz.play()
             send(input.text)
+            buttonBuzz.play()
             input.text = ""
         }
     }

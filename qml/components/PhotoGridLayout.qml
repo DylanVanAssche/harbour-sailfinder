@@ -170,7 +170,9 @@ Item {
 
             IconButton {
                 anchors.centerIn: parent
-                icon.source: "qrc:///images/remove.png"
+                icon.source: "qrc:///images/remove.png" + (pressed
+                                                           ? Theme.highlightColor
+                                                           : Theme.primaryColor)
                 onClicked: {
                     _showRemoveButton = false
                     fullScreen.visible = false

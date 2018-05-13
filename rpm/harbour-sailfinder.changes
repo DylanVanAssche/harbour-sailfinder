@@ -1,7 +1,8 @@
-* Tue May 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-1
+* Tue May 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-4
 - [MINOR BUGFIX] Sailfinder can now run in the emulator again
 - [IMPROVEMENT] Remorse action used when needed
 - [IMPROVEMENT] Stability improvements for the login screen
+- [IMPROVEMENT] Location updates are still working OK
 - [NEW] Delete pictures from Tinder (hold a profile picture to show remove screen)
 - [NEW] Opt-in for Smart Photo's
 - [NEW] Moved to OBS for building RPM's
