@@ -141,17 +141,7 @@ Page {
                     _mode === "accountkit"? _mode = "facebook": _mode = "accountkit"
                     console.debug("Authentication mode: " + _mode)
                 }
-            }
-
-            MenuItem {
-                text: "Login PHONE"
-                onClicked: {
-                    webview.experimental.postMessage(JSON.stringify({
-                                                                "type": "SUBMIT_PHONE",
-                                                                "land_code": "+32",
-                                                                "number": "472246280"
-                                                            }))
-                }
+                visible: false // Undo when phone login support is enabled
             }
         }
 

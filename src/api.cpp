@@ -154,6 +154,7 @@ void API::getMeta(double latitude, double longitude)
         data["lat"] = latitude;
         data["lon"] = longitude;
         QJsonDocument payload = QJsonDocument::fromVariant(data);
+        qDebug() << "Tinder meta data: " << data;
 
         // Prepare & do request
         QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
@@ -337,6 +338,7 @@ void API::getUpdates(QDateTime lastActivityDate)
 
         // Build POST payload
         QVariantMap data;
+        data["nudge"] = false;
         data["last_activity_date"] = lastActivityDate.toString(Qt::ISODate) + "Z"; // Qt::ISODate doesn't include the required 'Z'
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
@@ -676,8 +678,6 @@ void API::uploadPhoto(QString path)
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         multiPart->setParent(reply); // Delete multiPart when reply is deleted
-
-        // TO DO: client_photo_id=%7BphotoId%7D?client_photo_id=ProfilePhoto1526045306000 in URL
     }
 }
 
