@@ -26,13 +26,13 @@ import QtFeedback 5.0
 Item {
     property string placeHolderText
     signal send(string text)
+    signal keyboardVisible(bool state)
 
     id: messagingBar
     width: parent.width
     // Harbour incompatible: QML Qt Quick Controls isn't allowed
     height: timestamp.y + timestamp.height + Theme.paddingSmall
 
-    // Harbour incompatible, needs a workaround for their to restrictive rules
     ThemeEffect {
         id: buttonBuzz
         effect: ThemeEffect.Press
@@ -55,6 +55,7 @@ Item {
         color: Theme.primaryColor
         placeholderText: messagingBar.placeHolderText
         EnterKey.enabled: text.length > 0
+        onFocusChanged: keyboardVisible(focus) // Workaround for Qt issue: https://bugreports.qt.io/browse/QTBUG-36909
     }
 
     IconButton {
@@ -69,8 +70,8 @@ Item {
                                                       : Theme.primaryColor)
         icon.scale: Theme.iconSizeSmall/icon.width
         onPressed: {
-            buttonBuzz.play()
             send(input.text)
+            buttonBuzz.play()
             input.text = ""
         }
     }
