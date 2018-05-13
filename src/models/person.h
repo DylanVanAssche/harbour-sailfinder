@@ -7,6 +7,8 @@
 
 #include "photo.h"
 #include "photolistmodel.h"
+#include "schoollistmodel.h"
+#include "joblistmodel.h"
 
 class Person : public QObject
 {
@@ -17,6 +19,8 @@ class Person : public QObject
     Q_PROPERTY(QString id READ id NOTIFY idChanged)
     Q_PROPERTY(QString bio READ bio NOTIFY bioChanged)
     Q_PROPERTY(PhotoListModel* photos READ photos NOTIFY photosChanged)
+    Q_PROPERTY(SchoolListModel* schools READ schools WRITE setSchools NOTIFY schoolsChanged)
+    Q_PROPERTY(JobListModel* jobs READ jobs WRITE setJobs NOTIFY jobsChanged)
 
 public:
     explicit Person(QObject *parent = 0);
@@ -39,6 +43,10 @@ public:
     void setBio(const QString &bio);
     PhotoListModel *photos() const;
     void setPhotos(PhotoListModel *photos);
+    SchoolListModel *schools() const;
+    void setSchools(SchoolListModel *schools);
+    JobListModel *jobs() const;
+    void setJobs(JobListModel *jobs);
 
 signals:
     void birthDateChanged();
@@ -47,6 +55,8 @@ signals:
     void idChanged();
     void bioChanged();
     void photosChanged();
+    void schoolsChanged();
+    void jobsChanged();
 
 private:
     QDateTime m_birthDate = QDateTime();
@@ -55,6 +65,8 @@ private:
     QString m_id = QString();
     QString m_bio = QString();
     PhotoListModel *m_photos = NULL;
+    SchoolListModel* m_schools = NULL;
+    JobListModel* m_jobs = NULL;
 };
 
 #endif // PERSON_H

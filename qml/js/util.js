@@ -27,7 +27,7 @@ function createHeaderRecs(name, birthDate, gender, distance) {
     if(gender === 0) {
         genderSymbol = "♂";
     }
-    if(distance > -1) { // Only show when distance is available
+    if(distance > 0) { // Only show when distance is available
         distanceText = " - " + distance + " km"
     }
 
@@ -48,8 +48,8 @@ function createHeaderMessages(name, birthDate, gender, distance) {
     return createHeaderRecs(name, birthDate, gender, distance);
 }
 
-function createHeaderMatchProfile(name, birthDate, gender) {
-    return createHeaderRecs(name, birthDate, gender, -1);
+function createHeaderMatchProfile(name, birthDate, gender, distance) {
+    return createHeaderRecs(name, birthDate, gender, distance);
 }
 
 function formatDate(date) {

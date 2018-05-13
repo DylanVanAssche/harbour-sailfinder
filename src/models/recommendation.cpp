@@ -52,27 +52,3 @@ void Recommendation::setDistance(int distance)
     m_distance = distance;
     emit this->distanceChanged();
 }
-
-SchoolListModel *Recommendation::schools() const
-{
-    return m_schools;
-}
-
-void Recommendation::setSchools(SchoolListModel *schools)
-{
-    m_schools = schools;
-    emit this->schoolsChanged();
-}
-
-JobListModel *Recommendation::jobs() const
-{
-    return m_jobs;
-}
-
-void Recommendation::setJobs(JobListModel *jobs)
-{
-    m_jobs = jobs;
-    emit this->jobsChanged();
-}
-
-

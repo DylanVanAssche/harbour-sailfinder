@@ -70,6 +70,7 @@
 #define MATCH_OPERATIONS_ENDPOINT "https://api.gotinder.com/user/matches"
 #define MEDIA_ENDPOINT "https://api.gotinder.com/media"
 #define IMAGE_ENDPOINT "https://api.gotinder.com/image"
+#define USER_ENDPOINT "https://api.gotinder.com/user"
 
 class API : public QObject
 {
@@ -113,6 +114,7 @@ public:
     Q_INVOKABLE void unmatch(QString matchId);
     Q_INVOKABLE void uploadPhoto(QString path);
     Q_INVOKABLE void removePhoto(QString photoId);
+    Q_INVOKABLE void getFullMatchProfile(QString userId);
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -181,6 +183,7 @@ signals:
     void updatesReady(QDateTime lastActivityDate, bool refetch);
     void newMessage(int count);
     void unlockedAllEndpoints();
+    void fullMatchProfileFetched(int distance, SchoolListModel* schools, JobListModel* jobs);
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -220,6 +223,7 @@ private:
     bool messagesSendLock = false;
     bool removePhotoLock = false;
     bool uploadPhotoLock = false;
+    bool fullMatchProfileLock = false;
     QList<Match *> matchesTempList = QList<Match*> ();
     QList<Message *> messagesTempList = QList<Message*> ();
     QString messagesMatchId = QString();
@@ -248,6 +252,7 @@ private:
     void parseSendMessage(QJsonObject json);
     void parseRemovePhoto(QJsonObject json);
     void parseUploadPhoto(QJsonObject json);
+    void parseFullMatchProfile(QJsonObject json);
     void unlockAll();
 };
 

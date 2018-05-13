@@ -62,3 +62,14 @@ void Match::setMessage(Message *message)
     m_message = message;
     emit this->messageChanged();
 }
+
+int Match::distance() const
+{
+    return m_distance;
+}
+
+void Match::setDistance(int distance)
+{
+    m_distance = distance;
+    emit this->distanceChanged();
+}

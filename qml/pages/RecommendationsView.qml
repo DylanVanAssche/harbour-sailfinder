@@ -69,7 +69,7 @@ SilicaFlickable {
         }
 
         onProfileChanged: api.getRecommendations()
-        onUnlockedAll: recsBar.loaded = true // Reset UI on network or other failure
+        onUnlockedAllEndpoints: recsBar.loaded = true // Reset UI on network or other failure
     }
 
     Column {

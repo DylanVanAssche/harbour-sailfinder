@@ -7,6 +7,9 @@
 - [NEW] Delete pictures from Tinder (hold a profile picture to show remove screen)
 - [NEW] Opt-in for Smart Photo's
 - [NEW] Moved to OBS for building RPM's
+- [NEW] See the distance of your matches
+- [NEW] Show schools and jobs for recommendations and matches
+- [UPGRADE] /updates endpoint data upgrade
 - [WIP] Phone login support preparations
 - [LIBS] Moved to new Nemo import syntax
 
