@@ -1633,7 +1633,7 @@ void API::parseUploadPhoto(QJsonObject json)
     uploadPhotoLock = false;
 }
 
-void API::unlockAll()
+void API::unlockAll() // In case something goes wrong, avoid deadlock and reset everything
 {
     matchFetchLock = false;
     profileFetchLock = false;
@@ -1643,6 +1643,7 @@ void API::unlockAll()
     messagesSendLock = false;
     removePhotoLock = false;
     qWarning() << "All endpoints unlocked!";
+    emit this->unlockedAllEndpoints();
 }
 
 QString API::token() const

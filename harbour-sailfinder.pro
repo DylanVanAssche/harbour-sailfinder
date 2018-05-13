@@ -78,14 +78,14 @@ DISTFILES += qml/harbour-sailfinder.qml \
     qml/components/MessagingBar.qml \
     qml/components/MessagingDelegate.qml \
     qml/components/MessagingHeader.qml \
-    qml/js/facebook.js \
     qml/js/util.js \
-    qml/css/facebook.css \
     rpm/harbour-sailfinder.spec \
     rpm/harbour-sailfinder.yaml \
     translations/*.ts \
     harbour-sailfinder.desktop \
-    rpm/harbour-sailfinder.changes
+    rpm/harbour-sailfinder.changes \
+    qml/js/authentication.js \
+    qml/css/authentication.css
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

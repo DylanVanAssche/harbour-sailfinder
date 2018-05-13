@@ -304,5 +304,17 @@
         <source></source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-switch-facebook">
+        <source>Use Facebook login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-switch-phone">
+        <source>Use phone login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-reload">
+        <source>Reload</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

@@ -305,5 +305,17 @@
         <oldsource>Photo upload failed!</oldsource>
         <translation>Photo upload failed!</translation>
     </message>
+    <message id="sailfinder-login-facebook">
+        <source>Use Facebook login</source>
+        <translation>Use Facebook login</translation>
+    </message>
+    <message id="sailfinder-login-phone">
+        <source>Use phone login</source>
+        <translation>Use phone login</translation>
+    </message>
+    <message id="sailfinder-reload">
+        <source>Reload</source>
+        <translation>Reload</translation>
+    </message>
 </context>
 </TS>

@@ -22,16 +22,15 @@ import QtWebKit 3.0
 Page {
     property string fbToken
     property bool logout
+    property string _mode: "facebook" // accountkit or facebook mode
 
     id: page
 
     onFbTokenChanged: {
         if(fbToken.length > 0) {
+            loader.visible = true
             tinderLogin.visible = true
             api.login(fbToken)
-        }
-        else {
-            tinderLogin.visible = false
         }
     }
 
@@ -68,8 +67,8 @@ Page {
         experimental.preferences.javascriptEnabled: true
         experimental.preferences.navigatorQtObjectEnabled: true
         experimental.preferences.developerExtrasEnabled: true
-        experimental.userStyleSheets: Qt.resolvedUrl("../css/facebook.css")
-        experimental.userScripts: [Qt.resolvedUrl("../js/facebook.js")]
+        experimental.userStyleSheets: Qt.resolvedUrl("../css/authentication.css")
+        experimental.userScripts: [Qt.resolvedUrl("../js/authentication.js")]
         experimental.userAgent: app.fbUserAgent
         experimental.preferredMinimumContentsWidth: 980 // Helps rendering desktop websites
         experimental.onMessageReceived: {
@@ -78,13 +77,16 @@ Page {
             case 0: // FB_TOKEN
                 console.debug("Successfully retrieved Facebook access token: " + msg.data);
                 fbToken = msg.data;
-                errorFacebookLogin.enabled = false;
+                errorLogin.enabled = false;
                 opacity = 0.0;
                 break;
-            case 1: // ERROR
+            case 1: // PHONE_SUBMIT
+                console.log("Phone submit OK, new URL:" + url)
+                break;
+            case 41: // ERROR
                 console.error("Can't retrieve Facebook access token: " + msg.data);
                 fbToken = "";
-                errorFacebookLogin.enabled = true;
+                errorLogin.enabled = true;
                 opacity = 1.0;
                 break;
             case 42: // DEBUG
@@ -92,7 +94,8 @@ Page {
                 break;
             }
         }
-        url: app.fbAuthUrl
+        url: _mode === "accountkit"? app.accountkitAuthUrl: app.fbAuthUrl
+        enabled: !loading // block input while loading
         Component.onCompleted: {
             if(logout) {
                 console.debug("Clearing cookies due logout")
@@ -100,11 +103,60 @@ Page {
                 webview.reload()
             }
         }
+        onLoadingChanged: {
+            switch (loadRequest.status)
+            {
+            case WebView.LoadSucceededStatus:
+                opacity = 1
+                loader.visible = false
+                reloadLogin.visible = false
+                break
+            case WebView.LoadFailedStatus:
+                opacity = 0
+                //% "Something went wrong, please try again later"
+                sfos.createToaster(qsTrId("sailfinder-error"), "icon-s-high-importance", "sailfinder-login")
+                loader.visible = true
+                reloadLogin.visible = true
+                break
+            default:
+                opacity = 0
+                loader.visible = true
+                reloadLogin.visible = false
+                break
+            }
+        }
+
+        FadeAnimation on opacity {}
 
         Behavior on opacity { FadeAnimation {} }
 
+        PullDownMenu {
+            MenuItem {
+                text: _mode === "accountkit"?
+                          //% "Use Facebook login"
+                          qsTrId("sailfinder-login-facebook"):
+                          //% "Use phone login"
+                          qsTrId("sailfinder-login-phone")
+                onClicked: {
+                    _mode === "accountkit"? _mode = "facebook": _mode = "accountkit"
+                    console.debug("Authentication mode: " + _mode)
+                }
+            }
+
+            MenuItem {
+                text: "Login PHONE"
+                onClicked: {
+                    webview.experimental.postMessage(JSON.stringify({
+                                                                "type": "SUBMIT_PHONE",
+                                                                "land_code": "+32",
+                                                                "number": "472246280"
+                                                            }))
+                }
+            }
+        }
+
         ViewPlaceholder {
-            id: errorFacebookLogin
+            id: errorLogin
             //% "Oops!"
             text: qsTrId("sailfinder-oops")
             //% "Something went wrong, please try again later"
@@ -113,7 +165,7 @@ Page {
     }
 
     BusyIndicator {
-        id: tinderLogin
+        id: loader
         size: BusyIndicatorSize.Large
         anchors.centerIn: parent
         visible: false
@@ -121,10 +173,19 @@ Page {
     }
 
     Label {
-        anchors { top: tinderLogin.bottom; topMargin: Theme.paddingMedium; horizontalCenter: parent.horizontalCenter }
-        visible: tinderLogin.visible
+        id: tinderLogin
+        anchors { top: loader.bottom; topMargin: Theme.paddingMedium; horizontalCenter: parent.horizontalCenter }
+        visible: false
         //% "Logging in"
         text: qsTrId("sailfinder-logging-in")
+    }
+
+    Button {
+        id: reloadLogin
+        anchors { top: loader.bottom; topMargin: Theme.paddingLarge; horizontalCenter: parent.horizontalCenter }
+        visible: false
+        //% "Reload"
+        text: qsTrId("sailfinder-reload")
     }
 }
 

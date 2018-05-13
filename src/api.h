@@ -180,6 +180,7 @@ signals:
     void loggedOut();
     void updatesReady(QDateTime lastActivityDate, bool refetch);
     void newMessage(int count);
+    void unlockedAllEndpoints();
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
