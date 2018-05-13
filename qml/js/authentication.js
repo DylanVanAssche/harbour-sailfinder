@@ -15,7 +15,7 @@
 *   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var msgCode = {"FB_TOKEN": 0, "ERROR": 1, "DEBUG": 42};
+var msgCode = {"FB_TOKEN": 0, "SUBMIT_PHONE": 1, "SUBMIT_ACCOUNT": 2, "TINDER_TOKEN": 3, "ERROR": 41, "DEBUG": 42};
 
 // Create our JSON payload and send it to QML
 function send(type, data) {
@@ -23,6 +23,14 @@ function send(type, data) {
     payload.type = type;
     payload.data = data;
     navigator.qt.postMessage(JSON.stringify(payload))
+}
+
+// Receiver dispatcher
+navigator.qt.onmessage = function(msg) {
+    var payload = JSON.parse(msg)
+    if(msg.type === "SUBMIT_PHONE") {
+        submitPhoneNumber(payload.land_code, payload.number)
+    }
 }
 
 // Filters the access token from the Facebook OAuth hidden page
@@ -46,3 +54,20 @@ function filterAccessToken(data) {
 }
 
 filterAccessToken(document.documentElement.innerHTML)
+
+// Create our JSON payload and send it to QML
+function send(type, data) {
+    var payload = new Object;
+    payload.type = type;
+    payload.data = data;
+    navigator.qt.postMessage(JSON.stringify(payload))
+}
+
+// Submit phone number form
+function submitPhoneNumber(landCode, number) {
+    var inputFields = document.forms[0].getElementsByTagName("input");
+    inputFields[1].value = landCode;
+    inputFields[2].value = number;
+    document.forms[0].submit();
+    send(msgCode["SUBMIT_PHONE"], true);
+}

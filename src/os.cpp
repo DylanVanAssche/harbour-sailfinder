@@ -42,7 +42,12 @@ OS::OS() {
     querrySFOSList << "VERSION_ID" << "PRETTY_NAME";
     dataList = this->extractFileData("/etc/os-release", querrySFOSList);
 
-    for(int i=0; i<dataList.count(); i++) {
+    // Default unknown
+    m_version = "UNKNOWN";
+    m_release = "UNKNOWN";
+    m_device = "UNKNOWN";
+
+    for(int i=0; i < dataList.count(); i++) {
         if(dataList.at(i).first == "VERSION_ID") {
             m_version = dataList.at(i).second;
         }
@@ -54,7 +59,10 @@ OS::OS() {
     // Get HW release info
     QStringList querryHWList;
     querryHWList << "NAME";
-    m_device = this->extractFileData("/etc/hw-release", querryHWList).at(0).second;
+    dataList = this->extractFileData("/etc/hw-release", querryHWList);
+    if(dataList.count() > 0) {
+        m_device = dataList.at(0).second;
+    }
 }
 
 /* Reads a file and search for the querries in the querryList using recursion.
@@ -68,7 +76,7 @@ QList<QPair<QString, QString>> OS::extractFileData(QString location, QStringList
     QList<QPair<QString, QString>> dataList;
 
     // Return empty dataList if file couldn't be opened
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text) || !QFile::exists(location)) {
         qCritical() << "Opening file" << location << "failed";
         return dataList;
     }
