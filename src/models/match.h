@@ -13,6 +13,7 @@ class Match : public Person
     Q_PROPERTY(bool isSuperlike READ isSuperlike NOTIFY isSuperlikeChanged)
     Q_PROPERTY(bool isDead READ isDead NOTIFY isDeadChanged)
     Q_PROPERTY(Message* message READ message NOTIFY messageChanged)
+    Q_PROPERTY(int distance READ distance NOTIFY distanceChanged)
 
 public:
     explicit Match(QObject *parent = 0);
@@ -35,18 +36,22 @@ public:
     void setIsDead(bool value);
     Message *message() const;
     void setMessage(Message *messages);
+    int distance() const;
+    void setDistance(int distance);
 
 signals:
     void matchIdChanged();
     void isSuperlikeChanged();
     void isDeadChanged();
     void messageChanged();
+    void distanceChanged();
 
 private:
     QString m_matchId = QString();
     bool m_isSuperlike = false;
     bool m_isDead = false;
     Message* m_message = new Message();
+    int m_distance = 0;
 };
 
 #endif // MATCH_H

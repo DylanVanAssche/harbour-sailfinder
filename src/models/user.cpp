@@ -90,28 +90,6 @@ void User::setDiscoverable(bool discoverable)
     emit this->discoverableChanged();
 }
 
-SchoolListModel *User::schools() const
-{
-    return m_schools;
-}
-
-void User::setSchools(SchoolListModel *schools)
-{
-    m_schools = schools;
-    emit this->schoolsChanged();
-}
-
-JobListModel *User::jobs() const
-{
-    return m_jobs;
-}
-
-void User::setJobs(JobListModel *jobs)
-{
-    m_jobs = jobs;
-    emit this->jobsChanged();
-}
-
 bool User::optimizer() const
 {
     return m_optimizer;

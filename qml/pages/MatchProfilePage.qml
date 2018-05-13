@@ -24,8 +24,20 @@ Page {
     property var match
 
     Component.onCompleted: {
+        api.getFullMatchProfile(match.id)
         photoList.photoListModel = match.photos
         bio.text = match.bio
+    }
+
+    Connections {
+        target: api
+        onFullMatchProfileFetched: {
+            match.distance = distance
+            match.schools = schools
+            match.jobs = jobs
+            heading.title = Util.createHeaderMatchProfile(match.name, match.birthDate, match.gender, match.distance)
+            console.debug("Match profile enhanced!")
+        }
     }
 
     SilicaFlickable {
@@ -38,8 +50,8 @@ Page {
             spacing: Theme.paddingLarge
 
             PageHeader {
-                // Distance is supported as soon as the API is implemented for full profile
-                title: Util.createHeaderMatchProfile(match.name, match.birthDate, match.gender)
+                id: heading
+                title: Util.createHeaderMatchProfile(match.name, match.birthDate, match.gender, match.distance)
             }
 
             PhotoGridLayout {

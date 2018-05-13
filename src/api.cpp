@@ -726,6 +726,35 @@ void API::removePhoto(QString photoId)
 
 /**
  * @class API
+ * @brief Full profile of a match
+ * @details Retrieves the missing items of a match it's profile like distance, schools, jobs, ...
+ * @param userId
+ */
+void API::getFullMatchProfile(QString userId)
+{
+    if(this->authenticated() && !fullMatchProfileLock) {
+        // Lock recommendations fetching
+        fullMatchProfileLock = true;
+
+        // Build URL
+        QUrl url(QString(USER_ENDPOINT) + "/" + userId);
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    }
+    else if(fullMatchProfileLock) {
+        qWarning() << "Full match profile fetching is locked";
+    }
+    else {
+        qWarning() << "Not authenticated, can't retrieve recommendations data";
+    }
+}
+
+/**
+ * @class API
  * @brief Parse the positioning
  * @details Handler to parse the positioning signals from QGeoPositionInfoSource
  * @param info
@@ -1070,6 +1099,10 @@ void API::finished (QNetworkReply *reply)
             else if(reply->url().toString().contains(MATCH_OPERATIONS_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::PostOperation) {
                 qDebug() << "Tinder send message data received";
                 this->parseSendMessage(jsonObject);
+            }
+            else if(reply->url().toString().contains(USER_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "Tinder full match profile received";
+                this->parseFullMatchProfile(jsonObject);
             }
             else if(reply->url().toString().contains(MEDIA_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder remove picture data received";
@@ -1633,6 +1666,60 @@ void API::parseUploadPhoto(QJsonObject json)
     uploadPhotoLock = false;
 }
 
+void API::parseFullMatchProfile(QJsonObject json)
+{
+    QList<School *> schoolList;
+    QList<Job *> jobList;
+    qDebug() << json;
+
+    foreach(Match* match, this->matchesList()->matchesList()) {
+        QJsonObject result = json["results"].toObject();
+        if(match->id() == result["_id"].toString()) {
+            qDebug() << "Match ID found, enhancing profile...";
+
+            // Add schools if available
+            foreach(QJsonValue item, result["schools"].toArray()) {
+                QJsonObject school = item.toObject();
+                // Name is needed but ID might be missing sometimes!
+                if(school.value("id") != QJsonValue::Undefined) {
+                    schoolList.append(new School(school["id"].toString(), school["name"].toString()));
+                }
+                else {
+                    qWarning() << "School id is missing";
+                    schoolList.append(new School(school["name"].toString()));
+                }
+            }
+
+            // Add jobs if available
+            foreach(QJsonValue item, result["jobs"].toArray()) {
+                QJsonObject job = item.toObject();
+                // Name is needed but ID might be missing sometimes!
+                if(job.value("id") != QJsonValue::Undefined) {
+                    jobList.append(new Job(job["id"].toString(), job["name"].toString()));
+                }
+                else {
+                    qWarning() << "Job id is missing";
+                    jobList.append(new Job(job["name"].toString()));
+                }
+            }
+
+            // Update match profile
+            match->setDistance(result["distance_mi"].toInt());
+            match->setSchools(new SchoolListModel(schoolList));
+            match->setJobs(new JobListModel(jobList));
+
+            qDebug() << "Match full profile data:";
+            qDebug() << "\tDistance:" << match->distance();
+            qDebug() << "\tSchools:" << match->schools()->schoolList();
+            qDebug() << "\tJobs:" << match->jobs()->jobList();
+            emit this->fullMatchProfileFetched(match->distance(), match->schools(), match->jobs());
+            break;
+        }
+    }
+
+    fullMatchProfileLock = false;
+}
+
 void API::unlockAll() // In case something goes wrong, avoid deadlock and reset everything
 {
     matchFetchLock = false;
@@ -1642,6 +1729,7 @@ void API::unlockAll() // In case something goes wrong, avoid deadlock and reset 
     messagesFetchLock = false;
     messagesSendLock = false;
     removePhotoLock = false;
+    fullMatchProfileLock = false;
     qWarning() << "All endpoints unlocked!";
     emit this->unlockedAllEndpoints();
 }

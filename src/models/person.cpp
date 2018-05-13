@@ -80,3 +80,25 @@ void Person::setPhotos(PhotoListModel *photos)
     m_photos = photos;
     emit this->photosChanged();
 }
+
+SchoolListModel *Person::schools() const
+{
+    return m_schools;
+}
+
+void Person::setSchools(SchoolListModel *schools)
+{
+    m_schools = schools;
+    emit this->schoolsChanged();
+}
+
+JobListModel *Person::jobs() const
+{
+    return m_jobs;
+}
+
+void Person::setJobs(JobListModel *jobs)
+{
+    m_jobs = jobs;
+    emit this->jobsChanged();
+}
