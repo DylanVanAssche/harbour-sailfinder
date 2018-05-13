@@ -26,6 +26,7 @@ import QtFeedback 5.0
 Item {
     property string placeHolderText
     signal send(string text)
+    signal keyboardVisible(bool state)
 
     id: messagingBar
     width: parent.width
@@ -54,6 +55,7 @@ Item {
         color: Theme.primaryColor
         placeholderText: messagingBar.placeHolderText
         EnterKey.enabled: text.length > 0
+        onFocusChanged: keyboardVisible(focus) // Workaround for Qt issue: https://bugreports.qt.io/browse/QTBUG-36909
     }
 
     IconButton {

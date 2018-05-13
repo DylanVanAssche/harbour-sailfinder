@@ -55,6 +55,14 @@ Page {
         }
     }
 
+    Timer {
+        id: keyboardDelay
+        interval: 250 // A wild guess for the duration of the Sailfish OS keyboard
+        running: false
+        repeat: false
+        onTriggered: messagesListView.scrollToBottom()
+    }
+
     MessagingHeader {
         id: messagingHeader
         name: page.name
@@ -95,6 +103,10 @@ Page {
         onSend: {
             busyStatus.running = Qt.application.active
             api.sendMessage(matchId, text, userId, Math.random().toString())
+        }
+        onKeyboardVisible: {
+            console.debug("Keyboard opened? " + state)
+            keyboardDelay.restart() // Make sure we see the latest messages when the keyboard shows/hides
         }
     }
 

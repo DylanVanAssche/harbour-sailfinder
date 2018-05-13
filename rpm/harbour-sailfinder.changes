@@ -1,5 +1,6 @@
 * Tue May 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-4
 - [MINOR BUGFIX] Sailfinder can now run in the emulator again
+- [MINOR BUGFIX] Messages are scrolling automatically when the keyboard shows/hides
 - [IMPROVEMENT] Remorse action used when needed
 - [IMPROVEMENT] Stability improvements for the login screen
 - [IMPROVEMENT] Location updates are still working OK
