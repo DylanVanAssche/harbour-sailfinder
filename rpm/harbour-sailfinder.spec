@@ -19,7 +19,6 @@ Group:      Qt/Qt
 License:    GPLv3
 URL:        https://github.com/DylanVanAssche/harbour-sailfinder
 Source0:    %{name}-%{version}.tar.bz2
-Source100:  harbour-sailfinder.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   nemo-qml-plugin-notifications-qt5
 Requires:   nemo-qml-plugin-configuration-qt5
