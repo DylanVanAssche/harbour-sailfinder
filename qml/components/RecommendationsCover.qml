@@ -19,33 +19,31 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Item {
-    anchors.fill: parent
+    property bool _loaded
+    property bool _canLike
 
-    Component.onCompleted: {
-        try {
+    function populate() {
+        if(api.recommendation !== "null") {
             background.source = api.recommendation.photos.getPhoto(0).url
             name.text = api.recommendation.name
             distance.text = api.recommendation.distance + " km"
-        }
-        catch(err) {
-            console.debug("Recommendations cover data not ready yet")
+            _canLike = api.canLike
+            _loaded = true
         }
     }
 
+    anchors.fill: parent
+
     Connections {
         target: api
-        onRecommendationChanged: {
-            background.source = api.recommendation.photos.getPhoto(0).url
-            name.text = api.recommendation.name
-            distance.text = api.recommendation.distance + " km"
-        }
+        onRecommendationChanged: populate()
     }
 
     Image {
         id: background
         anchors.fill: parent
         asynchronous: true
-        opacity: progress/3 // background
+        opacity: _canLike? progress/3: 0.0 // background
         Behavior on opacity { FadeAnimator {} }
         onStatusChanged: {
             if(status == Image.Error) {
@@ -54,9 +52,12 @@ Item {
         }
     }
 
+    // Normal recommendations swiping
     Column {
-        anchors.centerIn: parent
         width: parent.width
+        anchors.centerIn: parent 
+        opacity: _canLike? 1.0: 0.0
+        Behavior on opacity { FadeAnimator {} }
 
         TextLabel {
             id: name
@@ -72,17 +73,45 @@ Item {
         }
     }
 
+    // Exhausted swiping
+    Column {
+        width: parent.width
+        anchors.centerIn: parent
+        opacity: _canLike? 0.0: 1.0
+        Behavior on opacity { FadeAnimator {} }
+
+        Image {
+            width: Theme.itemSizeSmall
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "qrc:///images/cover-logo.png"
+        }
+
+        TextLabel {
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: Theme.fontSizeLarge
+            //% "Exhausted!"
+            text: qsTrId("sailfinder-out-of-recs")
+        }
+    }
+
     CoverActionList {
+        enabled: _loaded && app.swipeViewIndex === 0 && _canLike
         iconBackground: true
 
         CoverAction {
             iconSource: "../resources/images/dislike.png"
-            onTriggered: api.passUser(api.recommendation.id)
+            onTriggered: {
+                _loaded = false
+                api.passUser(api.recommendation.id)
+            }
         }
 
         CoverAction {
             iconSource: "../resources/images/like.png"
-            onTriggered: api.likeUser(api.recommendation.id)
+            onTriggered: {
+                _loaded = false
+                api.likeUser(api.recommendation.id)
+            }
         }
     }
 }

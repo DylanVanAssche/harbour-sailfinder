@@ -29,7 +29,7 @@ ApplicationWindow
     property int swipeViewIndex: 0
 
     id: app
-    initialPage: Component { FirstPage { } }
+    initialPage: Component { FirstPage {} }
     cover: Qt.resolvedUrl("pages/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
     onNetworkStatusChanged: {

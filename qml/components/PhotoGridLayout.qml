@@ -70,6 +70,7 @@ Item {
                     source: model.urlMedium
                     asynchronous: true
                     opacity: progress
+                    visible: index < 6 // Max 6 photos
                     Behavior on opacity { FadeAnimator {} }
                     onStatusChanged: {
                         if(status == Image.Error) {

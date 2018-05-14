@@ -88,7 +88,8 @@ DISTFILES += qml/harbour-sailfinder.qml \
     qml/css/authentication.css \
     qml/components/RecommendationsCover.qml \
     qml/components/MatchesCover.qml \
-    qml/components/ProfileCover.qml
+    qml/components/ProfileCover.qml \
+    qml/components/DefaultCover.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

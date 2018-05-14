@@ -16,25 +16,59 @@
 */
 
 import QtQuick 2.0
+import QtQuick.Layouts 1.1
 import Sailfish.Silica 1.0
 
 Item {
     anchors.fill: parent
 
-    Component.onCompleted: {
-        try {
+    function populate() {
+        if(api.matchesList !== "null") {
             numberOfMatches.text = api.matchesList.numberOfMatches()
-        }
-        catch(err) {
-            console.debug("Matches cover data not ready yet")
+            repeater.model = api.matchesList
         }
     }
 
     Connections {
         target: api
-        onMatchesListChanged: {
-            console.debug("Cover number of matches=" + api.matchesList.numberOfMatches())
-            numberOfMatches.text = api.matchesList.numberOfMatches()
+        onMatchesListChanged: populate()
+    }
+
+    GridLayout {
+        id: layout
+        anchors.fill: parent // IMPORTANT: Using GridLayout without this will fail!
+        columns: 2
+        columnSpacing: 0
+        rowSpacing: 0
+
+        Repeater {
+            id: repeater
+
+            Image {
+                id: image
+                width: Layout.columnSpan*parent.width/parent.columns
+                height: Layout.rowSpan*parent.width/parent.columns
+                Layout.minimumWidth: width
+                Layout.minimumHeight: height
+                Layout.preferredWidth: width
+                Layout.preferredHeight: height
+                Layout.maximumWidth: parent.width
+                Layout.maximumHeight: parent.height
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                sourceSize.width: width
+                sourceSize.height: height
+                source: model.avatar
+                asynchronous: true
+                opacity: progress/3 // background
+                visible: index < rows // limit the number of pictures
+                Behavior on opacity { FadeAnimator {} }
+                onStatusChanged: {
+                    if(status == Image.Error) {
+                        console.warn("Can't load image for matches cover")
+                    }
+                }
+            }
         }
     }
 

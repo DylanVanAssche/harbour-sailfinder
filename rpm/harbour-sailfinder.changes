@@ -4,6 +4,7 @@
 - [IMPROVEMENT] Remorse action used when needed
 - [IMPROVEMENT] Stability improvements for the login screen
 - [IMPROVEMENT] Location updates are still working OK
+- [IMPROVEMENT] Use Silica booster for faster startup
 - [NEW] SFOS cover when Sailfinder is minimized
 - [NEW] Delete pictures from Tinder (hold a profile picture to show remove screen)
 - [NEW] Opt-in for Smart Photo's

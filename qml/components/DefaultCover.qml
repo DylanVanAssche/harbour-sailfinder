@@ -21,30 +21,6 @@ import Sailfish.Silica 1.0
 Item {
     anchors.fill: parent
 
-    function populate() {
-        if(api.profile !== "null") {
-            background.source = api.profile.photos.getPhoto(0).url
-        }
-    }
-
-    Connections {
-        target: api
-        onProfileChanged: populate()
-    }
-
-    Image {
-        id: background
-        anchors.fill: parent
-        asynchronous: true
-        opacity: progress/3 // background
-        Behavior on opacity { FadeAnimator {} }
-        onStatusChanged: {
-            if(status == Image.Error) {
-                console.warn("Can't load image as cover background")
-            }
-        }
-    }
-
     Column {
         width: parent.width
         anchors.centerIn: parent
@@ -57,9 +33,8 @@ Item {
 
         TextLabel {
             horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: Theme.fontSizeExtraLarge
-            //% "Profile"
-            text: qsTrId("sailfinder-profile")
+            font.pixelSize: Theme.fontSizeLarge
+            text: sfos.appNamePretty
         }
     }
 }

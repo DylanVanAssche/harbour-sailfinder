@@ -34,7 +34,7 @@
 int main(int argc, char *argv[])
 {
     // Enforce QT_OPENGL_NO_BGRA for Xperia X
-    //qputenv("QT_OPENGL_NO_BGRA", "1");
+    qputenv("QT_OPENGL_NO_BGRA", "1");
 
     // Set up qml engine.
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));

@@ -21,37 +21,27 @@ import "../components"
 
 CoverBackground {
     id: cover
-    property bool _loading
+    property bool _loading: true
 
-    Loader {
-        anchors.fill: parent
-        asynchronous: true
-        source: switch(app.swipeViewIndex) {
-                    case 1: // MatchesView
-                        return "../components/MatchesCover.qml"
-                    case 2: // ProfileView
-                        return "../components/ProfileCover.qml"
-                    case 0: // RecommendationsView
-                    default:
-                        return "../components/RecommendationsCover.qml"
-                }
-        onStatusChanged: {
-            if(status == Loader.Ready) {
-                _loading = false
-            }
-            else {
-                _loading = true
-                if(status == Loader.Error) {
-                    console.warn("Can't load QML component")
-                }
-            }
-        }
+    Connections {
+        target: api
+        onAuthenticatedChanged: _loading = false
     }
 
-    BusyIndicator {
-        anchors.centerIn: parent
-        size: BusyIndicatorSize.Medium
-        running: !Qt.application.active && _loading
+    DefaultCover {
+        visible: _loading
+    }
+
+    RecommendationsCover {
+        visible: app.swipeViewIndex === 0 && !_loading
+    }
+
+    MatchesCover {
+        visible: app.swipeViewIndex === 1 && !_loading
+    }
+
+    ProfileCover {
+        visible: app.swipeViewIndex === 2 && !_loading
     }
 }
 
