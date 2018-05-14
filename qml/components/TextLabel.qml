@@ -18,11 +18,15 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 Label {
-    anchors { left: parent.left; right: parent.right; leftMargin: Theme.horizontalPageMargin; rightMargin: Theme.horizontalPageMargin }
+    anchors {
+        left: parent.left
+        right: parent.right
+        leftMargin: Theme.horizontalPageMargin
+        rightMargin: Theme.horizontalPageMargin
+    }
     font.pixelSize: Theme.fontSizeMedium
     wrapMode: Text.WordWrap
+    truncationMode: TruncationMode.Fade
 
-    Behavior on opacity {
-        FadeAnimation {}
-    }
+    Behavior on opacity { FadeAnimation {} }
 }

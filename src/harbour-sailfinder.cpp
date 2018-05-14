@@ -33,46 +33,49 @@
 
 int main(int argc, char *argv[])
 {
-        // Set up qml engine.
-        QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
-        QScopedPointer<QQuickView> view(SailfishApp::createView());
-        qApp->setApplicationVersion(QString(APP_VERSION));
+    // Enforce QT_OPENGL_NO_BGRA for Xperia X
+    //qputenv("QT_OPENGL_NO_BGRA", "1");
 
-        // Set application version and enable logging
-        enableLogger(false);
+    // Set up qml engine.
+    QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    QScopedPointer<QQuickView> view(SailfishApp::createView());
+    qApp->setApplicationVersion(QString(APP_VERSION));
 
-        // Enable default translations
-        QTranslator *translator = new QTranslator(qApp);
-        QString trPath = SailfishApp::pathTo(QStringLiteral("translations")).toLocalFile();
-        QString appName = app->applicationName();
-        // Check if translations have been already loaded
-        if (!translator->load(QLocale::system(), appName, "-", trPath))
-        {
-            // Load default translations if not
-            translator->load(appName, trPath);
-            app->installTranslator(translator);
-        }
-        else
-        {
-            translator->deleteLater();
-        }
+    // Set application version and enable logging
+    enableLogger(false);
 
-        // Register custom QML modules
-        qmlRegisterUncreatableType<User>("Harbour.Sailfinder.Models", 1, 0, "User", "read only");
-        qmlRegisterUncreatableType<Person>("Harbour.Sailfinder.Models", 1, 0, "Person", "read only");
-        qmlRegisterUncreatableType<Recommendation>("Harbour.Sailfinder.Models", 1, 0, "Recommendation", "read only");
-        qmlRegisterUncreatableType<Match>("Harbour.Sailfinder.Models", 1, 0, "Match", "read only");
-        qmlRegisterUncreatableType<Photo>("Harbour.Sailfinder.Models", 1, 0, "Photo", "read only");
-        qmlRegisterUncreatableType<Message>("Harbour.Sailfinder.Models", 1, 0, "Message", "read only");
-        qmlRegisterUncreatableType<School>("Harbour.Sailfinder.Models", 1, 0, "School", "read only");
-        qmlRegisterUncreatableType<Job>("Harbour.Sailfinder.Models", 1, 0, "Job", "read only");
-        qmlRegisterUncreatableType<Sailfinder>("Harbour.Sailfinder.Models", 1, 0, "Sailfinder", "read only");
-        qmlRegisterType<API>("Harbour.Sailfinder.API", 1, 0, "API");
-        qmlRegisterType<OS>("Harbour.Sailfinder.SFOS", 1, 0, "SFOS");
+    // Enable default translations
+    QTranslator *translator = new QTranslator(qApp);
+    QString trPath = SailfishApp::pathTo(QStringLiteral("translations")).toLocalFile();
+    QString appName = app->applicationName();
+    // Check if translations have been already loaded
+    if(!translator->load(QLocale::system(), appName, "-", trPath))
+    {
+        // Load default translations if not
+        translator->load(appName, trPath);
+        app->installTranslator(translator);
+    }
+    else
+    {
+        translator->deleteLater();
+    }
 
-        // Start the application.
-        view->setSource(SailfishApp::pathTo("qml/harbour-sailfinder.qml"));
-        view->show();
+    // Register custom QML modules
+    qmlRegisterUncreatableType<User>("Harbour.Sailfinder.Models", 1, 0, "User", "read only");
+    qmlRegisterUncreatableType<Person>("Harbour.Sailfinder.Models", 1, 0, "Person", "read only");
+    qmlRegisterUncreatableType<Recommendation>("Harbour.Sailfinder.Models", 1, 0, "Recommendation", "read only");
+    qmlRegisterUncreatableType<Match>("Harbour.Sailfinder.Models", 1, 0, "Match", "read only");
+    qmlRegisterUncreatableType<Photo>("Harbour.Sailfinder.Models", 1, 0, "Photo", "read only");
+    qmlRegisterUncreatableType<Message>("Harbour.Sailfinder.Models", 1, 0, "Message", "read only");
+    qmlRegisterUncreatableType<School>("Harbour.Sailfinder.Models", 1, 0, "School", "read only");
+    qmlRegisterUncreatableType<Job>("Harbour.Sailfinder.Models", 1, 0, "Job", "read only");
+    qmlRegisterUncreatableType<Sailfinder>("Harbour.Sailfinder.Models", 1, 0, "Sailfinder", "read only");
+    qmlRegisterType<API>("Harbour.Sailfinder.API", 1, 0, "API");
+    qmlRegisterType<OS>("Harbour.Sailfinder.SFOS", 1, 0, "SFOS");
+
+    // Start the application.
+    view->setSource(SailfishApp::pathTo("qml/harbour-sailfinder.qml"));
+    view->show();
 
     return app->exec();
 }
