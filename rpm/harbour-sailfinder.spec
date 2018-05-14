@@ -27,6 +27,8 @@ BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  qt5-qtdbus-devel
+BuildRequires:  qt5-qtpositioning-devel
 BuildRequires:  nemo-qml-plugin-notifications-qt5-devel
 BuildRequires:  desktop-file-utils
 
