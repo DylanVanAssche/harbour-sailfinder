@@ -80,7 +80,6 @@ DISTFILES += qml/harbour-sailfinder.qml \
     qml/components/MessagingHeader.qml \
     qml/js/util.js \
     rpm/harbour-sailfinder.spec \
-    rpm/harbour-sailfinder.yaml \
     translations/*.ts \
     harbour-sailfinder.desktop \
     rpm/harbour-sailfinder.changes \
