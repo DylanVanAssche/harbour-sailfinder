@@ -46,6 +46,7 @@ QHash<int, QByteArray> JobListModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
+    roles[TitleRole] = "title";
     return roles;
 }
 
@@ -60,6 +61,8 @@ QVariant JobListModel::data(const QModelIndex &index, int role) const
         return QVariant(this->jobList().at(index.row())->id());
     case NameRole:
         return QVariant(this->jobList().at(index.row())->name());
+    case TitleRole:
+        return QVariant(this->jobList().at(index.row())->title());
     default:
         return QVariant();
     }

@@ -18,6 +18,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import Sailfish.Silica 1.0
+import Harbour.Sailfinder.Models 1.0
 
 Item {
     property var photoListModel
@@ -67,7 +68,16 @@ Item {
                     height: parent.height
                     sourceSize.width: width
                     sourceSize.height: height
-                    source: model.urlMedium
+                    source: {
+                        switch(api.getBearerType())
+                        {
+                            case Sailfinder.Ethernet:
+                            case Sailfinder.WLAN:
+                                return model.urlLarge
+                            default: // mobile networks or unknown
+                                return model.urlMedium
+                        }
+                    }
                     asynchronous: true
                     opacity: progress
                     Behavior on opacity { FadeAnimator {} }
@@ -143,6 +153,7 @@ Item {
         height: parent.width
         anchors.centerIn: parent
         visible: false
+        asynchronous: true
         z: 1
 
         MouseArea {

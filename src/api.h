@@ -115,6 +115,7 @@ public:
     Q_INVOKABLE void uploadPhoto(QString path);
     Q_INVOKABLE void removePhoto(QString photoId);
     Q_INVOKABLE void getFullMatchProfile(QString userId);
+    Q_INVOKABLE int getBearerType();
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
