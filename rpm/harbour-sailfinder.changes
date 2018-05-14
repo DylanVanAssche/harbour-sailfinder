@@ -1,4 +1,4 @@
-* Tue May 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-4
+* Mon May 15 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-6
 - [MINOR BUGFIX] Sailfinder can now run in the emulator again
 - [MINOR BUGFIX] Messages are scrolling automatically when the keyboard shows/hides
 - [MAJOR BUGFIX] Jobs are now parsed correctly by Sailfinder
@@ -14,6 +14,7 @@
 - [NEW] See the distance of your matches
 - [NEW] Show schools and jobs for recommendations, matches and your profile
 - [UPGRADE] /updates endpoint data upgrade
+- [RPM] Fixed OBS build
 - [WIP] Phone login support preparations
 - [LIBS] Moved to new Nemo import syntax
 
