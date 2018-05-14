@@ -41,9 +41,6 @@ Page {
             heading.title = Util.createHeaderMatchProfile(match.name, match.birthDate, match.gender, match.distance)
             schoolsListView.model = match.schools
             jobsListView.model = match.jobs
-            console.debug(schoolsListView.count)
-            console.debug(jobsListView.count)
-
             console.debug("Match profile enhanced!")
         }
     }
@@ -79,7 +76,7 @@ Page {
                 height: contentHeight
                 delegate: SchoolJobDelegate {
                     icon: "qrc:///images/icon-school.png"
-                    title: model.name
+                    name: model.name
                 }
             }
 

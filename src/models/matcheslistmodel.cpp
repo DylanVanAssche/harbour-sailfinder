@@ -95,7 +95,7 @@ QVariant MatchesListModel::data(const QModelIndex &index, int role) const
         }
         else {
             // Return a placeholder when match doesn't has any pictures
-            return QVariant(":/images/icon-liked.png");
+            return QVariant(":/images/icon-matches.png");
         }
     case MessagesPreviewRole:
         if(this->matchesList().at(index.row())->message() != NULL) {

@@ -22,10 +22,11 @@ ListItem {
     property string icon
     property string name
     property string title
+    property bool editable
 
     contentHeight: column.height + Theme.paddingLarge
     width: parent.width
-    enabled: false
+    enabled: editable
 
     Column {
         id: column
@@ -39,12 +40,14 @@ ListItem {
 
         TextLabel {
             text: name
+            visible: text.length > 0
         }
 
         TextLabel {
             text: title
-            font.pixelSize: Theme.fontSizeTiny
-            font.italic: true
+            // No name provided? Use the normal textsize
+            font.pixelSize: name.length > 0? Theme.fontSizeTiny: Theme.fontSizeMedium
+            font.italic: name.length > 0 // Italic when fontSizeTiny is in use
             visible: text.length > 0
         }
     }

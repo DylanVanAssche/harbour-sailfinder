@@ -40,6 +40,8 @@ SilicaFlickable {
             console.debug("Recommendation data received")
             photoList.photoListModel = api.recommendation.photos
             bio.text = api.recommendation.bio
+            schoolsListView.model = api.recommendation.schools
+            jobsListView.model = api.recommendation.jobs
             retryTimer.stop()
             recsBar.canSuperlike = api.canSuperlike
             recsBar.loaded = true
@@ -106,6 +108,27 @@ SilicaFlickable {
             width: parent.width
             readOnly: true
             visible: text.length > 0
+        }
+
+        SilicaListView {
+            id: schoolsListView
+            width: parent.width
+            height: contentHeight
+            delegate: SchoolJobDelegate {
+                icon: "qrc:///images/icon-school.png"
+                name: model.name
+            }
+        }
+
+        SilicaListView {
+            id: jobsListView
+            width: parent.width
+            height: contentHeight
+            delegate: SchoolJobDelegate {
+                icon: "qrc:///images/icon-job.png"
+                name: model.name
+                title: model.title
+            }
         }
     }
 

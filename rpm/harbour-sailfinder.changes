@@ -5,11 +5,12 @@
 - [IMPROVEMENT] Remorse action used when needed
 - [IMPROVEMENT] Stability improvements for the login screen
 - [IMPROVEMENT] Location updates are still working OK
+- [IMPROVEMENT] Automatically throttle the quality of the pictures to reduce data usage on mobile networks
 - [NEW] Delete pictures from Tinder (hold a profile picture to show remove screen)
 - [NEW] Opt-in for Smart Photo's
 - [NEW] Moved to OBS for building RPM's
 - [NEW] See the distance of your matches
-- [NEW] Show schools and jobs for recommendations and matches
+- [NEW] Show schools and jobs for recommendations, matches and your profile
 - [UPGRADE] /updates endpoint data upgrade
 - [WIP] Phone login support preparations
 - [LIBS] Moved to new Nemo import syntax

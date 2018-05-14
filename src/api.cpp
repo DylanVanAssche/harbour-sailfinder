@@ -25,7 +25,6 @@ API::API(QObject *parent) : QObject(parent)
     // Initiate a new QNetworkAccessManager with cache
     QNAM = new QNetworkAccessManager(this);
     QNetworkConfigurationManager QNAMConfig;
-    QNAM->setConfiguration(QNAMConfig.defaultConfiguration());
     QNAMCache = new QNetworkDiskCache(this);
     QNAMCache->setCacheDirectory(SFOS.cacheLocation()+ "/network");
     QNAM->setCache(QNAMCache);
@@ -753,6 +752,11 @@ void API::getFullMatchProfile(QString userId)
     }
 }
 
+int API::getBearerType()
+{
+    return QNAM->configuration().bearerType();
+}
+
 /**
  * @class API
  * @brief Parse the positioning
@@ -1311,14 +1315,30 @@ void API::parseProfile(QJsonObject json)
 
         foreach(QJsonValue item, user["jobs"].toArray()) {
             QJsonObject job = item.toObject();
-            // Name is needed but ID might be missing sometimes!
-            if(job.value("id") != QJsonValue::Undefined) {
-                jobList.append(new Job(job["id"].toString(), job["name"].toString()));
+
+            QString companyName;
+            QString titleName;
+            QString id;
+            if(job.value("company") != QJsonValue::Undefined)
+            {
+                QJsonObject company = job["company"].toObject();
+                companyName = company["name"].toString();
+                if(company.value("id") != QJsonValue::Undefined)
+                {
+                    id = company["id"].toString();
+                }
             }
-            else {
-                qWarning() << "Job id is missing";
-                jobList.append(new Job(job["name"].toString()));
+
+            if(job.value("title") != QJsonValue::Undefined)
+            {
+                QJsonObject title = job["title"].toObject();
+                titleName = title["name"].toString();
+                if(id.length() == 0 && title.value("id") != QJsonValue::Undefined)
+                {
+                    id = title["id"].toString();
+                }
             }
+            jobList.append(new Job(id, companyName, titleName));
         }
 
         qDebug() << "Profile data:";
@@ -1383,14 +1403,30 @@ void API::parseRecommendations(QJsonObject json)
 
             foreach(QJsonValue item, recommendation["jobs"].toArray()) {
                 QJsonObject job = item.toObject();
-                // Name is needed but ID might be missing sometimes!
-                if(job.value("id") != QJsonValue::Undefined) {
-                    jobList.append(new Job(job["id"].toString(), job["name"].toString()));
+
+                QString companyName;
+                QString titleName;
+                QString id;
+                if(job.value("company") != QJsonValue::Undefined)
+                {
+                    QJsonObject company = job["company"].toObject();
+                    companyName = company["name"].toString();
+                    if(company.value("id") != QJsonValue::Undefined)
+                    {
+                        id = company["id"].toString();
+                    }
                 }
-                else {
-                    qWarning() << "Job id is missing";
-                    jobList.append(new Job(job["name"].toString()));
+
+                if(job.value("title") != QJsonValue::Undefined)
+                {
+                    QJsonObject title = job["title"].toObject();
+                    titleName = title["name"].toString();
+                    if(id.length() == 0 && title.value("id") != QJsonValue::Undefined)
+                    {
+                        id = title["id"].toString();
+                    }
                 }
+                jobList.append(new Job(id, companyName, titleName));
             }
 
             recsList.append(new Recommendation(id, name, birthDate, gender, bio, schoolList, jobList, photoList, contentHash, sNumber, distance));

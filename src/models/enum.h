@@ -3,6 +3,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
+#include <QtNetwork/QNetworkConfiguration>
 
 class Sailfinder
 {
@@ -26,8 +27,15 @@ public:
         Full = 5 // 1080x1080
     };
 
+    // Stripped down from QNetworkConfiguration
+    enum class ConnectionType {
+        Ethernet = QNetworkConfiguration::BearerEthernet,
+        WLAN = QNetworkConfiguration::BearerWLAN
+    };
+
     Q_ENUMS(Gender)
     Q_ENUMS(Size)
+    Q_ENUMS(ConnectionType)
 };
 
 Q_DECLARE_METATYPE(Sailfinder::Gender)
