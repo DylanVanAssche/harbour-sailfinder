@@ -58,6 +58,7 @@ class MatchesListModel : public QAbstractListModel
         QList<Match *> matchesList() const;
         void setMatchesList(const QList<Match *> &matchesList);
         void updateMatchLastMessage(const QString &matchId, Message* lastMessage);
+        Q_INVOKABLE int numberOfMatches();
 
 protected:
         QHash<int, QByteArray> roleNames() const;

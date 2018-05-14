@@ -26,10 +26,11 @@ import "pages"
 ApplicationWindow
 {
     property bool networkStatus
+    property int swipeViewIndex: 0
 
     id: app
-    initialPage: Component { FirstPage { } }
-    cover: Qt.resolvedUrl("cover/CoverPage.qml")
+    initialPage: Component { FirstPage {} }
+    cover: Qt.resolvedUrl("pages/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
     onNetworkStatusChanged: {
         if(networkStatus == false) {

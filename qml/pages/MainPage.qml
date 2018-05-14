@@ -148,6 +148,7 @@ Page {
                     onHeaderChanged: swipeView._profileHeader = text
                 }
             }
+            onCurrentIndexChanged: app.swipeViewIndex = currentIndex
         }
 
         NavigationBar {

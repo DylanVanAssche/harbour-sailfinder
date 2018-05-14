@@ -59,6 +59,7 @@ SOURCES += src/harbour-sailfinder.cpp \
     src/models/matcheslistmodel.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
+    qml/pages/CoverPage.qml \
     qml/pages/FirstPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/AboutPage.qml \
@@ -85,6 +86,10 @@ DISTFILES += qml/harbour-sailfinder.qml \
     rpm/harbour-sailfinder.changes \
     qml/js/authentication.js \
     qml/css/authentication.css \
+    qml/components/RecommendationsCover.qml \
+    qml/components/MatchesCover.qml \
+    qml/components/ProfileCover.qml \
+    qml/components/DefaultCover.qml
     qml/components/SchoolJobDelegate.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256

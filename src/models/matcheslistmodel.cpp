@@ -149,4 +149,8 @@ void MatchesListModel::updateMatchLastMessage(const QString &matchId, Message *l
     this->endResetModel();
 }
 
+int MatchesListModel::numberOfMatches()
+{
+    return this->matchesList().count();
+}
 
