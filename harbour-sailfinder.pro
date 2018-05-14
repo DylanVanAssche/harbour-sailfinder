@@ -26,8 +26,7 @@ CONFIG += warn_off
 
 QT += core \
     network \
-    positioning \
-    sql
+    positioning
 
 # OS module notification support
 PKGCONFIG += nemonotifications-qt5
