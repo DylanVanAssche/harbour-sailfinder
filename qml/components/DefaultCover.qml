@@ -18,10 +18,23 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-CoverBackground {
-    Label {
+Item {
+    anchors.fill: parent
+
+    Column {
+        width: parent.width
         anchors.centerIn: parent
-        text: "Sailfinder"
+
+        Image {
+            width: Theme.itemSizeSmall
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "qrc:///images/cover-logo.png"
+        }
+
+        TextLabel {
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: Theme.fontSizeLarge
+            text: sfos.appNamePretty
+        }
     }
 }
-

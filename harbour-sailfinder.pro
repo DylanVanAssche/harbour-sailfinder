@@ -59,7 +59,6 @@ SOURCES += src/harbour-sailfinder.cpp \
     src/models/matcheslistmodel.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
-    qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/AboutPage.qml \
