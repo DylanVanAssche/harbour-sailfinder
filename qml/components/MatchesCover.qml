@@ -61,7 +61,7 @@ Item {
                 source: model.avatar
                 asynchronous: true
                 opacity: progress/3 // background
-                visible: index < rows // limit the number of pictures
+                visible: index < 8 // limit the number of pictures
                 Behavior on opacity { FadeAnimator {} }
                 onStatusChanged: {
                     if(status == Image.Error) {
