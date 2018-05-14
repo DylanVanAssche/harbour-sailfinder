@@ -30,7 +30,8 @@ class JobListModel : public QAbstractListModel
     public:
         enum Roles {
             IdRole = Qt::UserRole + 1,
-            NameRole = Qt::UserRole + 2
+            NameRole = Qt::UserRole + 2,
+            TitleRole = Qt::UserRole + 3
         };
 
         explicit JobListModel(QList<Job *> jobList);

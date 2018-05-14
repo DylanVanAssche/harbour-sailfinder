@@ -88,6 +88,8 @@ SilicaFlickable {
             ageMin.value = api.profile.ageMin // Order is important otherwise the value will not be updated due our limits implemented in the sliders
             photoList.photoListModel = api.profile.photos
             bio.text = api.profile.bio
+            schoolsListView.model = api.profile.schools
+            jobsListView.model = api.profile.jobs
             headerChanged(Util.createHeaderProfile(api.profile.name, api.profile.birthDate, api.profile.gender))
             updatesTimer.start()
         }
@@ -137,6 +139,29 @@ SilicaFlickable {
             label: text.length > 0? qsTrId("sailfinder-remaining-characters").arg(text.length).arg(500): ""
             //% "Type your biography here"
             placeholderText: qsTrId("sailfinder-bio-hint")
+        }
+
+        SilicaListView {
+            id: schoolsListView
+            width: parent.width
+            height: contentHeight
+            delegate: SchoolJobDelegate {
+                icon: "qrc:///images/icon-school.png"
+                name: model.name
+                editable: false // Updating schools and jobs not supported yet
+            }
+        }
+
+        SilicaListView {
+            id: jobsListView
+            width: parent.width
+            height: contentHeight
+            delegate: SchoolJobDelegate {
+                icon: "qrc:///images/icon-job.png"
+                name: model.name
+                title: model.title
+                editable: false // Updating schools and jobs not supported yet
+            }
         }
 
         //% "Discovery"

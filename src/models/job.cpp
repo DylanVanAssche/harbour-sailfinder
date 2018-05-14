@@ -11,6 +11,13 @@ Job::Job(QString id, QString name)
     this->setName(name);
 }
 
+Job::Job(QString id, QString name, QString title)
+{
+    this->setId(id);
+    this->setName(name);
+    this->setTitle(title);
+}
+
 Job::Job(QString name)
 {
     this->setId("");
@@ -37,4 +44,15 @@ void Job::setName(const QString &name)
 {
     m_name = name;
     emit this->nameChanged();
+}
+
+QString Job::title() const
+{
+    return m_title;
+}
+
+void Job::setTitle(const QString &title)
+{
+    m_title = title;
+    emit this->titleChanged();
 }
