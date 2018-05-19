@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="nl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="nl" version="2.1">
 <context>
-    <name></name>
+    <name/>
     <message id="sailfinder-api-error">
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
@@ -240,7 +238,7 @@
     </message>
     <message id="sailfinder-messaging-error">
         <source>Messages couldn&apos;t be retrieved due missing profile information</source>
-        <extracomment>Error shown to the user when profile data wasn&apos;t succesfull retrieved. It&apos;s impossible then to get the messages between the user and it&apos;s matches.</extracomment>
+        <extracomment>Error shown to the user when profile data wasn't succesfull retrieved. It's impossible then to get the messages between the user and it's matches.</extracomment>
         <translation>Berichten konden niet worden opgehaald wegens ontbrekende profielinformatie</translation>
     </message>
     <message id="sailfinder-minutes-ago">
@@ -278,43 +276,44 @@
     <message id="sailfinder-timeout-error">
         <source>Network timeout</source>
         <extracomment>Error shown to the user when a network timeout was received</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Netwerk timeout</translation>
     </message>
     <message id="sailfinder-optimizer">
         <source>Optimizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Optimalisator</translation>
     </message>
     <message id="sailfinder-optimizer-text">
         <source>The photo optimizer will automatically show your best photo&apos;s first on your profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>De foto-optimalisator zal automatisch jouw beste foto&apos;s eerst op je profiel tonen.</translation>
     </message>
     <message id="sailfinder-logging-out">
         <source>Logging out</source>
-        <translation type="unfinished"></translation>
+        <translation>Uitloggen</translation>
     </message>
     <message id="sailfinder-removing-photo">
         <source>Removing photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Foto verwijderen</translation>
     </message>
     <message id="sailfinder-upload-photo">
         <source>Upload photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Foto uploaden</translation>
     </message>
     <message id="sailfinder-upload-failed">
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="sailfinder-reload">
-        <source>Reload</source>
-        <translation type="unfinished"></translation>
+        <source/>
+        <oldsource>Photo upload failed!</oldsource>
+        <translation>Foto uploaden mislukt!</translation>
     </message>
     <message id="sailfinder-login-facebook">
         <source>Use Facebook login</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruik Facebook login</translation>
     </message>
     <message id="sailfinder-login-phone">
         <source>Use phone login</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruik telefoon login</translation>
+    </message>
+    <message id="sailfinder-reload">
+        <source>Reload</source>
+        <translation>Herladen</translation>
     </message>
 </context>
 </TS>
