@@ -130,6 +130,8 @@ SilicaFlickable {
                 title: model.title
             }
         }
+
+        Spacer {}
     }
 
     ViewPlaceholder {

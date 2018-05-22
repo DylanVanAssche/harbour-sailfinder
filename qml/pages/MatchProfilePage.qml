@@ -90,6 +90,8 @@ Page {
                     title: model.title
                 }
             }
+
+            Spacer {}
         }
     }
 }
