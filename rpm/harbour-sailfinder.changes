@@ -1,3 +1,6 @@
+* Sun May 20 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-8
+- [STORE] Make sure Sailfinder is Harbour compatible from SFOS 2.2.0 and higher
+
 * Sat May 19 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-7
 - [TRANSLATIONS] Updated Dutch, Dutch BE, Spanish, Portuguese and German translations
 
