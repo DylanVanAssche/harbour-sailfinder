@@ -20,7 +20,7 @@ import Sailfish.Silica 1.0
 
 Item {
     property bool _loaded
-    property bool _canLike
+    property bool _canLike: true // avoid race condition at launch
 
     function populate() {
         if(api.recommendation !== "null") {
@@ -71,6 +71,13 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Theme.fontSizeLarge
         }
+    }
+
+    BusyIndicator {
+        anchors.centerIn: parent
+        size: BusyIndicatorSize.Medium
+        // Show loading indicator until the name of the recommendation has been loaded
+        running: name.text.length == 0
     }
 
     // Exhausted swiping

@@ -317,5 +317,9 @@
         <source>Reload</source>
         <translation>Reload</translation>
     </message>
+    <message id="sailfinder-gif">
+        <source>GIF</source>
+        <translation>GIF</translation>
+    </message>
 </context>
 </TS>

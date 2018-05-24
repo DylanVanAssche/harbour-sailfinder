@@ -1,3 +1,8 @@
+* Thu May 24 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-1
+- [MINOR BUGFIX] Cover showed 'Exhausted' when launching
+- [NEW] Show GIF's in messages
+- [NEW] Send GIF's im messages
+
 * Tue May 22 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.4-9
 - [TRANSLATIONS] Added Polish translations
 
