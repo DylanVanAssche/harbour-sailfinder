@@ -1,68 +1,194 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Sailfinder</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./css/stylesheet.css">
+<body>
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
-    <title>Sailfinder by modulebaan</title>
-  </head>
-
-  <body>
-
-    <header>
-      <div class="container">
-        <h1>Sailfinder</h1>
-        <h2>Unofficial Tinder client for Sailfish OS</h2>
-
-        <section id="downloads">
-          <a href="https://github.com/modulebaan/harbour-sailfinder/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/modulebaan/harbour-sailfinder/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/modulebaan/harbour-sailfinder" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
-
-    <div class="container">
-      <section id="main_content">
-        <h3>
-<a id="sailfinder" class="anchor" href="#sailfinder" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sailfinder</h3>
-
-<p>Sailfinder is an unofficial Tinder client for Sailfish OS.
-Sailfinder is released under GPLv3, the source can be found in our Github repository where you can also report bugs.</p>
-
-<h4>
-<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h4>
-
-<ul>
-<li>Like, dislike and superlike people</li>
-<li>View their pictures and bio without looking at their profile</li>
-<li>Change your Tinder discovery, location and other settings</li>
-<li>View your profile: pictures, about, ...</li>
-<li>Update your bio and gender</li>
-<li>Upload pictures from FB</li>
-<li>View your matches</li>
-<li>Report &amp; unmatch matches</li>
-<li>Send messages</li>
-<li>Like messages</li>
-<li>Send &amp; receive GIFs</li>
-</ul>
-
-<h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Sailfinder? Please let me know by opening an 'Issue' on Github.</p>
-
-<h3>
-<a id="other" class="anchor" href="#other" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Other</h3>
-
-<p>I'm not responsible for burning your house down, get fired or anything else when you use my app! I'm also not related in any way with the official Tinder app and the company.</p>
-      </section>
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme w3-card" id="myNavbar">
+    <a href="#home" class="w3-bar-item w3-button w3-wide bold w3-large">Sailfinder</a>
+    <!-- Right-sided navbar links -->
+    <div class="w3-right w3-hide-small">
+      <a href="#what" class="w3-bar-item w3-button w3-large">WHAT?</a>
+      <a href="#screenshots" class="w3-bar-item w3-button w3-large">SCREENSHOTS</a>
+      <a href="#download" class="w3-bar-item w3-button w3-large">DOWNLOAD</a>
+      <a href="#about" class="w3-bar-item w3-button w3-large">ABOUT</a>
+      <a href="https://www.github.com/DylanVanAssche/harbour-sailfinder" target="_blank" onclick="w3_close()" class="w3-bar-item w3-button w3-large"><i class="fa fa-github"></i></a>
     </div>
+    <!-- Hide right-floated links on small screens and replace them with a menu icon -->
 
-    
-  </body>
+    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-large w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
+      <i class="fa fa-bars"></i>
+    </a>
+  </div>
+</div>
+
+<!-- Sidebar on small screens when clicking the menu icon -->
+<nav class="w3-sidebar w3-bar-block w3-theme-dark w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close &times;</a>
+  <a href="#home" onclick="w3_close()" class="w3-bar-item w3-button w3-large">HOME</a>
+  <a href="#what" onclick="w3_close()" class="w3-bar-item w3-button w3-large">WHAT?</a>
+  <a href="#screenshots" onclick="w3_close()" class="w3-bar-item w3-button w3-large">SCREENSHOTS</a>
+  <a href="#download" onclick="w3_close()" class="w3-bar-item w3-button w3-large">DOWNLOAD</a>
+  <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button w3-large">ABOUT</a>
+  <a href="https://www.github.com/DylanVanAssche/harbour-sailfinder" target="_blank" onclick="w3_close()" class="w3-bar-item w3-button w3-large">SOURCE CODE</a>
+</nav>
+
+<!-- Header with full-height image -->
+<header class="bgimg-1 w3-display-container w3-theme-d1" id="home">
+  <div class="w3-display-left w3-text-white" style="padding:48px">
+    <span class="w3-jumbo w3-hide-small">Meet the one on Sailfinder</span><br>
+    <span class="w3-xxlarge w3-hide-large w3-hide-medium">Meet the one on Sailfinder</span><br>
+    <span class="w3-xlarge">The unofficial Tinder client for Sailfish OS</span>
+    <p><a href="#download" class="w3-button w3-theme-d4 w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off">Download now</a></p>
+  </div>
+</header>
+
+<!-- What's? -->
+<div class="w3-container w3-theme-light w3-padding-64" id="what">
+  <h3 class="w3-center">WHAT'S SAILFINDER?</h3>
+  <p class="w3-center">Sailfinder is an unofficial <a href="https://www.tinder.com/" target="_blank">Tinder</a> client for Jolla's <a href="https://www.sailfishos.org/" target="_blank">Sailfish OS</a>.</p>
+  <div class="vertical-center">
+  <h5>Our goal?</h5>
+  <ul>
+    <li>Provide native access to Tinder for Sailfish OS users.</li>
+    <li>Show Tinder that Sailfish OS is ready for an official native application.</li>
+  </ul>
+  <h5>Features</h5>
+  <ul>
+    <li>Discover people in your area, like, dislike or superlike them.</li>
+    <li>View people their profile</li>
+    <li>Chat with your matches</li>
+    <li>GIF support</li>
+    <li>Edit your profile, upload new pictures, ...</li>
+    <li>Native notifications</li>
+    <li>Available in several languages, for more information click <a href="https://www.transifex.com/DylanVanAssche/harbour-sailfinder" target="_blank">here</a></li>
+    <li>Modern C++ backend with a beautiful Sailfish OS UI</li>
+    <li>Open source, available on <a href="https://www.github.com/DylanVanAssche/harbour-sailfinder" target="_blank">Github</a></li>
+    <li>Many more!</li>
+  </ul>
+  <h5>Support</h5>
+  <p>
+    Sailfinder is completely developed in spare time, if you want to support the
+    development further you can <a href="https://www.paypal.me/minitreintje" class="w3-theme-hover">buy us a coffee</a>.
+  </p>
+</div>
+</div>
+
+<!-- Screenshots -->
+<div class="w3-container w3-theme-light" style="padding:128px 16px" id="screenshots">
+  <div class="w3-row-padding">
+    <div class="w3-col m6 w3-center">
+      <div class="both-center">
+        <p><i class="fa fa-globe w3-margin-bottom w3-jumbo"></i></p>
+        <h2>Recommendations</h2>
+        <p class="w3-large">Discover other people in your area.</p>
+      </div>
+    </div>
+    <div class="w3-col m6 w3-center">
+      <img class="w3-image w3-round-large screenshots" src="./images/screenshot-recommendations.png" alt="Recommendations">
+    </div>
+  </div>
+</div>
+
+<div class="w3-container w3-theme-light" style="padding:128px 16px">
+  <div class="w3-row-padding">
+    <div class="w3-col m6 w3-center">
+      <div class="both-center">
+        <p><i class="fa fa-heartbeat w3-margin-bottom w3-jumbo"></i></p>
+        <h2 class="w3-center">Matches</h2>
+        <p class="w3-center w3-large">You liked each other? Chat with your match and maybe you found the one!</p>
+      </div>
+    </div>
+    <div class="w3-col m6 w3-center">
+      <img class="w3-image w3-round-large screenshots" src="./images/screenshot-matches.png" alt="Matches">
+    </div>
+  </div>
+</div>
+
+<div class="w3-container w3-theme-light" style="padding:128px 16px">
+  <div class="w3-row-padding">
+    <div class="w3-col m6 w3-center">
+      <div class="both-center">
+        <p><i class="fa fa-address-card w3-margin-bottom w3-jumbo"></i></p>
+        <h2>Profile</h2>
+        <p class="w3-large">Edit your profile, add new pictures and so much more!</p>
+      </div>
+    </div>
+    <div class="w3-col m6 w3-center">
+      <img class="w3-image w3-round-large screenshots" src="./images/screenshot-profile.png" alt="Profile">
+    </div>
+  </div>
+</div>
+
+<!-- Download -->
+<div class="w3-container w3-theme-light" style="padding:128px 16px" id="download">
+  <h3 class="w3-center">DOWNLOAD NOW!</h3>
+  <div class="w3-row-padding w3-center" style="margin-top:64px">
+    <div class="w3-half">
+      <i class="fa fa-shopping-bag w3-margin-bottom w3-jumbo w3-center"></i>
+      <p class="w3-large">Jolla Store</p>
+      <p>
+        The official Jolla Store where all <span class="italic">stable releases</span> are available.<br>
+        Launch the Store app on your Sailfish OS device to install Sailfinder on your device!
+      </p>
+    </div>
+    <div class="w3-half">
+      <a href="https://openrepos.net/content/minitreintje/sailfinder" target="_blank"><i class="fa fa-download w3-margin-bottom w3-jumbo w3-hover-opacity"></i></a>
+      <p class="w3-large"><a href="https://openrepos.net/content/minitreintje/sailfinder" target="_blank">Openrepos.net</a></p>
+      <p>
+        <span class="italic">Experimental features</span> are tested on Openrepos.net before they are available in the Jolla Store.<br>
+        Download the latest Sailfinder from Openrepos.net or install Sailfinder using the Storeman client.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-center w3-theme-dark w3-padding-32">
+  <div class="w3-xxlarge w3-section">
+    <a href="https://www.github.com/DylanVanAssche/harbour-sailfinder" target="_blank"><i class="fa fa-github w3-hover-opacity"></i></a>
+    <a href="https://www.twitter.com/DylanVanAssche" target="_blank"><i class="fa fa-twitter w3-hover-opacity"></i></a>
+    <a href="https://www.linkedin.com/in/DylanVanAssche" target="_blank"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
+  </div>
+  <p class="w3-medium w3-center">
+    We are not affiliated with Tinder in any way nor are we responsible in any way for using Sailfinder.<br>
+    &copy; Dylan Van Assche (2018)<br>
+  </p>
+</footer>
+
+<!-- Add Google Maps -->
+<script>
+// Modal Image Gallery
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
+}
+
+
+// Toggle between showing and hiding the sidebar when clicking the menu icon
+var mySidebar = document.getElementById("mySidebar");
+
+function w3_open() {
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+    } else {
+        mySidebar.style.display = 'block';
+    }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+    mySidebar.style.display = "none";
+}
+</script>
+</body>
 </html>
