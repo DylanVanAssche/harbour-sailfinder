@@ -105,6 +105,7 @@ public:
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     Q_INVOKABLE void getMessages(QString matchId);
     Q_INVOKABLE void sendMessage(QString matchId, QString message, QString userId, QString tempMessageId);
+    Q_INVOKABLE void sendGIF(QString matchId, QString url, QString gifId, QString userId, QString tempMessageId);
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
     Q_INVOKABLE void superlikeUser(QString userId);
@@ -251,6 +252,7 @@ private:
     void parseUnmatch(QJsonObject json);
     void parseMessages(QJsonObject json);
     void parseSendMessage(QJsonObject json);
+    void sendMessage(QJsonDocument payload);
     void parseRemovePhoto(QJsonObject json);
     void parseUploadPhoto(QJsonObject json);
     void parseFullMatchProfile(QJsonObject json);

@@ -386,33 +386,28 @@ void API::getMessages(QString matchId)
 
 void API::sendMessage(QString matchId, QString message, QString userId, QString tempMessageId)
 {
-    if(this->authenticated() && !messagesSendLock) {
-        // Lock message sending
-        messagesSendLock = true;
+    // Build POST payload for text message
+    QVariantMap data;
+    data["matchId"] = matchId;
+    data["message"] = message;
+    data["tempMessageId"] = tempMessageId;
+    data["userId"] = userId;
+    QJsonDocument payload = QJsonDocument::fromVariant(data);
+    this->sendMessage(payload);
+}
 
-        // Build URL
-        QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
-        QUrlQuery parameters;
-
-        // Build POST payload
-        QVariantMap data;
-        data["matchId"] = matchId;
-        data["message"] = message;
-        data["tempMessageId"] = tempMessageId;
-        data["userId"] = userId;
-        QJsonDocument payload = QJsonDocument::fromVariant(data);
-
-        // Prepare & do request
-        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
-        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-    }
-    else if(messagesSendLock) {
-        qWarning() << "Message sending is locked";
-    }
-    else {
-        qWarning() << "Not authenticated, can't send message data";
-    }
+void API::sendGIF(QString matchId, QString url, QString gifId, QString userId, QString tempMessageId)
+{
+    // Build POST payload for GIF message
+    QVariantMap data;
+    data["matchId"] = matchId;
+    data["message"] = url;
+    data["gif_id"] = gifId;
+    data["type"] = "gif";
+    data["tempMessageId"] = tempMessageId;
+    data["userId"] = userId;
+    QJsonDocument payload = QJsonDocument::fromVariant(data);
+    this->sendMessage(payload);
 }
 
 void API::likeUser(QString userId)
@@ -1688,6 +1683,29 @@ void API::parseSendMessage(QJsonObject json)
 
     // Unlock send messages
     messagesSendLock = false;
+}
+
+void API::sendMessage(QJsonDocument payload)
+{
+    if(this->authenticated() && !messagesSendLock) {
+        // Lock message sending
+        messagesSendLock = true;
+
+        // Build URL
+        QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    }
+    else if(messagesSendLock) {
+        qWarning() << "Message sending is locked";
+    }
+    else {
+        qWarning() << "Not authenticated, can't send message data";
+    }
 }
 
 void API::parseRemovePhoto(QJsonObject json)
