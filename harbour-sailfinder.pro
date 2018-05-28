@@ -113,7 +113,12 @@ CONFIG += sailfishapp_i18n \
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
 TRANSLATIONS += translations/harbour-sailfinder.ts \
-    translations/harbour-sailfinder-nl.ts
+    translations/harbour-sailfinder-nl.ts \
+    translations/harbour-sailfinder-nl_BE.ts \
+    translations/harbour-sailfinder-es.ts \
+    translations/harbour-sailfinder-pl.ts \
+    translations/harbour-sailfinder-pt_BR.ts \
+    translations/harbour-sailfinder-de.ts
 
 HEADERS += \
     src/api.h \
