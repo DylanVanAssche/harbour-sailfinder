@@ -41,8 +41,10 @@ int main(int argc, char *argv[])
     QScopedPointer<QQuickView> view(SailfishApp::createView());
     qApp->setApplicationVersion(QString(APP_VERSION));
 
-    // Set application version and enable logging
+    // Set application version and enable logging (disabled in QML DEBUG mode)
+#ifndef QT_QML_DEBUG
     enableLogger(true);
+#endif
 
     // Enable default translations
     QTranslator *translator = new QTranslator(qApp);
