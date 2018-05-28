@@ -396,6 +396,26 @@ void API::sendMessage(QString matchId, QString message, QString userId, QString 
     this->sendMessage(payload);
 }
 
+void API::searchGIF(QString querry)
+{
+    this->searchGIF(querry, 0);
+}
+
+void API::searchGIF(QString querry, int offset)
+{
+    // No check if authenticated since this endpoint uses a different API key which doesn't change
+
+    // Build URL
+    QUrl url(QString(GIPHY_SEARCH_ENDPOINT));
+    QUrlQuery parameters;
+    parameters.addQueryItem("api_key", GIPHY_KEY);
+
+    // Prepare & do request
+    QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+    connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+}
+
 void API::sendGIF(QString matchId, QString url, QString gifId, QString userId, QString tempMessageId)
 {
     // Build POST payload for GIF message

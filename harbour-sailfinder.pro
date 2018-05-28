@@ -139,4 +139,5 @@ HEADERS += \
     src/models/messagelistmodel.h \
     src/models/matcheslistmodel.h \
     src/parsers/giphy.h \
-    src/models/gif.h
+    src/models/gif.h \
+    src/keys.h

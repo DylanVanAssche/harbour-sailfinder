@@ -71,6 +71,7 @@
 #define MEDIA_ENDPOINT "https://api.gotinder.com/media"
 #define IMAGE_ENDPOINT "https://api.gotinder.com/image"
 #define USER_ENDPOINT "https://api.gotinder.com/user"
+#define GIPHY_SEARCH_ENDPOINT "https://api.giphy.com/v1/gifs/search"
 
 class API : public QObject
 {
@@ -105,6 +106,8 @@ public:
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     Q_INVOKABLE void getMessages(QString matchId);
     Q_INVOKABLE void sendMessage(QString matchId, QString message, QString userId, QString tempMessageId);
+    Q_INVOKABLE void searchGIF(QString querry);
+    Q_INVOKABLE void searchGIF(QString querry, int offset);
     Q_INVOKABLE void sendGIF(QString matchId, QString url, QString gifId, QString userId, QString tempMessageId);
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
