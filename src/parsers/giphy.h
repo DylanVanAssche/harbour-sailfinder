@@ -18,8 +18,11 @@
 #ifndef GIPHY_H
 #define GIPHY_H
 
+#include <QDebug>
 #include <QtCore/QObject>
-#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonValue>
 #include "../models/gif.h"
 
 #define GIPHY_KEY "fBEDuhnVCiP16"
@@ -30,7 +33,7 @@ class Giphy : public QObject
 
 public:
     explicit Giphy(QObject *parent = nullptr);
-    QList<GIF> parseSearch(QJsonDocument json);
+    static QList<GIF *> parseSearch(QJsonObject json);
 };
 
 #endif // GIPHY_H

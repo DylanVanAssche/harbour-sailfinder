@@ -45,10 +45,30 @@ Item {
         onTriggered: timestamp.text = new Date().toLocaleTimeString(Qt.locale(), "HH:mm:ss")
     }
 
+    BackgroundItem {
+        id: gif
+        anchors {
+            left: parent.left
+            right: input.left
+            top: parent.top
+        }
+        height: Theme.iconSizeSmall
+        width: Theme.iconSizeSmall
+
+        Label {
+            anchors.centerIn: parent
+            //% "GIF"
+            text: qsTrId("sailfinder-gif")
+        }
+        onPressed: {
+            console.debug("Show GIF picker")
+        }
+    }
+
     TextArea {
         id: input
         anchors {
-            left: parent.left
+            left: gif.right
             right: sendButton.left
             top: parent.top
         }

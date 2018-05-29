@@ -44,6 +44,7 @@
 #include <stdlib.h>
 
 #include "os.h"
+#include "keys.h"
 #include "models/user.h"
 #include "models/photo.h"
 #include "models/recommendation.h"
@@ -51,6 +52,8 @@
 #include "models/matcheslistmodel.h"
 #include "models/message.h"
 #include "models/messagelistmodel.h"
+#include "models/giflistmodel.h"
+#include "parsers/giphy.h"
 
 #define POSITION_MAX_UPDATE 10
 #define TIMEOUT_TIME 15000 // 15 sec
@@ -72,6 +75,7 @@
 #define IMAGE_ENDPOINT "https://api.gotinder.com/image"
 #define USER_ENDPOINT "https://api.gotinder.com/user"
 #define GIPHY_SEARCH_ENDPOINT "https://api.giphy.com/v1/gifs/search"
+#define GIPHY_FETCH_LIMIT 15 // 15 GIF's each time
 
 class API : public QObject
 {
@@ -158,6 +162,8 @@ public:
     void setHasRecommendations(bool hasRecommendations);
     MessageListModel *messages() const;
     void setMessages(MessageListModel *messages);
+    GifListModel *getGifResults() const;
+    void setGifResults(GifListModel *gifResults);
 
 signals:
     void busyChanged();
@@ -189,6 +195,7 @@ signals:
     void newMessage(int count);
     void unlockedAllEndpoints();
     void fullMatchProfileFetched(int distance, SchoolListModel* schools, JobListModel* jobs);
+    void gifResultsChanged();
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -216,6 +223,7 @@ private:
     MessageListModel* m_messages = NULL;
     User* m_profile = NULL;
     Recommendation* m_recommendation = NULL;
+    GifListModel* m_gifResults = NULL;
     int m_standardPollInterval = 0;
     int m_persistentPollInterval = 0;
     int positionUpdateCounter = 0;
@@ -255,7 +263,7 @@ private:
     void parseUnmatch(QJsonObject json);
     void parseMessages(QJsonObject json);
     void parseSendMessage(QJsonObject json);
-    void sendMessage(QJsonDocument payload);
+    void sendMessage(QJsonDocument payload, QString matchId);
     void parseRemovePhoto(QJsonObject json);
     void parseUploadPhoto(QJsonObject json);
     void parseFullMatchProfile(QJsonObject json);

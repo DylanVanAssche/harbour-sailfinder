@@ -22,7 +22,18 @@ Giphy::Giphy(QObject *parent) : QObject(parent)
 
 }
 
-QList<GIF> Giphy::parseSearch(QJsonDocument json)
+QList<GIF *> Giphy::parseSearch(QJsonObject json)
 {
-
+    QList<GIF *> gifList = QList<GIF *>();
+    QJsonArray dataArray = json["data"].toArray();
+    foreach(QJsonValue item, dataArray) {
+        QJsonObject gif = item.toObject();
+        QString id = gif["id"].toString();
+        QJsonObject images = gif["images"].toObject();
+        QUrl url = images["downsized_large"].toObject()["url"].toString();
+        gifList.append(new GIF(id, url));
+    }
+    qDebug() << "GIF search";
+    qDebug() << "\tGIF's:" << gifList;
+    return gifList;
 }

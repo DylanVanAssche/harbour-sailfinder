@@ -393,7 +393,7 @@ void API::sendMessage(QString matchId, QString message, QString userId, QString 
     data["tempMessageId"] = tempMessageId;
     data["userId"] = userId;
     QJsonDocument payload = QJsonDocument::fromVariant(data);
-    this->sendMessage(payload);
+    this->sendMessage(payload, matchId);
 }
 
 void API::searchGIF(QString querry)
@@ -409,9 +409,23 @@ void API::searchGIF(QString querry, int offset)
     QUrl url(QString(GIPHY_SEARCH_ENDPOINT));
     QUrlQuery parameters;
     parameters.addQueryItem("api_key", GIPHY_KEY);
+    parameters.addQueryItem("q", querry);
+    parameters.addQueryItem("limit", QString(GIPHY_FETCH_LIMIT));
+    parameters.addQueryItem("offset", QString(offset));
+    parameters.addQueryItem("rating", "pg-13");
+    url.setQuery(parameters);
+
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
+    request.setRawHeader("accept", "*/*");
+    request.setRawHeader("accept-language", "en-GB,en-US;q=0.9,en;q=0.8");
+    request.setRawHeader("origin", "https://tinder.com");
+    request.setRawHeader("referer", "https://tinder.com/");
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
 
     // Prepare & do request
-    QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
+    QNetworkReply* reply = QNAM->get(request);
     connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
 }
@@ -427,7 +441,7 @@ void API::sendGIF(QString matchId, QString url, QString gifId, QString userId, Q
     data["tempMessageId"] = tempMessageId;
     data["userId"] = userId;
     QJsonDocument payload = QJsonDocument::fromVariant(data);
-    this->sendMessage(payload);
+    this->sendMessage(payload, matchId);
 }
 
 void API::likeUser(QString userId)
@@ -807,6 +821,17 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     }
 }
 
+GifListModel *API::getGifResults() const
+{
+    return m_gifResults;
+}
+
+void API::setGifResults(GifListModel *gifResults)
+{
+    m_gifResults = gifResults;
+    emit this->gifResultsChanged();
+}
+
 MessageListModel *API::messages() const
 {
     return m_messages;
@@ -1130,6 +1155,10 @@ void API::finished (QNetworkReply *reply)
             else if(reply->url().toString().contains(IMAGE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder upload picture data received";
                 this->parseUploadPhoto(jsonObject);
+            }
+            else if(reply->url().toString().contains(GIPHY_SEARCH_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "GIPHY search data received";
+                this->setGifResults(new GifListModel(Giphy::parseSearch(jsonObject)));
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
@@ -1705,7 +1734,7 @@ void API::parseSendMessage(QJsonObject json)
     messagesSendLock = false;
 }
 
-void API::sendMessage(QJsonDocument payload)
+void API::sendMessage(QJsonDocument payload, QString matchId)
 {
     if(this->authenticated() && !messagesSendLock) {
         // Lock message sending

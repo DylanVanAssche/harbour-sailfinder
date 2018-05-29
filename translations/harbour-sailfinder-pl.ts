@@ -1,6 +1,8 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="pl">
 <context>
-    <name/>
+    <name></name>
     <message id="sailfinder-api-error">
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
@@ -238,7 +240,7 @@
     </message>
     <message id="sailfinder-messaging-error">
         <source>Messages couldn&apos;t be retrieved due missing profile information</source>
-        <extracomment>Error shown to the user when profile data wasn't succesfull retrieved. It's impossible then to get the messages between the user and it's matches.</extracomment>
+        <extracomment>Error shown to the user when profile data wasn&apos;t succesfull retrieved. It&apos;s impossible then to get the messages between the user and it&apos;s matches.</extracomment>
         <translation>Wiadomości nie mogą zostać przetworzone z powodu brakujących informacji w profilu</translation>
     </message>
     <message id="sailfinder-minutes-ago">
@@ -299,7 +301,7 @@
         <translation>Wgraj zdjęcie</translation>
     </message>
     <message id="sailfinder-upload-failed">
-        <source/>
+        <source></source>
         <oldsource>Photo upload failed!</oldsource>
         <translation>Wgrywanie zdjęcia zakończone niepowodzeniem!</translation>
     </message>
@@ -314,6 +316,10 @@
     <message id="sailfinder-reload">
         <source>Reload</source>
         <translation>Przeładuj</translation>
+    </message>
+    <message id="sailfinder-gif">
+        <source>GIF</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
