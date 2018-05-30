@@ -49,11 +49,10 @@ Item {
         id: gif
         anchors {
             left: parent.left
-            right: input.left
             top: parent.top
         }
-        height: Theme.iconSizeSmall
-        width: Theme.iconSizeSmall
+        width: Theme.itemSizeMedium
+        height: parent.height
 
         Label {
             anchors.centerIn: parent
