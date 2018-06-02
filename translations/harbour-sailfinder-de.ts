@@ -1,6 +1,8 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="de" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="de">
 <context>
-    <name/>
+    <name></name>
     <message id="sailfinder-api-error">
         <source>Tinder API couldn&apos;t complete your request</source>
         <extracomment>Error shown to the user when the Tinder API failed to retrieve the requested data</extracomment>
@@ -240,7 +242,7 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
     </message>
     <message id="sailfinder-messaging-error">
         <source>Messages couldn&apos;t be retrieved due missing profile information</source>
-        <extracomment>Error shown to the user when profile data wasn't succesfull retrieved. It's impossible then to get the messages between the user and it's matches.</extracomment>
+        <extracomment>Error shown to the user when profile data wasn&apos;t succesfull retrieved. It&apos;s impossible then to get the messages between the user and it&apos;s matches.</extracomment>
         <translation>Nachrichten konnten wegen fehlender Profilinformationen nicht abgerufen werden</translation>
     </message>
     <message id="sailfinder-minutes-ago">
@@ -278,44 +280,57 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
     <message id="sailfinder-timeout-error">
         <source>Network timeout</source>
         <extracomment>Error shown to the user when a network timeout was received</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-optimizer">
         <source>Optimizer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-optimizer-text">
         <source>The photo optimizer will automatically show your best photo&apos;s first on your profile.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-logging-out">
         <source>Logging out</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-removing-photo">
         <source>Removing photo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-upload-photo">
         <source>Upload photo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-upload-failed">
-        <source/>
+        <source></source>
         <oldsource>Photo upload failed!</oldsource>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-login-facebook">
         <source>Use Facebook login</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-login-phone">
         <source>Use phone login</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message id="sailfinder-reload">
         <source>Reload</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-gif">
+        <source>GIF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-send-gif">
+        <source>Send GIF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-no-gifs">
+        <source>No GIF&apos;s yet</source>
+        <oldsource>No GIF&apos;s</oldsource>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

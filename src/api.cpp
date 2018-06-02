@@ -386,33 +386,62 @@ void API::getMessages(QString matchId)
 
 void API::sendMessage(QString matchId, QString message, QString userId, QString tempMessageId)
 {
-    if(this->authenticated() && !messagesSendLock) {
-        // Lock message sending
-        messagesSendLock = true;
+    // Build POST payload for text message
+    QVariantMap data;
+    data["matchId"] = matchId;
+    data["message"] = message;
+    data["tempMessageId"] = tempMessageId;
+    data["userId"] = userId;
+    QJsonDocument payload = QJsonDocument::fromVariant(data);
+    this->sendMessage(payload, matchId);
+}
 
-        // Build URL
-        QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
-        QUrlQuery parameters;
+void API::searchGIF(QString querry)
+{
+    this->searchGIF(querry, 0);
+}
 
-        // Build POST payload
-        QVariantMap data;
-        data["matchId"] = matchId;
-        data["message"] = message;
-        data["tempMessageId"] = tempMessageId;
-        data["userId"] = userId;
-        QJsonDocument payload = QJsonDocument::fromVariant(data);
+void API::searchGIF(QString querry, int offset)
+{
+    // No check if authenticated since this endpoint uses a different API key which doesn't change
 
-        // Prepare & do request
-        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
-        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-    }
-    else if(messagesSendLock) {
-        qWarning() << "Message sending is locked";
-    }
-    else {
-        qWarning() << "Not authenticated, can't send message data";
-    }
+    // Build URL
+    QUrl url(QString(GIPHY_SEARCH_ENDPOINT));
+    QUrlQuery parameters;
+    parameters.addQueryItem("api_key", GIPHY_KEY);
+    parameters.addQueryItem("q", querry);
+    parameters.addQueryItem("limit", GIPHY_FETCH_LIMIT);
+    parameters.addQueryItem("offset", QString(offset)); // avoid encoding
+    parameters.addQueryItem("rating", "pg-13");
+    url.setQuery(parameters);
+
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
+    request.setRawHeader("accept", "*/*");
+    request.setRawHeader("accept-language", "en-GB,en-US;q=0.9,en;q=0.8");
+    request.setRawHeader("origin", "https://tinder.com");
+    request.setRawHeader("referer", "https://tinder.com/");
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
+
+    // Prepare & do request
+    QNetworkReply* reply = QNAM->get(request);
+    connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+}
+
+void API::sendGIF(QString matchId, QString url, QString gifId, QString userId, QString tempMessageId)
+{
+    // Build POST payload for GIF message
+    QVariantMap data;
+    data["matchId"] = matchId;
+    data["message"] = url;
+    data["gif_id"] = gifId;
+    data["type"] = "gif";
+    data["tempMessageId"] = tempMessageId;
+    data["userId"] = userId;
+    QJsonDocument payload = QJsonDocument::fromVariant(data);
+    this->sendMessage(payload, matchId);
 }
 
 void API::likeUser(QString userId)
@@ -792,6 +821,17 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     }
 }
 
+GifListModel *API::gifResults() const
+{
+    return m_gifResults;
+}
+
+void API::setGifResults(GifListModel *gifResults)
+{
+    m_gifResults = gifResults;
+    emit this->gifResultsChanged();
+}
+
 MessageListModel *API::messages() const
 {
     return m_messages;
@@ -1115,6 +1155,20 @@ void API::finished (QNetworkReply *reply)
             else if(reply->url().toString().contains(IMAGE_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder upload picture data received";
                 this->parseUploadPhoto(jsonObject);
+            }
+            else if(reply->url().toString().contains(GIPHY_SEARCH_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "GIPHY search data received";
+                this->setGifResults(new GifListModel(Giphy::parseSearch(jsonObject)));
+                /*if(this->gifResults() != NULL) { Paging via offset not supported yet due the fact that GIPHY doesn't accept encoded offset values
+                    QList<GIF*> gifList = this->gifResults()->gifList();
+                    gifList += Giphy::parseSearch(jsonObject);
+                    qDebug() << "Extended GIF list model to" << this->gifResults()->gifList().length() << "GIF's";
+                    this->gifResults()->setGifList(gifList);
+                }
+                else {
+                    this->setGifResults(new GifListModel(Giphy::parseSearch(jsonObject)));
+                    qDebug() << "New GIF model created";
+                }*/
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
@@ -1688,6 +1742,29 @@ void API::parseSendMessage(QJsonObject json)
 
     // Unlock send messages
     messagesSendLock = false;
+}
+
+void API::sendMessage(QJsonDocument payload, QString matchId)
+{
+    if(this->authenticated() && !messagesSendLock) {
+        // Lock message sending
+        messagesSendLock = true;
+
+        // Build URL
+        QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    }
+    else if(messagesSendLock) {
+        qWarning() << "Message sending is locked";
+    }
+    else {
+        qWarning() << "Not authenticated, can't send message data";
+    }
 }
 
 void API::parseRemovePhoto(QJsonObject json)

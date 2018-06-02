@@ -55,7 +55,10 @@ SOURCES += src/harbour-sailfinder.cpp \
     src/models/joblistmodel.cpp \
     src/models/photolistmodel.cpp \
     src/models/messagelistmodel.cpp \
-    src/models/matcheslistmodel.cpp
+    src/models/matcheslistmodel.cpp \
+    src/parsers/giphy.cpp \
+    src/models/gif.cpp \
+    src/models/giflistmodel.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/pages/CoverPage.qml \
@@ -91,7 +94,10 @@ DISTFILES += qml/harbour-sailfinder.qml \
     translations/harbour-sailfinder-nl_BE.ts \
     translations/harbour-sailfinder-pt_BR.ts \
     translations/harbour-sailfinder-es.ts \
-    translations/harbour-sailfinder-de.ts
+    translations/harbour-sailfinder-de.ts \
+    qml/components/TextMessage.qml \
+    qml/components/GIFMessage.qml \
+    qml/pages/GIFPage.qml
     qml/components/SchoolJobDelegate.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
@@ -109,7 +115,12 @@ CONFIG += sailfishapp_i18n \
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
 TRANSLATIONS += translations/harbour-sailfinder.ts \
-    translations/harbour-sailfinder-nl.ts
+    translations/harbour-sailfinder-nl.ts \
+    translations/harbour-sailfinder-nl_BE.ts \
+    translations/harbour-sailfinder-es.ts \
+    translations/harbour-sailfinder-pl.ts \
+    translations/harbour-sailfinder-pt_BR.ts \
+    translations/harbour-sailfinder-de.ts
 
 HEADERS += \
     src/api.h \
@@ -128,4 +139,8 @@ HEADERS += \
     src/models/joblistmodel.h \
     src/models/photolistmodel.h \
     src/models/messagelistmodel.h \
-    src/models/matcheslistmodel.h
+    src/models/matcheslistmodel.h \
+    src/parsers/giphy.h \
+    src/models/gif.h \
+    src/keys.h \
+    src/models/giflistmodel.h

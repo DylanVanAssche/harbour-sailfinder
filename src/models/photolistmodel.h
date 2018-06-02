@@ -1,7 +1,6 @@
 #ifndef PHOTOLISTMODEL_H
 #define PHOTOLISTMODEL_H
 
-
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QList>
 
