@@ -20,7 +20,6 @@ import Sailfish.Silica 1.0
 
 Page {
     signal selected(string url, string id)
-    Component.onCompleted: api.searchGIF("flirting")
 
     Connections {
         target: api
@@ -31,6 +30,17 @@ Page {
         }
     }
 
+    Timer {
+        id: delayedSearch
+        interval: 750
+        running: false
+        repeat: false
+        onTriggered: {
+            loading.visible = true
+            api.searchGIF(searchField.text)
+        }
+    }
+
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height
@@ -38,10 +48,36 @@ Page {
         Column {
             id: column
             width: parent.width
+            spacing: Theme.paddingLarge
 
             PageHeader {
                 //% "Send GIF"
                 title: qsTrId("sailfinder-send-gif")
+
+                BusyIndicator {
+                    id: loading
+                    anchors {
+                        left: parent.left
+                        leftMargin: Theme.horizontalPageMargin
+                        verticalCenter: parent.verticalCenter
+                    }
+                    size: BusyIndicatorSize.Small
+                    visible: false
+                    running: Qt.application.active && visible
+                }
+            }
+
+            SearchField {
+                id: searchField
+                width: parent.width
+                focus: true
+                onTextChanged: delayedSearch.restart() // Avoid too much requests to the GIPHY API
+                EnterKey.iconSource: "image://theme/icon-m-search"
+                EnterKey.onClicked: {
+                    delayedSearch.stop()
+                    loading.visible = true
+                    api.searchGIF(searchField.text)
+                }
             }
 
             Grid {
@@ -72,8 +108,8 @@ Page {
                             Rectangle {
                                 anchors.fill: parent
                                 color: mouseArea.pressed && mouseArea.containsMouse
-                                                ? Theme.rgba(Theme.highlightBackgroundColor, Theme.highlightBackgroundOpacity)
-                                                : "transparent"
+                                       ? Theme.rgba(Theme.highlightBackgroundColor, Theme.highlightBackgroundOpacity)
+                                       : "transparent"
                             }
                         }
 
@@ -86,13 +122,11 @@ Page {
                 }
             }
         }
-    }
 
-    BusyIndicator {
-        id: loading
-        size: BusyIndicatorSize.Large
-        anchors.centerIn: parent
-        visible: true
-        running: Qt.application.active && visible
+        ViewPlaceholder {
+            enabled: gridModel.count == 0 && !loading.visible
+            //% "No GIF's yet"
+            text: qsTrId("sailfinder-no-gifs")
+        }
     }
 }

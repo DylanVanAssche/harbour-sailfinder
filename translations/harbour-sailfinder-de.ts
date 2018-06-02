@@ -327,5 +327,10 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
         <source>Send GIF</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-no-gifs">
+        <source>No GIF&apos;s yet</source>
+        <oldsource>No GIF&apos;s</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

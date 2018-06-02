@@ -75,7 +75,7 @@
 #define IMAGE_ENDPOINT "https://api.gotinder.com/image"
 #define USER_ENDPOINT "https://api.gotinder.com/user"
 #define GIPHY_SEARCH_ENDPOINT "https://api.giphy.com/v1/gifs/search"
-#define GIPHY_FETCH_LIMIT "15" // 15 GIF's each time
+#define GIPHY_FETCH_LIMIT "30" // 30 GIF's each time
 
 class API : public QObject
 {

@@ -411,7 +411,7 @@ void API::searchGIF(QString querry, int offset)
     parameters.addQueryItem("api_key", GIPHY_KEY);
     parameters.addQueryItem("q", querry);
     parameters.addQueryItem("limit", GIPHY_FETCH_LIMIT);
-    parameters.addQueryItem("offset", QString(offset));
+    parameters.addQueryItem("offset", QString(offset)); // avoid encoding
     parameters.addQueryItem("rating", "pg-13");
     url.setQuery(parameters);
 
@@ -1159,6 +1159,16 @@ void API::finished (QNetworkReply *reply)
             else if(reply->url().toString().contains(GIPHY_SEARCH_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "GIPHY search data received";
                 this->setGifResults(new GifListModel(Giphy::parseSearch(jsonObject)));
+                /*if(this->gifResults() != NULL) { Paging via offset not supported yet due the fact that GIPHY doesn't accept encoded offset values
+                    QList<GIF*> gifList = this->gifResults()->gifList();
+                    gifList += Giphy::parseSearch(jsonObject);
+                    qDebug() << "Extended GIF list model to" << this->gifResults()->gifList().length() << "GIF's";
+                    this->gifResults()->setGifList(gifList);
+                }
+                else {
+                    this->setGifResults(new GifListModel(Giphy::parseSearch(jsonObject)));
+                    qDebug() << "New GIF model created";
+                }*/
             }
             else {
                 qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();

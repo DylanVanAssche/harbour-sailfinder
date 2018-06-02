@@ -325,5 +325,9 @@
         <source>Send GIF</source>
         <translation>Send GIF</translation>
     </message>
+    <message id="sailfinder-no-gifs">
+        <source>No GIF&apos;s yet</source>
+        <translation>No GIF&apos;s yet</translation>
+    </message>
 </context>
 </TS>
