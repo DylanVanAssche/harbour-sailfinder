@@ -17,6 +17,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../js/util.js" as Util
 
 ListItem {
     signal removed()
@@ -65,7 +66,8 @@ ListItem {
         truncationMode: TruncationMode.Fade
         // Strip all line breaks from strings in Javascript using RegExp
         // https://stackoverflow.com/questions/10805125/how-to-remove-all-line-breaks-from-a-string
-        text: model.messagesPreview.replace(/(\r\n|\n|\r)/gm," ");
+        //% "GIF"
+        text: Util.validateGiphyURL(model.messagesPreview)? qsTrId("sailfinder-gif"): model.messagesPreview.replace(/(\r\n|\n|\r)/gm," ");
     }
 
     Rectangle {

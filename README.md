@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="store/banner.png" alt="BeRail">
+  <img src="store/banner.png" alt="Sailfinder">
   <br>
   <br>
   Sailfinder
@@ -36,4 +36,11 @@ https://www.transifex.com/dylanvanassche/harbour-sailfinder/
 Sailfinder and it's contributors aren't related to Tinder in any way and they can't be hold responsible for anything. You agree automatically with this disclaimer by using the application, contribute to it, ...
 
 ## Screenshots
+
 <img src="store/screenshots.png" alt="Screenshots"/>
+
+## Build instructions
+- Clone this repository
+- Fire up QtCreator (SailfishSDK)
+- Open the `.pro` file and add your build targets
+- Create a header file in `./src` called `keys.h` with the GIPHY API key: ```#define GIPHY_KEY "yourapikey"``` 

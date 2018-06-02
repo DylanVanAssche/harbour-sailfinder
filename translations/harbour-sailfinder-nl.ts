@@ -317,5 +317,18 @@
         <source>Reload</source>
         <translation>Herladen</translation>
     </message>
+    <message id="sailfinder-gif">
+        <source>GIF</source>
+        <translation>GIF</translation>
+    </message>
+    <message id="sailfinder-send-gif">
+        <source>Send GIF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-no-gifs">
+        <source>No GIF&apos;s yet</source>
+        <oldsource>No GIF&apos;s</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

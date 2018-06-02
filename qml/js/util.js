@@ -80,3 +80,8 @@ function getUTCDate() {
     var now = new Date();
     return new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
 }
+
+function validateGiphyURL(url) {
+    var giphyRegex = /(https:\/\/media[0-9]\.giphy\.com\/media\/.+\/giphy.gif)/;
+    return giphyRegex.test(url);
+}

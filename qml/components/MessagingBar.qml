@@ -25,7 +25,8 @@ import QtFeedback 5.0
 
 Item {
     property string placeHolderText
-    signal send(string text)
+    signal sendText(string text)
+    signal sendGIF(string url, string id)
     signal keyboardVisible(bool state)
 
     id: messagingBar
@@ -45,10 +46,35 @@ Item {
         onTriggered: timestamp.text = new Date().toLocaleTimeString(Qt.locale(), "HH:mm:ss")
     }
 
+    BackgroundItem {
+        id: gif
+        anchors {
+            left: parent.left
+            top: parent.top
+        }
+        width: Theme.itemSizeMedium
+        height: Math.min(Theme.itemSizeMedium, parent.height)
+
+        Label {
+            anchors.centerIn: parent
+            //% "GIF"
+            text: qsTrId("sailfinder-gif")
+        }
+        onClicked: {
+            var picker = pageStack.push("../pages/GIFPage.qml")
+            picker.selected.connect(function(url, id) {
+                console.debug("Picked GIF: ")
+                console.debug("\tID: " + id)
+                console.debug("\tURL: " + url)
+                sendGIF(url, id)
+            })
+        }
+    }
+
     TextArea {
         id: input
         anchors {
-            left: parent.left
+            left: gif.right
             right: sendButton.left
             top: parent.top
         }

@@ -44,6 +44,7 @@
 #include <stdlib.h>
 
 #include "os.h"
+#include "keys.h"
 #include "models/user.h"
 #include "models/photo.h"
 #include "models/recommendation.h"
@@ -51,11 +52,13 @@
 #include "models/matcheslistmodel.h"
 #include "models/message.h"
 #include "models/messagelistmodel.h"
+#include "models/giflistmodel.h"
+#include "parsers/giphy.h"
 
 #define POSITION_MAX_UPDATE 10
 #define TIMEOUT_TIME 15000 // 15 sec
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
-#define TINDER_APP_VERSION "1002219"
+#define TINDER_APP_VERSION "1002223"
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
 #define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
 #define META_ENDPOINT "https://api.gotinder.com/v2/meta"
@@ -71,6 +74,8 @@
 #define MEDIA_ENDPOINT "https://api.gotinder.com/media"
 #define IMAGE_ENDPOINT "https://api.gotinder.com/image"
 #define USER_ENDPOINT "https://api.gotinder.com/user"
+#define GIPHY_SEARCH_ENDPOINT "https://api.giphy.com/v1/gifs/search"
+#define GIPHY_FETCH_LIMIT "30" // 30 GIF's each time
 
 class API : public QObject
 {
@@ -91,6 +96,7 @@ class API : public QObject
     Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
     Q_PROPERTY(MessageListModel* messages READ messages WRITE setMessages NOTIFY messagesChanged)
+    Q_PROPERTY(GifListModel* gifResults READ gifResults WRITE setGifResults NOTIFY gifResultsChanged)
 
 public:
     explicit API(QObject *parent = 0);
@@ -105,6 +111,9 @@ public:
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     Q_INVOKABLE void getMessages(QString matchId);
     Q_INVOKABLE void sendMessage(QString matchId, QString message, QString userId, QString tempMessageId);
+    Q_INVOKABLE void searchGIF(QString querry);
+    Q_INVOKABLE void searchGIF(QString querry, int offset);
+    Q_INVOKABLE void sendGIF(QString matchId, QString url, QString gifId, QString userId, QString tempMessageId);
     Q_INVOKABLE void likeUser(QString userId);
     Q_INVOKABLE void passUser(QString userId);
     Q_INVOKABLE void superlikeUser(QString userId);
@@ -154,6 +163,8 @@ public:
     void setHasRecommendations(bool hasRecommendations);
     MessageListModel *messages() const;
     void setMessages(MessageListModel *messages);
+    GifListModel *gifResults() const;
+    void setGifResults(GifListModel *gifResults);
 
 signals:
     void busyChanged();
@@ -185,6 +196,7 @@ signals:
     void newMessage(int count);
     void unlockedAllEndpoints();
     void fullMatchProfileFetched(int distance, SchoolListModel* schools, JobListModel* jobs);
+    void gifResultsChanged();
 
 public slots:
     void networkAccessible(QNetworkAccessManager::NetworkAccessibility state);
@@ -212,6 +224,7 @@ private:
     MessageListModel* m_messages = NULL;
     User* m_profile = NULL;
     Recommendation* m_recommendation = NULL;
+    GifListModel* m_gifResults = NULL;
     int m_standardPollInterval = 0;
     int m_persistentPollInterval = 0;
     int positionUpdateCounter = 0;
@@ -251,6 +264,7 @@ private:
     void parseUnmatch(QJsonObject json);
     void parseMessages(QJsonObject json);
     void parseSendMessage(QJsonObject json);
+    void sendMessage(QJsonDocument payload, QString matchId);
     void parseRemovePhoto(QJsonObject json);
     void parseUploadPhoto(QJsonObject json);
     void parseFullMatchProfile(QJsonObject json);

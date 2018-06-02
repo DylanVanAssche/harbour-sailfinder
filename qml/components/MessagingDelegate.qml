@@ -24,6 +24,16 @@ ListItem {
     width: parent.width*0.75
     anchors.right: model.authorIsUser? parent.right: undefined // Left is automatically assigned
 
+    Component.onCompleted: {
+        if(Util.validateGiphyURL(model.message)) {
+            console.debug("GIF detected")
+            messageItemLoader.setSource("GIFMessage.qml", {"source": model.message})
+        }
+        else {
+            messageItemLoader.setSource("TextMessage.qml", {"text": model.message, "color": model.authorIsUser? Theme.primaryColor: "black"})
+        }
+    }
+
     Column {
         id: column
         width: parent.width
@@ -41,17 +51,10 @@ ListItem {
             color: model.authorIsUser? Theme.primaryColor: "black"
         }
 
-        Label {
+        Loader {
+            id: messageItemLoader
             width: parent.width
-            anchors {
-                left: parent.left
-                leftMargin: Theme.paddingMedium
-                right: parent.right
-                rightMargin: Theme.paddingMedium
-            }
-            wrapMode: Text.WordWrap
-            text: model.message
-            color: model.authorIsUser? Theme.primaryColor: "black"
+            height: Util.validateGiphyURL(model.message)? Theme.itemSizeHuge: undefined // TextMessage automatically sets the height, GIFMessage does not.
         }
 
         Label {
