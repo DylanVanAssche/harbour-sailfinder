@@ -323,5 +323,9 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
         <source>GIF</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="sailfinder-send-gif">
+        <source>Send GIF</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

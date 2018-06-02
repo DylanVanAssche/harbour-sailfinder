@@ -75,7 +75,7 @@
 #define IMAGE_ENDPOINT "https://api.gotinder.com/image"
 #define USER_ENDPOINT "https://api.gotinder.com/user"
 #define GIPHY_SEARCH_ENDPOINT "https://api.giphy.com/v1/gifs/search"
-#define GIPHY_FETCH_LIMIT 15 // 15 GIF's each time
+#define GIPHY_FETCH_LIMIT "15" // 15 GIF's each time
 
 class API : public QObject
 {
@@ -96,6 +96,7 @@ class API : public QObject
     Q_PROPERTY(int standardPollInterval READ standardPollInterval NOTIFY standardPollIntervalChanged)
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
     Q_PROPERTY(MessageListModel* messages READ messages WRITE setMessages NOTIFY messagesChanged)
+    Q_PROPERTY(GifListModel* gifResults READ gifResults WRITE setGifResults NOTIFY gifResultsChanged)
 
 public:
     explicit API(QObject *parent = 0);
@@ -162,7 +163,7 @@ public:
     void setHasRecommendations(bool hasRecommendations);
     MessageListModel *messages() const;
     void setMessages(MessageListModel *messages);
-    GifListModel *getGifResults() const;
+    GifListModel *gifResults() const;
     void setGifResults(GifListModel *gifResults);
 
 signals:

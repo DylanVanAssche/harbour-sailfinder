@@ -25,7 +25,8 @@ import QtFeedback 5.0
 
 Item {
     property string placeHolderText
-    signal send(string text)
+    signal sendText(string text)
+    signal sendGIF(string url, string id)
     signal keyboardVisible(bool state)
 
     id: messagingBar
@@ -52,15 +53,21 @@ Item {
             top: parent.top
         }
         width: Theme.itemSizeMedium
-        height: parent.height
+        height: Math.min(Theme.itemSizeMedium, parent.height)
 
         Label {
             anchors.centerIn: parent
             //% "GIF"
             text: qsTrId("sailfinder-gif")
         }
-        onPressed: {
-            console.debug("Show GIF picker")
+        onClicked: {
+            var picker = pageStack.push("../pages/GIFPage.qml")
+            picker.selected.connect(function(url, id) {
+                console.debug("Picked GIF: ")
+                console.debug("\tID: " + id)
+                console.debug("\tURL: " + url)
+                sendGIF(url, id)
+            })
         }
     }
 

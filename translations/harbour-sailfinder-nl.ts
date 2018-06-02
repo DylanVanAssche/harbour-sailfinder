@@ -321,5 +321,9 @@
         <source>GIF</source>
         <translation>GIF</translation>
     </message>
+    <message id="sailfinder-send-gif">
+        <source>Send GIF</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

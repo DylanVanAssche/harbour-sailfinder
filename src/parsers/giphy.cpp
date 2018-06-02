@@ -30,7 +30,7 @@ QList<GIF *> Giphy::parseSearch(QJsonObject json)
         QJsonObject gif = item.toObject();
         QString id = gif["id"].toString();
         QJsonObject images = gif["images"].toObject();
-        QUrl url = images["downsized_large"].toObject()["url"].toString();
+        QUrl url = images["downsized"].toObject()["url"].toString();
         gifList.append(new GIF(id, url));
     }
     qDebug() << "GIF search";

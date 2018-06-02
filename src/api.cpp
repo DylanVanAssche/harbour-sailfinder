@@ -410,7 +410,7 @@ void API::searchGIF(QString querry, int offset)
     QUrlQuery parameters;
     parameters.addQueryItem("api_key", GIPHY_KEY);
     parameters.addQueryItem("q", querry);
-    parameters.addQueryItem("limit", QString(GIPHY_FETCH_LIMIT));
+    parameters.addQueryItem("limit", GIPHY_FETCH_LIMIT);
     parameters.addQueryItem("offset", QString(offset));
     parameters.addQueryItem("rating", "pg-13");
     url.setQuery(parameters);
@@ -821,7 +821,7 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     }
 }
 
-GifListModel *API::getGifResults() const
+GifListModel *API::gifResults() const
 {
     return m_gifResults;
 }

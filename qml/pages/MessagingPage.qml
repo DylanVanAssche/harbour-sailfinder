@@ -40,7 +40,7 @@ Page {
             console.debug("Messages received")
             console.debug(api.messages)
             messagesListView.model = api.messages
-            noMessagesPlaceholder.enabled = messagesListView.count == 0
+            noMessagesPlaceholder.enabled = (messagesListView.count == 0)
             messagesListView.positionViewAtEnd()
             busyStatus.running = false
         }
@@ -57,7 +57,7 @@ Page {
 
     Timer {
         id: keyboardDelay
-        interval: 250 // A wild guess for the duration of the Sailfish OS keyboard
+        interval: 500 // A wild guess for the duration of the Sailfish OS keyboard
         running: false
         repeat: false
         onTriggered: messagesListView.scrollToBottom()
@@ -100,9 +100,13 @@ Page {
         anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
         //% "Say hi to %0!"
         placeHolderText: qsTrId("sailfinder-messaging-placeholder").arg(name)
-        onSend: {
+        onSendText: {
             busyStatus.running = Qt.application.active
             api.sendMessage(matchId, text, userId, Math.random().toString())
+        }
+        onSendGIF: {
+            busyStatus.running = Qt.application.active
+            api.sendGIF(matchId, url, id, userId, Math.random().toString())
         }
         onKeyboardVisible: {
             console.debug("Keyboard opened? " + state)
