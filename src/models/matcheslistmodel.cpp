@@ -136,19 +136,6 @@ void MatchesListModel::setMatchesList(const QList<Match *> &matchesList)
     emit this->endResetModel();
 }
 
-void MatchesListModel::updateMatchLastMessage(const QString &matchId, Message *lastMessage)
-{
-    this->beginResetModel(); // Enforce view update
-    foreach(Match* match, this->matchesList()) {
-        if(match->matchId() == matchId) {
-            match->setMessage(lastMessage);
-            qDebug() << "Last message has been updated";
-            break;
-        }
-    }
-    this->endResetModel();
-}
-
 int MatchesListModel::numberOfMatches()
 {
     return this->matchesList().count();

@@ -1738,7 +1738,6 @@ void API::parseSendMessage(QJsonObject json)
 
     // Enforce view updates
     emit this->newMessage(0);
-    this->matchesList()->updateMatchLastMessage(json["match_id"].toString(), newMessage);
 
     // Unlock send messages
     messagesSendLock = false;
