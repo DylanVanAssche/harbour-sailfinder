@@ -30,7 +30,10 @@ public:
     // Stripped down from QNetworkConfiguration
     enum class ConnectionType {
         Ethernet = QNetworkConfiguration::BearerEthernet,
-        WLAN = QNetworkConfiguration::BearerWLAN
+        WLAN = QNetworkConfiguration::BearerWLAN,
+        LTE = QNetworkConfiguration::Bearer4G,
+        UTMS = QNetworkConfiguration::Bearer3G,
+        GRPS = QNetworkConfiguration::Bearer2G
     };
 
     Q_ENUMS(Gender)

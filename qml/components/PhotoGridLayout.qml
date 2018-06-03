@@ -71,10 +71,17 @@ Item {
                     source: {
                         switch(api.getBearerType())
                         {
-                            case Sailfinder.Ethernet:
-                            case Sailfinder.WLAN:
+                            case Sailfinder.Ethernet: // Ethernet
+                                return model.urlFull
+                            case Sailfinder.WLAN: // WLAN
                                 return model.urlLarge
-                            default: // mobile networks or unknown
+                            case Sailfinder.LTE: // 4G
+                                return model.urlMedium
+                            case Sailfinder.UTMS: // 3G
+                                return model.urlSmall
+                            case Sailfinder.GPRS: // 2G
+                                return model.urlAvatar
+                            default: // Unknown
                                 return model.urlMedium
                         }
                     }

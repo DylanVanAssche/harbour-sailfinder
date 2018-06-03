@@ -1,7 +1,8 @@
 * Thu May 24 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-2
 - [MINOR BUGFIX] Cover showed 'Exhausted' when launching
-- [MINOR BUGFIX] Search distance is now limited to 100 km instead of 160 miles.
+- [MINOR BUGFIX] Search distance is now limited to 100 km instead of 160 miles
 - [MAJOR BUGFIX] Fixed translations files in .pro files, they should now be loaded correctly
+- [IMPROVEMENT] Image loading on mobile networks and ethernet has been improved
 - [NEW] Show GIF's in messages
 - [NEW] Send GIF's in messages using the GIPHY search API
 - [DEVELOPMENT] Added build instructions, auto builds on Mer OBS
