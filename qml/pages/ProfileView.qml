@@ -245,7 +245,7 @@ SilicaFlickable {
             id: distanceMax
             width: parent.width
             minimumValue: 1
-            maximumValue: 160
+            maximumValue: 100
             value: 0
             stepSize: 1
             opacity: enabled? 1.0: app.fadeOutValue
