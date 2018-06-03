@@ -89,7 +89,7 @@ Item {
         anchors {
             right: parent.right
             rightMargin: Theme.horizontalPageMargin
-            top: parent.top
+            verticalCenter: parent.verticalCenter
         }
         icon.source: "qrc:///images/icon-send.png" + (pressed
                                                       ? Theme.highlightColor
