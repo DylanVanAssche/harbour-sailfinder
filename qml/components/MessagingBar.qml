@@ -96,7 +96,7 @@ Item {
                                                       : Theme.primaryColor)
         icon.scale: Theme.iconSizeSmall/icon.width
         onPressed: {
-            send(input.text)
+            sendText(input.text)
             buttonBuzz.play()
             input.text = ""
         }
