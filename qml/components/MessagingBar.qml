@@ -53,7 +53,7 @@ Item {
             top: parent.top
         }
         width: Theme.itemSizeMedium
-        height: Math.min(Theme.itemSizeMedium, parent.height)
+        height: parent.height
 
         Label {
             anchors.centerIn: parent

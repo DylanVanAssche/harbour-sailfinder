@@ -30,7 +30,7 @@ Page {
     property string matchId
     property string userId
     property int distance
-    property var match // Until full profile API is added, fetching profile depends then on the matchId
+    property var match
 
     Component.onCompleted: api.getMessages(matchId)
 
@@ -102,7 +102,9 @@ Page {
         placeHolderText: qsTrId("sailfinder-messaging-placeholder").arg(name)
         onSendText: {
             busyStatus.running = Qt.application.active
+            console.debug("NOT EMPTY=" + match)
             api.sendMessage(matchId, text, userId, Math.random().toString())
+            console.debug("EMPTY=" + match)
         }
         onSendGIF: {
             busyStatus.running = Qt.application.active
