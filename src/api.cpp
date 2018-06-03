@@ -1789,6 +1789,9 @@ void API::parseFullMatchProfile(QJsonObject json)
         if(match->id() == result["_id"].toString()) {
             qDebug() << "Match ID found, enhancing profile...";
 
+            // Get distance in KM
+            int distance = result["distance_mi"].toInt();
+
             // Add schools if available
             foreach(QJsonValue item, result["schools"].toArray()) {
                 QJsonObject school = item.toObject();
@@ -1832,7 +1835,7 @@ void API::parseFullMatchProfile(QJsonObject json)
             }
 
             // Update match profile
-            match->setDistance(result["distance_mi"].toInt());
+            match->setDistance(distance);
             match->setSchools(new SchoolListModel(schoolList));
             match->setJobs(new JobListModel(jobList));
 
