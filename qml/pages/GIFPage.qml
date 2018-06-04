@@ -83,18 +83,20 @@ Page {
             Grid {
                 id: grid
                 width: parent.width
-                columns: 3
+                columns: 2
 
                 Repeater {
                     id: gridModel
 
                     AnimatedImage {
+                        id: gif
                         property bool _loadingGif: true
 
                         width: grid.width / grid.columns
                         height: width
                         source: model.url
                         asynchronous: true
+                        paused: true // too heavy for low power devices like the Jolla 1
                         onProgressChanged: _loadingGif = (progress < 1.0)
 
                         MouseArea {
@@ -117,6 +119,14 @@ Page {
                             anchors.centerIn: parent
                             size: BusyIndicatorSize.Medium
                             running: Qt.application.active && parent._loadingGif
+                        }
+
+                        IconButton {
+                            anchors.centerIn: parent
+                            z: 1 // visible above GIF
+                            icon.source: gif.paused? "image://theme/icon-l-play": "image://theme/icon-l-pause"
+                            onClicked: gif.paused? gif.paused = false: gif.paused = true
+                            visible: !gif._loadingGif
                         }
                     }
                 }
