@@ -1,4 +1,4 @@
-* Thu May 24 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-3
+* Thu May 24 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-4
 - [MINOR BUGFIX] Cover showed 'Exhausted' when launching
 - [MINOR BUGFIX] Search distance is now limited to 100 km instead of 160 miles
 - [MINOR BUGFIX] Match profile isn't empty anymore after sending a message
