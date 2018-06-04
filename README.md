@@ -18,6 +18,7 @@ Sailfinder is available in the official Jolla Store and on [Openrepos.net](https
 - View their profile, pictures, bio, ...
 - Notifications
 - View your matches, send them messages and unmatch them
+- GIF support
 - Edit your profile: change your search criteria, discoverable, ...
 - Modern Sailfish Silica UI and a blazing fast C++ backend
 
