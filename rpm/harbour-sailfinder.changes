@@ -1,3 +1,6 @@
+* Tue Jun 5 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.6-1
+- [MINOR BUGFIX] Scroll to the latest message automatically
+
 * Tue Jun 5 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-5
 - [TRANSLATIONS] Updated all translations to the latest release
 

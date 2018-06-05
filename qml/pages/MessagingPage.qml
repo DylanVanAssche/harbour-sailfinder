@@ -41,7 +41,6 @@ Page {
             console.debug(api.messages)
             messagesListView.model = api.messages
             noMessagesPlaceholder.enabled = (messagesListView.count == 0)
-            messagesListView.positionViewAtEnd()
             busyStatus.running = false
         }
 
@@ -50,13 +49,13 @@ Page {
                 api.getMessages(matchId)
             }
             noMessagesPlaceholder.enabled = messagesListView.count == 0
-            messagesListView.positionViewAtEnd()
             busyStatus.running = false
         }
     }
 
     Timer {
-        id: keyboardDelay
+        // This is a workaround for the broken signal of Qt.inputMethod
+        id: scrollDelay
         interval: 500 // A wild guess for the duration of the Sailfish OS keyboard
         running: false
         repeat: false
@@ -91,6 +90,7 @@ Page {
         delegate: MessagingDelegate {
             width: ListView.view.width*0.75
         }
+        onCountChanged: scrollDelay.restart()
 
         VerticalScrollDecorator {}
     }
@@ -112,7 +112,7 @@ Page {
         }
         onKeyboardVisible: {
             console.debug("Keyboard opened? " + state)
-            keyboardDelay.restart() // Make sure we see the latest messages when the keyboard shows/hides
+            scrollDelay.restart() // Make sure we see the latest messages when the keyboard shows/hides
         }
     }
 
