@@ -280,57 +280,56 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
     <message id="sailfinder-timeout-error">
         <source>Network timeout</source>
         <extracomment>Error shown to the user when a network timeout was received</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Netzwerk-Zeitüberschreitung</translation>
     </message>
     <message id="sailfinder-optimizer">
         <source>Optimizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Optimizer </translation>
     </message>
     <message id="sailfinder-optimizer-text">
         <source>The photo optimizer will automatically show your best photo&apos;s first on your profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Fotooptimierung zeigt automatisch dein bestes Foto zuerst in deinem Profil.</translation>
     </message>
     <message id="sailfinder-logging-out">
         <source>Logging out</source>
-        <translation type="unfinished"></translation>
+        <translation>Abmelden</translation>
     </message>
     <message id="sailfinder-removing-photo">
         <source>Removing photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Foto entfernen</translation>
     </message>
     <message id="sailfinder-upload-photo">
         <source>Upload photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Foto hochladen</translation>
     </message>
     <message id="sailfinder-upload-failed">
         <source></source>
         <oldsource>Photo upload failed!</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Hochladen des Fotos fehlgeschlagen!</translation>
     </message>
     <message id="sailfinder-login-facebook">
         <source>Use Facebook login</source>
-        <translation type="unfinished"></translation>
+        <translation>Nutze Facebook Login</translation>
     </message>
     <message id="sailfinder-login-phone">
         <source>Use phone login</source>
-        <translation type="unfinished"></translation>
+        <translation>Nutze Login mit Telefonnummer</translation>
     </message>
     <message id="sailfinder-reload">
         <source>Reload</source>
-        <translation type="unfinished"></translation>
+        <translation>Neu laden</translation>
     </message>
     <message id="sailfinder-gif">
         <source>GIF</source>
-        <translation type="unfinished"></translation>
+        <translation>GIF</translation>
     </message>
     <message id="sailfinder-send-gif">
         <source>Send GIF</source>
-        <translation type="unfinished"></translation>
+        <translation>GIF senden</translation>
     </message>
     <message id="sailfinder-no-gifs">
         <source>No GIF&apos;s yet</source>
-        <oldsource>No GIF&apos;s</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Keine GIF&apos;s gesucht</translation>
     </message>
 </context>
 </TS>

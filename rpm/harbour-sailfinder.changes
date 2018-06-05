@@ -1,3 +1,6 @@
+* Tue Jun 5 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-5
+- [TRANSLATIONS] Updated all translations to the latest release
+
 * Mon Jun 4 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-4
 - [MINOR BUGFIX] Cover showed 'Exhausted' when launching
 - [MINOR BUGFIX] Search distance is now limited to 100 km instead of 160 miles

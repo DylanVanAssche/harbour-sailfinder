@@ -319,16 +319,15 @@
     </message>
     <message id="sailfinder-gif">
         <source>GIF</source>
-        <translation type="unfinished"></translation>
+        <translation>GIF</translation>
     </message>
     <message id="sailfinder-send-gif">
         <source>Send GIF</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyślij GIF</translation>
     </message>
     <message id="sailfinder-no-gifs">
         <source>No GIF&apos;s yet</source>
-        <oldsource>No GIF&apos;s</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Brak GIF&apos;ów</translation>
     </message>
 </context>
 </TS>
