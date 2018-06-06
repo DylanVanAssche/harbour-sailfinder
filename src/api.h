@@ -57,6 +57,7 @@
 #include "models/messagelistmodel.h"
 #include "models/giflistmodel.h"
 #include "parsers/giphy.h"
+#include "parsers/login.h"
 
 #define POSITION_MAX_UPDATE 10
 #define TIMEOUT_TIME 15000 // 15 sec
@@ -128,16 +129,10 @@ public:
     Q_INVOKABLE void removePhoto(QString photoId);
     Q_INVOKABLE void getFullMatchProfile(QString userId);
     Q_INVOKABLE int getBearerType();
-    QString token() const;
-    void setToken(const QString &token);
     bool networkEnabled() const;
     void setNetworkEnabled(bool networkEnabled);
     bool busy() const;
     void setBusy(bool busy);
-    bool isNewUser() const;
-    void setIsNewUser(bool isNewUser);
-    bool authenticated() const;
-    void setAuthenticated(bool authenticated);
     bool canEditJobs() const;
     void setCanEditJobs(bool canEditJobs);
     bool canEditSchools() const;
@@ -168,11 +163,12 @@ public:
     void setMessages(MessageListModel *messages);
     GifListModel *gifResults() const;
     void setGifResults(GifListModel *gifResults);
+    Authentication *tinderAuth() const;
+    void setTinderAuth(Authentication *tinderAuth);
 
 signals:
     void busyChanged();
-    void tokenChanged();
-    void isNewUserChanged();
+    void tinderAuthChanged();
     void canEditJobsChanged();
     void canEditSchoolsChanged();
     void canAddPhotosFromFacebookChanged();
@@ -183,7 +179,6 @@ signals:
     void standardPollIntervalChanged();
     void persistentPollIntervalChanged();
     void networkEnabledChanged();
-    void authenticatedChanged();
     void errorOccurred(const QString &text);
     void authenticationRequested(const QString &text);
     void newMatch(int count);
@@ -210,9 +205,7 @@ public slots:
     void positionUpdated(const QGeoPositionInfo &info);
 
 private:
-    QString m_token = QString();
-    bool m_isNewUser = false;
-    bool m_authenticated = false;
+    Authentication* m_tinderAuth = NULL;
     bool m_canEditJobs = false;
     bool m_canEditSchools = false;
     bool m_canAddPhotosFromFacebook = false;

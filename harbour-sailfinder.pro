@@ -59,7 +59,9 @@ SOURCES += src/harbour-sailfinder.cpp \
     src/models/matcheslistmodel.cpp \
     src/parsers/giphy.cpp \
     src/models/gif.cpp \
-    src/models/giflistmodel.cpp
+    src/models/giflistmodel.cpp \
+    src/parsers/login.cpp \
+    src/models/authentication.cpp
 
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/pages/CoverPage.qml \
@@ -144,4 +146,6 @@ HEADERS += \
     src/parsers/giphy.h \
     src/models/gif.h \
     src/keys.h \
-    src/models/giflistmodel.h
+    src/models/giflistmodel.h \
+    src/parsers/login.h \
+    src/models/authentication.h

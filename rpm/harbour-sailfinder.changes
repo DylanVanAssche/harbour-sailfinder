@@ -1,7 +1,8 @@
-* Wed Jun 6 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.6-4
+* Wed Jun 6 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.6-5
 - [MINOR BUGFIX] Scroll to the latest message automatically
-- [IMPROVEMENT] Notifications for matches are now automatically closed when read in Sailfinder
 - [MAJOR BUGFIX] Uploaded pictures are now respecting the EXIF tag
+- [IMPROVEMENT] Notifications for matches are now automatically closed when read in Sailfinder
+- [IMPROVEMENT] Refactored C++ code for easier maintaining
 - [NEW] Copy message to clipboard
 
 * Tue Jun 5 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-5

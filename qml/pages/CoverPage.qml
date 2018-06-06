@@ -25,7 +25,7 @@ CoverBackground {
 
     Connections {
         target: api
-        onAuthenticatedChanged: _loading = false
+        onTinderAuthChanged: _loading = false
     }
 
     DefaultCover {
