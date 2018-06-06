@@ -94,9 +94,8 @@ SilicaFlickable {
             updatesTimer.start()
         }
 
-        onLoggedOut: {
-            pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { logout: true })
-        }
+        onLoggedOut: pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { clearData: true })
+        onDeleteAccount: pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { clearData: true })
 
         onPersistentPollIntervalChanged: {
             if(api.persistentPollInterval > 0) {
@@ -260,12 +259,26 @@ SilicaFlickable {
 
         Button {
             anchors.horizontalCenter: parent.horizontalCenter
+            preferredWidth: Theme.buttonWidthMedium
             //% "Logout"
             text: qsTrId("sailfinder-logout")
             opacity: enabled? 1.0: app.fadeOutValue
             //% "Logging out"
             onClicked: remorse.execute(qsTrId("sailfinder-logging-out"), function() {
                 api.logout()
+            });
+        }
+
+        Button {
+            anchors.horizontalCenter: parent.horizontalCenter
+            preferredWidth: Theme.buttonWidthMedium
+            color: "red"
+            //% "Delete account"
+            text: qsTrId("sailfinder-delete-account")
+            opacity: enabled? 1.0: app.fadeOutValue
+            //% "Deleting account"
+            onClicked: remorse.execute(qsTrId("sailfinder-deleting-account"), function() {
+                api.deleteAccount()
             });
         }
 

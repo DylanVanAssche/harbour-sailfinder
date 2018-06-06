@@ -159,8 +159,8 @@
         <translation>Privacy &amp; licensing</translation>
     </message>
     <message id="sailfinder-privacy-licensing-text">
-        <source>%0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0.</source>
-        <translation>%0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0.</translation>
+        <source>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you like.</source>
+        <translation>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you like.</translation>
     </message>
     <message id="sailfinder-disclaimer">
         <source>Disclaimer</source>
@@ -301,8 +301,7 @@
         <translation>Upload photo</translation>
     </message>
     <message id="sailfinder-upload-failed">
-        <source></source>
-        <oldsource>Photo upload failed!</oldsource>
+        <source>Photo upload failed!</source>
         <translation>Photo upload failed!</translation>
     </message>
     <message id="sailfinder-login-facebook">
@@ -332,6 +331,22 @@
     <message id="sailfinder-copy">
         <source>Copy</source>
         <translation>Copy</translation>
+    </message>
+    <message id="sailfinder-terms-title">
+        <source>Terms of Service</source>
+        <translation>Terms of Service</translation>
+    </message>
+    <message id="sailfinder-accept">
+        <source>Accept</source>
+        <translation>Accept</translation>
+    </message>
+    <message id="sailfinder-delete-account">
+        <source>Delete account</source>
+        <translation>Delete account</translation>
+    </message>
+    <message id="sailfinder-deleting-account">
+        <source>Deleting account</source>
+        <translation>Deleting account</translation>
     </message>
 </context>
 </TS>

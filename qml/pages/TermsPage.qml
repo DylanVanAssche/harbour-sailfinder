@@ -15,7 +15,7 @@
 *   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.2
+import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Harbour.Sailfinder.SFOS 1.0
 import "../components"
@@ -36,8 +36,8 @@ Page {
             width: parent.width
             spacing: Theme.paddingLarge
 
-            //% "About %0 V%1"
-            PageHeader { title: qsTrId("sailfinder-version").arg(sfos.appNamePretty).arg(sfos.appVersion) }
+            //% "Terms of Service"
+            PageHeader { title: qsTrId("sailfinder-terms-title") }
 
             //% "What's %0?"
             SectionHeader { text: qsTrId("sailfinder-what-is").arg(sfos.appNamePretty) }
@@ -63,59 +63,18 @@ Page {
                 text: qsTrId("sailfinder-disclaimer-text").arg(sfos.appNamePretty).arg("Tinder")
             }
 
-            //% "Developer & source code"
-            SectionHeader { text: qsTrId("sailfinder-developer-source") }
-
-            GlassButton {
-                link: "https://github.com/dylanvanassche"
-                source: "qrc:///images/icon-github.png"
-                text: "Dylan Van Assche"
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                //% "Accept"
+                text: qsTrId("sailfinder-accept")
+                preferredWidth: Theme.buttonWidthMedium
+                onClicked: {
+                    temp.readTerms = true
+                    pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"))
+                }
             }
 
-            GlassButton {
-                link: "https://paypal.me/minitreintje"
-                source: "qrc:///images/icon-paypal.png"
-                //% "Donate with %0"
-                text: qsTrId("sailfinder-donate-with").arg("PayPal")
-            }
-
-            GlassButton {
-                link: "https://github.com/dylanvanassche/harbour-sailfinder"
-                source: "qrc:///images/icon-code.png"
-                //% "Source code"
-                text: qsTrId("sailfinder-source")
-            }
-
-            //% "Translations"
-            SectionHeader { text: qsTrId("sailfinder-translations") }
-
-            TextLabel {
-                //% "%0 can be translated into your language but for that we need your help! You can translate this app on %1"
-                text: qsTrId("sailfinder-translations-text").arg(sfos.appNamePretty).arg("Transifex:")
-            }
-
-            GlassButton {
-                link: "https://www.transifex.com/dylanvanassche/harbour-sailfinder"
-                source: "qrc:///images/icon-translate.png"
-                //% "%0 project"
-                text: qsTrId("sailfinder-translations-project").arg("Transifex")
-            }
-
-            //% "Powered by"
-            SectionHeader { text: qsTrId("sailfinder-powered-by") }
-
-            GlassButton {
-                link: "https://fontawesome.io/"
-                source: "qrc:///images/icon-fontawesome.png"
-                //% "%0 icons"
-                text: qsTrId("sailfinder-icons").arg("FontAwesome")
-            }
-
-            GlassButton {
-                link: "https://be.linkedin.com/in/sam-goedgezelschap-06a516106"
-                source: "qrc:///images/icon-linkedin.png"
-                text: "Sam Goedgezelschap"
-            }
+            Spacer {}
         }
     }
 }

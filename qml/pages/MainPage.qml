@@ -36,7 +36,7 @@ Page {
                 }
                 else {
                     console.debug("Photo MIME type isn't JPEG or WEBP!")
-                    //% Photo upload failed!
+                    //% "Photo upload failed!"
                     sfos.createToaster(qsTrId("sailfinder-upload-failed"), "icon-s-high-importance", "sailfinder-upload")
                 }
             }

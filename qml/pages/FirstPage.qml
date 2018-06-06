@@ -21,7 +21,7 @@ import QtWebKit 3.0
 
 Page {
     property string fbToken
-    property bool logout
+    property bool clearData
     property string _mode: "facebook" // accountkit or facebook mode
 
     id: page
@@ -97,7 +97,7 @@ Page {
         url: _mode === "accountkit"? app.accountkitAuthUrl: app.fbAuthUrl
         enabled: !loading // block input while loading
         Component.onCompleted: {
-            if(logout) {
+            if(clearData) {
                 console.debug("Clearing cookies due logout")
                 webview.experimental.deleteAllCookies();
                 webview.reload()

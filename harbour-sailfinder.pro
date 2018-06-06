@@ -98,7 +98,8 @@ DISTFILES += qml/harbour-sailfinder.qml \
     translations/harbour-sailfinder-de.ts \
     qml/components/TextMessage.qml \
     qml/components/GIFMessage.qml \
-    qml/pages/GIFPage.qml
+    qml/pages/GIFPage.qml \
+    qml/pages/TermsPage.qml
     qml/components/SchoolJobDelegate.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
