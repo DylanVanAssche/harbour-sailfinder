@@ -39,6 +39,9 @@
 #include <QtCore/QTimer>
 #include <QtCore/QBuffer>
 #include <QtCore/QFile>
+#include <QtGui/QImage>
+#include <QtGui/QImageReader>
+#include <QtGui/QTransform>
 #include <QtPositioning/QGeoSatelliteInfoSource>
 #include <QtPositioning/QGeoPositionInfoSource>
 #include <stdlib.h>

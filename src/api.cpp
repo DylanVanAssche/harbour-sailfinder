@@ -681,11 +681,49 @@ void API::uploadPhoto(QString path)
         // Lock photo upload
         uploadPhotoLock = true;
 
-        // Build URL
+         // Build URL
         QUrl url(QString(IMAGE_ENDPOINT));
         QUrlQuery parameters;
         parameters.addQueryItem("client_photo_id", QString("{photoId}?client_photo_id=ProfilePhoto%1").arg(QDateTime::currentMSecsSinceEpoch()));
         qDebug() << url;
+
+        // Read EXIF tag and rotate if needed
+        QImageReader photoReader;
+        photoReader.setAutoDetectImageFormat(true);
+        photoReader.setAutoTransform(true);
+        photoReader.setFileName(path);
+        QImage photo = photoReader.read();
+        photo.save("/tmp/uploadPhoto.jpeg", "JPEG");
+        QFile* file = new QFile("/tmp/uploadPhoto.jpeg");
+        file->open(QIODevice::ReadOnly);
+        qDebug() << "Rotated photo according to EXIF tag";
+
+        // Build multipart
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        QHttpPart imagePart; // Create imagePart and set headers
+        imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"blob\""));
+        imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
+        imagePart.setBodyDevice(file); // Attach file to imagePart
+        file->setParent(multiPart); // Delete file when multiPart is deleted
+        multiPart->append(imagePart);
+
+        // Prepare & do request
+        QNetworkRequest request = this->prepareRequest(url, parameters);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data; boundary=" + multiPart->boundary()); // special content-type header
+        qDebug() << request.header(QNetworkRequest::ContentTypeHeader);
+        QNetworkReply* reply = QNAM->post(request, multiPart);
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        multiPart->setParent(reply); // Delete multiPart when reply is deleted
+
+        /*// Build URL
+        QUrl url(QString(IMAGE_ENDPOINT));
+        QUrlQuery parameters;
+        parameters.addQueryItem("client_photo_id", QString("{photoId}?client_photo_id=ProfilePhoto%1").arg(QDateTime::currentMSecsSinceEpoch()));
+        qDebug() << url;
+
+        // Rotate image if needed
+
 
         // Build multipart
         QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
@@ -705,7 +743,7 @@ void API::uploadPhoto(QString path)
         QNetworkReply* reply = QNAM->post(request, multiPart);
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-        multiPart->setParent(reply); // Delete multiPart when reply is deleted
+        multiPart->setParent(reply); // Delete multiPart when reply is deleted*/
     }
 }
 
