@@ -329,5 +329,9 @@
         <source>No GIF&apos;s yet</source>
         <translation>Brak GIF&apos;ów</translation>
     </message>
+    <message id="sailfinder-copy">
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

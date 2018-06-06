@@ -329,5 +329,9 @@
         <source>No GIF&apos;s yet</source>
         <translation>No GIF&apos;s yet</translation>
     </message>
+    <message id="sailfinder-copy">
+        <source>Copy</source>
+        <translation>Copy</translation>
+    </message>
 </context>
 </TS>

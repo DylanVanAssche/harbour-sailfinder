@@ -331,5 +331,9 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
         <source>No GIF&apos;s yet</source>
         <translation>Keine GIF&apos;s gesucht</translation>
     </message>
+    <message id="sailfinder-copy">
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
