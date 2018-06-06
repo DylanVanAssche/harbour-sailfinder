@@ -90,7 +90,7 @@ Page {
         delegate: MessagingDelegate {
             width: ListView.view.width*0.75
         }
-        onCountChanged: scrollDelay.restart()
+        onCountChanged: messagesListView.currentIndex = messagesListView.count - 1
 
         VerticalScrollDecorator {}
     }
