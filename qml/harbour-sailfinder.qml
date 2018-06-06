@@ -28,8 +28,18 @@ ApplicationWindow
     property bool networkStatus
     property int swipeViewIndex: 0
 
+    Component {
+        id: firstPage
+        FirstPage {}
+    }
+
+    Component {
+        id: termsPage
+        TermsPage {}
+    }
+
     id: app
-    initialPage: Component { FirstPage {} }
+    initialPage: temp.readTerms? firstPage: termsPage
     cover: Qt.resolvedUrl("pages/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
     onNetworkStatusChanged: {
@@ -62,6 +72,7 @@ ApplicationWindow
         path: "/apps/harbour-sailfinder/temp"
 
         property date lastActivityDate: new Date()
+        property bool readTerms: false
         Component.onCompleted: console.debug("Last activity date:" + temp.lastActivityDate)
     }
 

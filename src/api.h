@@ -128,6 +128,7 @@ public:
     Q_INVOKABLE void removePhoto(QString photoId);
     Q_INVOKABLE void getFullMatchProfile(QString userId);
     Q_INVOKABLE int getBearerType();
+    Q_INVOKABLE void deleteAccount();
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -195,6 +196,7 @@ signals:
     void hasRecommendationsChanged();
     void messagesChanged();
     void loggedOut();
+    void accountDeleted();
     void updatesReady(QDateTime lastActivityDate, bool refetch);
     void newMessage(int count);
     void unlockedAllEndpoints();

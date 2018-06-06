@@ -3,6 +3,8 @@
 - [IMPROVEMENT] Notifications for matches are now automatically closed when read in Sailfinder
 - [MAJOR BUGFIX] Uploaded pictures are now respecting the EXIF tag
 - [NEW] Copy message to clipboard
+- [NEW] Allow Tinder account removal from Sailfinder
+- [STORE] Enforce GDPR compliance as far as possible
 
 * Tue Jun 5 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-5
 - [TRANSLATIONS] Updated all translations to the latest release

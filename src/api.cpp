@@ -824,6 +824,23 @@ int API::getBearerType()
     return QNAM->configuration().bearerType();
 }
 
+void API::deleteAccount()
+{
+    if(this->authenticated()) {
+        // Build URL
+        QUrl url(QString(PROFILE_ENDPOINT));
+        QUrlQuery parameters;
+
+        // Prepare & do request
+        QNetworkReply* reply = QNAM->deleteResource(this->prepareRequest(url, parameters));
+        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    }
+    else {
+        qWarning() << "Not authenticated, can't delete account";
+    }
+}
+
 /**
  * @class API
  * @brief Parse the positioning
@@ -1142,9 +1159,15 @@ void API::finished (QNetworkReply *reply)
                 qDebug() << "Tinder updates data received";
                 this->parseUpdates(jsonObject);
             }
-            else if(reply->url().toString().contains(PROFILE_ENDPOINT, Qt::CaseInsensitive)) {
+            else if(reply->url().toString().contains(PROFILE_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::PostOperation || reply->url().toString().contains(PROFILE_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::GetOperation) {
                 qDebug() << "Tinder profile data received";
                 this->parseProfile(jsonObject);
+            }
+            else if(reply->url().toString().contains(PROFILE_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::DeleteOperation) {
+                qDebug() << "Tinder account deleted";
+                this->setToken("");
+                this->setAuthenticated(false);
+                emit this->accountDeleted();
             }
             else if(reply->url().toString().contains(RECS_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder recommendations data received";
