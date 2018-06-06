@@ -15,23 +15,26 @@
 *   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GIPHY_H
-#define GIPHY_H
+#include "login.h"
 
-#include <QDebug>
-#include <QtCore/QObject>
-#include <QtCore/QJsonObject>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonValue>
-#include "../models/gif.h"
-
-class Giphy : public QObject
+Login::Login(QObject *parent) : QObject(parent)
 {
-    Q_OBJECT
 
-public:
-    explicit Giphy(QObject *parent = nullptr);
-    static QList<GIF *> parseSearch(QJsonObject json);
-};
+}
 
-#endif // GIPHY_H
+Authentication* Login::parseTinder(QJsonObject json)
+{
+    Authentication *auth = new Authentication();
+    QJsonObject login = json["data"].toObject();
+
+    auth.setToken(login["api_token"].toString());
+    auth.setIsNewUser(login["is_new_user"].toBool());
+    auth.setIsAuthenticated(auth.token().length() > 0);
+
+    qDebug() << "Login data:";
+    qDebug() << "\tToken:" << auth.token();
+    qDebug() << "\tisNewUser" << auth.isNewUser();
+    qDebug() << "\tisAuthenticated" << auth.isAuthenticated();
+
+    return auth;
+}

@@ -36,8 +36,8 @@ Page {
 
     Connections {
         target: api
-        onAuthenticatedChanged: {
-            if(api.authenticated) {
+        onTinderAuthChanged: {
+            if(api.tinderAuth.isAuthenticated) {
                 console.debug("Tinder token successfully retrieved")
                 pageStack.replace(Qt.resolvedUrl("../pages/MainPage.qml"))
             }

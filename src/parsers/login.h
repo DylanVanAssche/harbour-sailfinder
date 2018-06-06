@@ -15,23 +15,19 @@
 *   along with Sailfinder.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GIPHY_H
-#define GIPHY_H
+#ifndef LOGIN_H
+#define LOGIN_H
 
-#include <QDebug>
 #include <QtCore/QObject>
-#include <QtCore/QJsonObject>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonValue>
-#include "../models/gif.h"
+#include <QtCore/QVariantMap>
+#include "../models/authentication.h"
 
-class Giphy : public QObject
+class Login : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit Giphy(QObject *parent = nullptr);
-    static QList<GIF *> parseSearch(QJsonObject json);
+    explicit Login(QObject *parent = nullptr);
+    static Authentication* parseTinder(QJsonObject json);
 };
 
-#endif // GIPHY_H
+#endif // LOGIN_H

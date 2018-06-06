@@ -19,9 +19,6 @@
 
 API::API(QObject *parent) : QObject(parent)
 {
-    // Set authenticated to false at init
-    this->setAuthenticated(false);
-
     // Initiate a new QNetworkAccessManager with cache
     QNAM = new QNetworkAccessManager(this);
     QNetworkConfigurationManager QNAMConfig;
@@ -104,7 +101,7 @@ QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
     request.setRawHeader("platform", "web");
     request.setRawHeader("referer", "https://tinder.com");
     if(url.toString() != AUTH_FACEBOOK_ENDPOINT) { // not needed when we're authenticating
-        request.setRawHeader("x-auth-token", this->token().toLocal8Bit());
+        request.setRawHeader("x-auth-token", this->tinderAuth()->token().toLocal8Bit());
     }
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
@@ -142,7 +139,7 @@ void API::login(QString fbToken)
  */
 void API::getMeta(double latitude, double longitude)
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Build URL
         QUrl url(QString(META_ENDPOINT));
         QUrlQuery parameters;
@@ -172,7 +169,7 @@ void API::getMeta(double latitude, double longitude)
  */
 void API::getProfile()
 {
-    if(this->authenticated() && !profileFetchLock) {
+    if(this->tinderAuth()->isAuthenticated() && !profileFetchLock) {
         // Lock profile fetching
         profileFetchLock = true;
 
@@ -196,7 +193,7 @@ void API::getProfile()
 
 void API::getRecommendations()
 {
-    if(this->authenticated() && !recommendationsFetchLock) {
+    if(this->tinderAuth()->isAuthenticated() && !recommendationsFetchLock) {
         // Lock recommendations fetching
         recommendationsFetchLock = true;
 
@@ -229,7 +226,7 @@ void API::getMatchesWithoutMessages()
 
 void API::getMatchesAll()
 {
-    if(this->authenticated() && !matchFetchLock) {
+    if(this->tinderAuth()->isAuthenticated() && !matchFetchLock) {
         // Lock matches fetching
         matchFetchLock = true;
 
@@ -253,7 +250,7 @@ void API::getMatchesAll()
 
 void API::getMatches(bool withMessages)
 {
-    if(this->authenticated() && !matchFetchLock) {
+    if(this->tinderAuth()->isAuthenticated() && !matchFetchLock) {
         // Lock matches fetching
         matchFetchLock = true;
 
@@ -283,7 +280,7 @@ void API::getMatches(bool withMessages)
 
 void API::getMatches(QString pageToken)
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Lock matches fetching
         matchFetchLock = true;
 
@@ -305,7 +302,7 @@ void API::getMatches(QString pageToken)
 
 void API::getMessages(QString matchId, QString pageToken)
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Lock matches fetching
         messagesFetchLock = true;
 
@@ -327,7 +324,7 @@ void API::getMessages(QString matchId, QString pageToken)
 
 void API::getUpdates(QDateTime lastActivityDate)
 {
-    if(this->authenticated() && !updatesFetchLock) {
+    if(this->tinderAuth()->isAuthenticated() && !updatesFetchLock) {
         // Lock updates fetching
         updatesFetchLock = true;
 
@@ -358,7 +355,7 @@ void API::getUpdates(QDateTime lastActivityDate)
 
 void API::getMessages(QString matchId)
 {
-    if(this->authenticated() && !messagesFetchLock) {
+    if(this->tinderAuth()->isAuthenticated() && !messagesFetchLock) {
         // Lock message fetching
         messagesFetchLock = true;
 
@@ -446,7 +443,7 @@ void API::sendGIF(QString matchId, QString url, QString gifId, QString userId, Q
 
 void API::likeUser(QString userId)
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Build URL
         QUrl url(QString(LIKE_ENDPOINT) + "/" + userId);
         QUrlQuery parameters;
@@ -463,7 +460,7 @@ void API::likeUser(QString userId)
 
 void API::passUser(QString userId)
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Build URL
         QUrl url(QString(PASS_ENDPOINT) + "/" + userId);
         QUrlQuery parameters;
@@ -480,7 +477,7 @@ void API::passUser(QString userId)
 
 void API::superlikeUser(QString userId)
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Build URL
         QUrl url(QString(LIKE_ENDPOINT) + "/" + userId + QString(SUPERLIKE_ENDPOINT));
         QUrlQuery parameters;
@@ -525,7 +522,7 @@ void API::nextRecommendation()
 
 void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable, bool optimizer)
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Build URL
         QUrl url(QString(PROFILE_ENDPOINT));
         QUrlQuery parameters;
@@ -614,7 +611,7 @@ void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sa
 
 void API::logout()
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Clear Webkit cache for Facebook authentication
         const QString cachePath = SFOS.cacheLocation() + "/" + SFOS.appName() + "/.QtWebKit";
         QDir webcache(cachePath);
@@ -654,7 +651,7 @@ void API::logout()
 
 void API::unmatch(QString matchId)
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Build URL
         QUrl url(QString(MATCH_OPERATIONS_ENDPOINT) + "/" + matchId);
         QUrlQuery parameters;
@@ -677,7 +674,7 @@ void API::unmatch(QString matchId)
  */
 void API::uploadPhoto(QString path)
 {
-    if(this->authenticated() && !uploadPhotoLock) {
+    if(this->tinderAuth()->isAuthenticated() && !uploadPhotoLock) {
         // Lock photo upload
         uploadPhotoLock = true;
 
@@ -715,35 +712,6 @@ void API::uploadPhoto(QString path)
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         multiPart->setParent(reply); // Delete multiPart when reply is deleted
-
-        /*// Build URL
-        QUrl url(QString(IMAGE_ENDPOINT));
-        QUrlQuery parameters;
-        parameters.addQueryItem("client_photo_id", QString("{photoId}?client_photo_id=ProfilePhoto%1").arg(QDateTime::currentMSecsSinceEpoch()));
-        qDebug() << url;
-
-        // Rotate image if needed
-
-
-        // Build multipart
-        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-        QHttpPart imagePart; // Create imagePart and set headers
-        imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"blob\""));
-        imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
-        QFile *file = new QFile(path); // Read image
-        file->open(QIODevice::ReadOnly);
-        imagePart.setBodyDevice(file); // Attach file to imagePart
-        file->setParent(multiPart); // Delete file when multiPart is deleted
-        multiPart->append(imagePart);
-
-        // Prepare & do request
-        QNetworkRequest request = this->prepareRequest(url, parameters);
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data; boundary=" + multiPart->boundary()); // special content-type header
-        qDebug() << request.header(QNetworkRequest::ContentTypeHeader);
-        QNetworkReply* reply = QNAM->post(request, multiPart);
-        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-        multiPart->setParent(reply); // Delete multiPart when reply is deleted*/
     }
 }
 
@@ -756,7 +724,7 @@ void API::uploadPhoto(QString path)
  */
 void API::removePhoto(QString photoId)
 {
-    if(this->authenticated() && !removePhotoLock) {
+    if(this->tinderAuth()->isAuthenticated() && !removePhotoLock) {
         // Lock photo remover
         removePhotoLock = true;
 
@@ -798,7 +766,7 @@ void API::removePhoto(QString photoId)
  */
 void API::getFullMatchProfile(QString userId)
 {
-    if(this->authenticated() && !fullMatchProfileLock) {
+    if(this->tinderAuth()->isAuthenticated() && !fullMatchProfileLock) {
         // Lock recommendations fetching
         fullMatchProfileLock = true;
 
@@ -857,7 +825,7 @@ void API::positionUpdated(const QGeoPositionInfo &info)
         if (info.attribute(QGeoPositionInfo::HorizontalAccuracy) < 1000 && info.attribute(QGeoPositionInfo::VerticalAccuracy) < 1000) {
             qDebug() << "Position fix OK:" << position;
             // Only perform request when API is ready
-            if(this->authenticated()) {
+            if(this->tinderAuth()->isAuthenticated()) {
                 qDebug() << "Authenticated, updating on API and stopping location services";
                 this->getMeta(position.latitude(), position.longitude());
                 positionSource->stopUpdates();
@@ -865,7 +833,7 @@ void API::positionUpdated(const QGeoPositionInfo &info)
         }
     }
     // Position fix takes too long
-    else if(positionUpdateCounter > POSITION_MAX_UPDATE && this->authenticated()) {
+    else if(positionUpdateCounter > POSITION_MAX_UPDATE && this->tinderAuth()->isAuthenticated()) {
         qWarning() << "No accurate fix aquired, using the best available location:" << position;
         this->getMeta(position.latitude(), position.longitude());
         positionSource->stopUpdates();
@@ -874,6 +842,17 @@ void API::positionUpdated(const QGeoPositionInfo &info)
     else {
         qWarning() << "Position fix not accurate enough yet" << positionUpdateCounter << "/" << POSITION_MAX_UPDATE ;
     }
+}
+
+Authentication *API::tinderAuth() const
+{
+    return m_tinderAuth;
+}
+
+void API::setTinderAuth(Authentication *tinderAuth)
+{
+    m_tinderAuth = tinderAuth;
+    emit this->tinderAuthChanged();
 }
 
 GifListModel *API::gifResults() const
@@ -1041,18 +1020,6 @@ void API::setProfile(User *profile)
     emit this->profileChanged();
 }
 
-
-bool API::authenticated() const
-{
-    return m_authenticated;
-}
-
-void API::setAuthenticated(bool authenticated)
-{
-    m_authenticated = authenticated;
-    emit this->authenticatedChanged();
-}
-
 /**
  * @class API
  * @brief Logs the networkstate.
@@ -1149,7 +1116,8 @@ void API::finished (QNetworkReply *reply)
             // Parse data in the right C++ model or database
             if(reply->url().toString().contains(AUTH_FACEBOOK_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder login data received";
-                this->parseLogin(jsonObject);
+                this->setTinderAuth(Login::parseTinder(jsonObject));
+                //this->parseLogin(jsonObject);
             }
             else if(reply->url().toString().contains(META_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder meta data received";
@@ -1266,18 +1234,6 @@ void API::timeoutChecker(qint64 bytesReceived, qint64 bytesTotal)
         qDebug() << "Progress:" << bytesReceived << " bytes received of " << bytesTotal << "bytes";
         QNAMTimeoutTimer->start(); // restart timer
     }
-}
-
-void API::parseLogin(QJsonObject json)
-{
-    QJsonObject login = json["data"].toObject();
-    this->setToken(login["api_token"].toString());
-    this->setIsNewUser(login["is_new_user"].toBool());
-    this->setAuthenticated(this->token().length() > 0);
-
-    qDebug() << "Login data:";
-    qDebug() << "\tToken:" << this->token();
-    qDebug() << "\tisNewUser" << this->isNewUser();
 }
 
 void API::parseMeta(QJsonObject json)
@@ -1806,7 +1762,7 @@ void API::parseSendMessage(QJsonObject json)
 
 void API::sendMessage(QJsonDocument payload, QString matchId)
 {
-    if(this->authenticated() && !messagesSendLock) {
+    if(this->tinderAuth()->isAuthenticated() && !messagesSendLock) {
         // Lock message sending
         messagesSendLock = true;
 
@@ -1925,17 +1881,6 @@ void API::unlockAll() // In case something goes wrong, avoid deadlock and reset 
     emit this->unlockedAllEndpoints();
 }
 
-QString API::token() const
-{
-    return m_token;
-}
-
-void API::setToken(const QString &token)
-{
-    m_token = token;
-    this->tokenChanged();
-}
-
 bool API::networkEnabled() const
 {
     return m_networkEnabled;
@@ -1956,15 +1901,4 @@ void API::setBusy(bool busy)
 {
     m_busy = busy;
     this->busyChanged();
-}
-
-bool API::isNewUser() const
-{
-    return m_isNewUser;
-}
-
-void API::setIsNewUser(bool isNewUser)
-{
-    m_isNewUser = isNewUser;
-    emit this->isNewUserChanged();
 }
