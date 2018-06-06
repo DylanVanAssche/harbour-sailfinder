@@ -30,6 +30,25 @@ SilicaFlickable {
     width: parent.width
     height: parent.height
 
+    function _closeMatchesNotifications() {
+        if(app.swipeViewIndex === 1) {
+            sfos.closeNotificationByCategory("sailfinder-new-match")
+            sfos.closeNotificationByCategory("sailfinder-new-message")
+        }
+    }
+
+    Connections {
+        target: app
+        // Close all notifications for matches when going to MatchesView
+        onSwipeViewIndexChanged: _closeMatchesNotifications()
+        // Close all notification for matches when opening Sailfinder from the homescreen directly into the MatchesView
+        onApplicationActiveChanged: {
+            if(Qt.application.active) {
+                _closeMatchesNotifications()
+            }
+        }
+    }
+
     SFOS {
         id: sfos
     }
@@ -116,7 +135,9 @@ SilicaFlickable {
             width: ListView.view.width
             onRemoved: api.unmatch(model.matchId)
             enabled: _userId.length > 0 // Only enable when all our data is received to send messages
-            onClicked: pageStack.push(
+            onClicked: {
+                _closeMatchesNotifications() // Close notifications when interacting with the MatchesView
+                pageStack.push(
                            Qt.resolvedUrl("MessagingPage.qml"),
                            {
                                name: model.name,
@@ -129,6 +150,7 @@ SilicaFlickable {
                                match: model
                            }
                            )
+            }
             onAvatarClicked: pageStack.push(Qt.resolvedUrl("MatchProfilePage.qml"), {match: model})
             menu: ContextMenu {
                 MenuItem {
