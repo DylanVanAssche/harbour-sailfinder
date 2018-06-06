@@ -20,9 +20,18 @@ import Sailfish.Silica 1.0
 import "../js/util.js" as Util
 
 ListItem {
+    property alias messageItem: messageItemLoader.item
+
     contentHeight: column.height + Theme.paddingLarge
     width: parent.width*0.75
     anchors.right: model.authorIsUser? parent.right: undefined // Left is automatically assigned
+    menu: ContextMenu {
+        MenuItem {
+            //% "Copy"
+            text: qsTrId("sailfinder-copy")
+            onClicked: Clipboard.text = model.message
+        }
+    }
 
     Component.onCompleted: {
         if(Util.validateGiphyURL(model.message)) {
