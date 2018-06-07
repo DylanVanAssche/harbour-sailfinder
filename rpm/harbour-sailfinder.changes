@@ -1,5 +1,6 @@
 * Wed Jun 6 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.6-5
 - [MINOR BUGFIX] Scroll to the latest message automatically
+- [MINOR BUGFIX] Do not send the Tinder token when authenticating
 - [MAJOR BUGFIX] Uploaded pictures are now respecting the EXIF tag
 - [IMPROVEMENT] Notifications for matches are now automatically closed when read in Sailfinder
 - [IMPROVEMENT] Refactored C++ code for easier maintaining

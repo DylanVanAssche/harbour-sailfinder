@@ -27,14 +27,14 @@ Authentication* Login::parseTinder(QJsonObject json)
     Authentication *auth = new Authentication();
     QJsonObject login = json["data"].toObject();
 
-    auth.setToken(login["api_token"].toString());
-    auth.setIsNewUser(login["is_new_user"].toBool());
-    auth.setIsAuthenticated(auth.token().length() > 0);
+    auth->setToken(login["api_token"].toString());
+    auth->setIsNewUser(login["is_new_user"].toBool());
+    auth->setIsAuthenticated(auth->token().length() > 0);
 
     qDebug() << "Login data:";
-    qDebug() << "\tToken:" << auth.token();
-    qDebug() << "\tisNewUser" << auth.isNewUser();
-    qDebug() << "\tisAuthenticated" << auth.isAuthenticated();
+    qDebug() << "\tToken:" << auth->token();
+    qDebug() << "\tisNewUser" << auth->isNewUser();
+    qDebug() << "\tisAuthenticated" << auth->isAuthenticated();
 
     return auth;
 }

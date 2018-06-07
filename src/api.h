@@ -85,8 +85,6 @@ class API : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
-    Q_PROPERTY(QString token READ token NOTIFY tokenChanged)
-    Q_PROPERTY(bool authenticated READ authenticated NOTIFY authenticatedChanged)
     Q_PROPERTY(bool canEditJobs READ canEditJobs NOTIFY canEditJobsChanged)
     Q_PROPERTY(bool canEditSchools READ canEditSchools NOTIFY canEditSchoolsChanged)
     Q_PROPERTY(bool canAddPhotosFromFacebook READ canAddPhotosFromFacebook NOTIFY canAddPhotosFromFacebookChanged)
@@ -101,6 +99,7 @@ class API : public QObject
     Q_PROPERTY(int persistentPollInterval READ persistentPollInterval NOTIFY persistentPollIntervalChanged)
     Q_PROPERTY(MessageListModel* messages READ messages WRITE setMessages NOTIFY messagesChanged)
     Q_PROPERTY(GifListModel* gifResults READ gifResults WRITE setGifResults NOTIFY gifResultsChanged)
+    Q_PROPERTY(Authentication* tinderAuth READ tinderAuth NOTIFY tinderAuthChanged)
 
 public:
     explicit API(QObject *parent = 0);

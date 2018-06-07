@@ -15,7 +15,9 @@ public:
     QString token() const;
     bool isNewUser() const;
     bool isAuthenticated() const;
-
+    void setToken(const QString &token);
+    void setIsNewUser(bool isNewUser);
+    void setIsAuthenticated(bool isAuthenticated);
 
 signals:
     void tokenChanged();
@@ -26,9 +28,6 @@ private:
     QString m_token = QString();
     bool m_isNewUser = false;
     bool m_isAuthenticated = false;
-    void setToken(const QString &token);
-    void setIsNewUser(bool isNewUser);
-    void setIsAuthenticated(bool isAuthenticated);
 };
 
 #endif // AUTHENTICATION_H

@@ -100,8 +100,11 @@ QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
     request.setRawHeader("origin", "https://tinder.com");
     request.setRawHeader("platform", "web");
     request.setRawHeader("referer", "https://tinder.com");
-    if(url.toString() != AUTH_FACEBOOK_ENDPOINT) { // not needed when we're authenticating
+    if(!url.toString().contains(AUTH_FACEBOOK_ENDPOINT, Qt::CaseInsensitive)) { // not needed when we're authenticating
         request.setRawHeader("x-auth-token", this->tinderAuth()->token().toLocal8Bit());
+    }
+    else {
+        qDebug() << "Not sending token for endpoint:" << url.toString();
     }
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
@@ -794,7 +797,7 @@ int API::getBearerType()
 
 void API::deleteAccount()
 {
-    if(this->authenticated()) {
+    if(this->tinderAuth()->isAuthenticated()) {
         // Build URL
         QUrl url(QString(PROFILE_ENDPOINT));
         QUrlQuery parameters;
@@ -1133,8 +1136,8 @@ void API::finished (QNetworkReply *reply)
             }
             else if(reply->url().toString().contains(PROFILE_ENDPOINT, Qt::CaseInsensitive) && reply->operation() == QNetworkAccessManager::Operation::DeleteOperation) {
                 qDebug() << "Tinder account deleted";
-                this->setToken("");
-                this->setAuthenticated(false);
+                this->tinderAuth()->deleteLater();
+                this->setTinderAuth(NULL);
                 emit this->accountDeleted();
             }
             else if(reply->url().toString().contains(RECS_ENDPOINT, Qt::CaseInsensitive)) {

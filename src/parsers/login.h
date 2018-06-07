@@ -18,8 +18,9 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
+#include <QDebug>
 #include <QtCore/QObject>
-#include <QtCore/QVariantMap>
+#include <QtCore/QJsonObject>
 #include "../models/authentication.h"
 
 class Login : public QObject
