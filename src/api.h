@@ -129,8 +129,6 @@ public:
     Q_INVOKABLE void getFullMatchProfile(QString userId);
     Q_INVOKABLE int getBearerType();
     Q_INVOKABLE void deleteAccount();
-    QString token() const;
-    void setToken(const QString &token);
     bool networkEnabled() const;
     void setNetworkEnabled(bool networkEnabled);
     bool busy() const;
