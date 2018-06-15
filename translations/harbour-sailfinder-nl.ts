@@ -159,8 +159,8 @@
         <translation>Privacy &amp; licenties</translation>
     </message>
     <message id="sailfinder-privacy-licensing-text">
-        <source>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you like.</source>
-        <oldsource>%0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0.</oldsource>
+        <source>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you want.</source>
+        <oldsource>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you like.</oldsource>
         <translation type="unfinished">%0 zal nooit persoonlijke informatie over de gebruiker verzamelen, maar dit kan niet gegarandeerd worden van alle derde partijen die in %0 gebruikt worden. Deze toepassing wordt uitgegeven onder de GPLv3. De broncode en licentie zijn beschikbaar in de GitHub-pakketbron van %0.</translation>
     </message>
     <message id="sailfinder-disclaimer">
