@@ -160,10 +160,8 @@
     </message>
     <message id="sailfinder-privacy-licensing-text">
         <source>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you want.</source>
-        <oldsource>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you like.</oldsource>
-        <translation type="unfinished">%0 wird niemals irgendwelche persönlichen Informationen von oder über seine Nutzer sammeln. Das gilt aber nicht für Drittanbieter, insbesondere für die Bereitsteller der Tinderplattform, auf die dieses Programm aufbaut!
-
-Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und die komplette Lizenz kann im Github Repository von %0 eingesehen werden.</translation>
+        <translation>%0 erstellt ein minimales Log unter /home/nemo/.cache/%1/logging/log.txt für Debuggingzwecke. %0 wird nie persönlichen Daten über die Nutzer sammeln, aber das kann nicht für Dritte Firmen garantiert werden auf das %0 aufbaut!
+Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und die komplette Lizenz kann im Github Repository von %0 eingesehen werden. Du kannst dein %2 Konto in %0 löschen, wenn du möchtest.</translation>
     </message>
     <message id="sailfinder-disclaimer">
         <source>Disclaimer</source>
@@ -305,7 +303,7 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
     </message>
     <message id="sailfinder-upload-failed">
         <source>Photo upload failed!</source>
-        <translation type="unfinished">Hochladen des Fotos fehlgeschlagen!</translation>
+        <translation>Hochladen des Fotos fehlgeschlagen!</translation>
     </message>
     <message id="sailfinder-login-facebook">
         <source>Use Facebook login</source>
@@ -333,23 +331,23 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
     </message>
     <message id="sailfinder-copy">
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopie</translation>
     </message>
     <message id="sailfinder-terms-title">
         <source>Terms of Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Nutzungsbedingungen</translation>
     </message>
     <message id="sailfinder-accept">
         <source>Accept</source>
-        <translation type="unfinished"></translation>
+        <translation>Akzeptieren</translation>
     </message>
     <message id="sailfinder-delete-account">
         <source>Delete account</source>
-        <translation type="unfinished"></translation>
+        <translation>Konto löschen</translation>
     </message>
     <message id="sailfinder-deleting-account">
         <source>Deleting account</source>
-        <translation type="unfinished"></translation>
+        <translation>Konto wird gelöscht</translation>
     </message>
 </context>
 </TS>

@@ -160,8 +160,7 @@
     </message>
     <message id="sailfinder-privacy-licensing-text">
         <source>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you want.</source>
-        <oldsource>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you like.</oldsource>
-        <translation type="unfinished">%0 zal nooit persoonlijke informatie over de gebruiker verzamelen, maar dit kan nie’ gegarandeerd worden van alle derde partijen die in %0 gebruikt worden. Dezen app word uitgegeven onder de GPLv3. De broncode en licentie zijn beschikbaar in den GitHub-pakketbron van %0.</translation>
+        <translation>%0 bewaart een minimalistisch logboek in /home/nemo/.cache/%1/logging/log.txt voor debugdoeleinden. %0 zal nooit persoonlijke informatie over de gebruiker verzamelen, maar dit kan niet gegarandeerd worden van alle derde partijen die dat in %0 worden gebruikt. Dezen app wordt uitgegeven onder de GPLv3. De broncode en licentie zijn beschikbaar in den GitHub-pakketbron van %0. Als ge wilt kunt ge uwen %2-account vanuit %0 verwijderen.</translation>
     </message>
     <message id="sailfinder-disclaimer">
         <source>Disclaimer</source>
@@ -303,7 +302,7 @@
     </message>
     <message id="sailfinder-upload-failed">
         <source>Photo upload failed!</source>
-        <translation type="unfinished">Uploaden van foto mislukt!</translation>
+        <translation>Uploaden van foto mislukt!</translation>
     </message>
     <message id="sailfinder-login-facebook">
         <source>Use Facebook login</source>
@@ -331,23 +330,23 @@
     </message>
     <message id="sailfinder-copy">
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiëren</translation>
     </message>
     <message id="sailfinder-terms-title">
         <source>Terms of Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienstvoorwaarden</translation>
     </message>
     <message id="sailfinder-accept">
         <source>Accept</source>
-        <translation type="unfinished"></translation>
+        <translation>Aanvaarden</translation>
     </message>
     <message id="sailfinder-delete-account">
         <source>Delete account</source>
-        <translation type="unfinished"></translation>
+        <translation>Account verwijderen</translation>
     </message>
     <message id="sailfinder-deleting-account">
         <source>Deleting account</source>
-        <translation type="unfinished"></translation>
+        <translation>Account wordt verwijderd</translation>
     </message>
 </context>
 </TS>

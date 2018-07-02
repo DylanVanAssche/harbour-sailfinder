@@ -1,3 +1,6 @@
+* Wed Jul 2 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.6-5
+- [TRANSLATIONS] Updated translations to the latest release
+
 * Wed Jun 6 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.6-4
 - [MINOR BUGFIX] Scroll to the latest message automatically
 - [IMPROVEMENT] Notifications for matches are now automatically closed when read in Sailfinder
@@ -12,7 +15,7 @@
 * Mon Jun 4 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.5-4
 - [MINOR BUGFIX] Cover showed 'Exhausted' when launching
 - [MINOR BUGFIX] Search distance is now limited to 100 km instead of 160 miles
-- [MINOR BUGFIX] Match profile isn't empty anymore after sending a message
+- [MINOR BUGFIX] Match profile isn't empty any more after sending a message
 - [MAJOR BUGFIX] GIF page works now on low power devices like the Jolla 1
 - [MAJOR BUGFIX] Fixed translations files in .pro files, they should now be loaded correctly
 - [IMPROVEMENT] Image loading on mobile networks and ethernet has been improved
@@ -69,7 +72,7 @@
 
 * Mon Feb 10 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.1-1
 - [MINOR BUGFIX] Message preview text is now stripped
-- [MINOR BUGFIX] No Messages placeholder isn't visible anymore when sending the first message
+- [MINOR BUGFIX] No Messages placeholder isn't visible any more when sending the first message
 - [MINOR BUGFIX] Timeout timer prevents deadlocks when network connection is poor (beta)
 - [MINOR BUGFIX] PhotoGridLayout needs double pressing before activation for the first time
 - [NEW] Show distance for recommendations
@@ -81,7 +84,7 @@
 
 * Mon Feb 1 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.0-2
 - [MINOR BUGFIX] Liking people resulted in double notifications
-- [MINOR BUGIFX] Error text is not shown anymore when image is loaded after retry
+- [MINOR BUGIFX] Error text is not shown any more when image is loaded after retry
 - [IMPROVEMENT] Avatar image error handling
 - [TRANSLATIONS] Added Dutch translations
 

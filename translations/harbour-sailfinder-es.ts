@@ -160,8 +160,7 @@
     </message>
     <message id="sailfinder-privacy-licensing-text">
         <source>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you want.</source>
-        <oldsource>%0 keeps a minimalistic log in /home/nemo/.cache/%1/logging/log.txt for debugging purposes. %0 will never collect any personal information about the user, but this can&apos;t be guaranteed from any third-party company used in %0. This application is released under GPLv3. The source code and the license is available in the Github repo of %0. You can delete your %2 account in %0 if you like.</oldsource>
-        <translation type="unfinished">%0 nunca recopilará información personal del usuario, pero esto no puede garantizarse de cualquier compañía de terceros usada en %0. Esta aplicación está publicada bajo GPLv3. El código fuente y la licencia están disponibles en el repositorio de %0 en Github.</translation>
+        <translation>%0 recopila un registro sencillo en /home/nemo/.cache/%1/logging/log.txt para la depuración. %0 nunca almacenará información personal del usuario, pero no se puede garantizar lo mismo de las aplicaciones de terceros usadas en %0. Esta aplicación se publica bajo GPLv3. El código fuente y la licencia está disponible en el repositorio de %0 en Github. Si quieres, puedes borrar tu cuenta %2 en %0.</translation>
     </message>
     <message id="sailfinder-disclaimer">
         <source>Disclaimer</source>
@@ -303,7 +302,7 @@
     </message>
     <message id="sailfinder-upload-failed">
         <source>Photo upload failed!</source>
-        <translation type="unfinished">¡Error al subir foto!</translation>
+        <translation>¡Error al subir foto!</translation>
     </message>
     <message id="sailfinder-login-facebook">
         <source>Use Facebook login</source>
@@ -331,23 +330,23 @@
     </message>
     <message id="sailfinder-copy">
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar</translation>
     </message>
     <message id="sailfinder-terms-title">
         <source>Terms of Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Términos del servicio</translation>
     </message>
     <message id="sailfinder-accept">
         <source>Accept</source>
-        <translation type="unfinished"></translation>
+        <translation>Aceptar</translation>
     </message>
     <message id="sailfinder-delete-account">
         <source>Delete account</source>
-        <translation type="unfinished"></translation>
+        <translation>Borrar cuenta</translation>
     </message>
     <message id="sailfinder-deleting-account">
         <source>Deleting account</source>
-        <translation type="unfinished"></translation>
+        <translation>Borrando cuenta</translation>
     </message>
 </context>
 </TS>
