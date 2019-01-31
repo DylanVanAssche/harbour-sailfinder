@@ -47,7 +47,6 @@
 #include <stdlib.h>
 
 #include "os.h"
-#include "keys.h"
 #include "models/user.h"
 #include "models/photo.h"
 #include "models/recommendation.h"
@@ -60,8 +59,8 @@
 
 #define POSITION_MAX_UPDATE 10
 #define TIMEOUT_TIME 15000 // 15 sec
-#define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
-#define TINDER_APP_VERSION "1002224"
+#define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36"
+#define TINDER_APP_VERSION "1020330"
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
 #define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
 #define META_ENDPOINT "https://api.gotinder.com/v2/meta"
@@ -77,7 +76,7 @@
 #define MEDIA_ENDPOINT "https://api.gotinder.com/media"
 #define IMAGE_ENDPOINT "https://api.gotinder.com/image"
 #define USER_ENDPOINT "https://api.gotinder.com/user"
-#define GIPHY_SEARCH_ENDPOINT "https://api.giphy.com/v1/gifs/search"
+#define GIPHY_SEARCH_ENDPOINT "https://api.gotinder.com/giphy/search"
 #define GIPHY_FETCH_LIMIT "30" // 30 GIF's each time
 
 class API : public QObject
@@ -114,12 +113,12 @@ public:
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     Q_INVOKABLE void getMessages(QString matchId);
     Q_INVOKABLE void sendMessage(QString matchId, QString message, QString userId, QString tempMessageId);
-    Q_INVOKABLE void searchGIF(QString querry);
-    Q_INVOKABLE void searchGIF(QString querry, int offset);
+    Q_INVOKABLE void searchGIF(QString query);
+    Q_INVOKABLE void searchGIF(QString query, int offset);
     Q_INVOKABLE void sendGIF(QString matchId, QString url, QString gifId, QString userId, QString tempMessageId);
-    Q_INVOKABLE void likeUser(QString userId);
-    Q_INVOKABLE void passUser(QString userId);
-    Q_INVOKABLE void superlikeUser(QString userId);
+    Q_INVOKABLE void likeUser(QString userId, int s_number);
+    Q_INVOKABLE void passUser(QString userId, int s_number);
+    Q_INVOKABLE void superlikeUser(QString userId, int s_number);
     Q_INVOKABLE void nextRecommendation();
     Q_INVOKABLE void updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable, bool optimizer);
     Q_INVOKABLE void logout();
@@ -252,7 +251,7 @@ private:
     QTimer* QNAMTimeoutTimer = NULL;
     QGeoPositionInfoSource* source = NULL;
     OS SFOS;
-    QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters);
+    QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters, bool hasData = false);
     void getMatches(bool withMessages);
     void getMatches(QString pageToken);
     void getMessages(QString matchId, QString pageToken);

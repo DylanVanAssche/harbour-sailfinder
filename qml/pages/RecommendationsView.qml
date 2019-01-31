@@ -88,17 +88,17 @@ SilicaFlickable {
             id: recsBar
             onLiked: {
                 loaded = false
-                api.likeUser(api.recommendation.id)
+                api.likeUser(api.recommendation.id, api.recommendation.sNumber)
                 photoList.closeFullScreen()
             }
             onSuperliked: {
                 loaded = false
-                api.superlikeUser(api.recommendation.id)
+                api.superlikeUser(api.recommendation.id, api.recommendation.sNumber)
                 photoList.closeFullScreen()
             }
             onPassed: {
                 loaded = false
-                api.passUser(api.recommendation.id)
+                api.passUser(api.recommendation.id, api.recommendation.sNumber)
                 photoList.closeFullScreen()
             }
         }
