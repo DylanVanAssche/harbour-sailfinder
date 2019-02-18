@@ -114,19 +114,83 @@ QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters, bool hasData
 
 /**
  * @class API
+ * @brief Send confirmation code to the phone number
+ * @param phone Phone number
+ */
+void API::authSendSMS(QString phone)
+{
+    this->setBusy(true);
+    this->setPhoneNumber(phone);
+
+    // Build URL
+    QUrl url(QString(ACCOUNTKIT_SENDSMS_ENDPOINT) + phone);
+
+    // Prepare request
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
+
+    // Send request
+    QByteArray dummy;
+    QNetworkReply* reply = QNAM->post(request, dummy);
+    connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+}
+
+/**
+ * @class API
+ * @brief Verify phone number
+ * @param code Request code
+ */
+void API::authVerifySMS(QString code)
+{
+    qDebug() << "enter authVerifySMS";
+    this->setBusy(true);
+    qDebug() << "busy";
+    // Build URL
+    QUrl url(QString(ACCOUNTKIT_VERIFYSMS_ENDPOINT) + this->phoneNumber() + QString("&login_request_code=") + this->requestCode() + QString("&confirmation_code=") + code);
+    qDebug() << "url ok";
+
+    QNetworkRequest request(url);
+    qDebug() << "request ok";
+    request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    qDebug() << "headers ok";
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
+    qDebug() << "attributes ok";
+
+    // Prepare & do request
+    QByteArray dummy;
+    qDebug() << "dummy ok";
+    QNetworkReply* reply = QNAM->post(request, dummy);
+    qDebug() << "POST DONE";
+    connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    qDebug() << "signals ok";
+
+    qDebug() << "exit authVerifySMS";
+}
+
+/**
+ * @class API
  * @brief Authenticate the user with the API
  * @details Retrieve the API token for the user based on it's Facebook access token
  * @param fbToken
  */
-void API::login(QString fbToken)
+void API::login(QString accessToken, bool accountkit=false, QString accessId=QString())
 {
     // Build URL
-    QUrl url(QString(AUTH_FACEBOOK_ENDPOINT));
+    QUrl url(QString(accountkit ? AUTH_ACCOUNTKIT_ENDPOINT : AUTH_FACEBOOK_ENDPOINT));
     QUrlQuery parameters;
 
     // Build POST payload
     QVariantMap data;
-    data["token"] = fbToken;
+    data["token"] = accessToken;
+    if(accountkit)
+        data["id"] = accessId;
     QJsonDocument payload = QJsonDocument::fromVariant(data);
 
     // Prepare & do request
@@ -1122,7 +1186,15 @@ void API::finished (QNetworkReply *reply)
             QJsonObject jsonObject = jsonData.object();
 
             // Parse data in the right C++ model or database
-            if(reply->url().toString().contains(AUTH_FACEBOOK_ENDPOINT, Qt::CaseInsensitive)) {
+            if(reply->url().toString().contains(ACCOUNTKIT_SENDSMS_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "AccountKit request code received";
+                this->parseRequestCode(jsonObject);
+            }
+            else if(reply->url().toString().contains(ACCOUNTKIT_VERIFYSMS_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "AccountKit access token received";
+                this->parseAccessToken(jsonObject);
+            }
+            else if(reply->url().toString().contains(AUTH_FACEBOOK_ENDPOINT, Qt::CaseInsensitive) || reply->url().toString().contains(AUTH_ACCOUNTKIT_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder login data received";
                 this->parseLogin(jsonObject);
             }
@@ -1207,7 +1279,7 @@ void API::finished (QNetworkReply *reply)
                 }*/
             }
             else {
-                qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
+                qWarning() << "Received unhandled API endpoint: " << reply->url().toString();
             }
         }
         else {
@@ -1241,6 +1313,22 @@ void API::timeoutChecker(qint64 bytesReceived, qint64 bytesTotal)
         qDebug() << "Progress:" << bytesReceived << " bytes received of " << bytesTotal << "bytes";
         QNAMTimeoutTimer->start(); // restart timer
     }
+}
+
+void API::parseRequestCode(QJsonObject json)
+{
+    this->setRequestCode(json["login_request_code"].toString());
+
+    qDebug() << "AccountKit request code: " << this->requestCode();
+}
+
+void API::parseAccessToken(QJsonObject json)
+{
+    QString access_token = json["access_token"].toString();
+    QString access_id = json["id"].toString();
+    qDebug() << "AccountKit access token: " << access_token << "; access id: " << access_id;
+
+    this->login(access_token, true, access_id);
 }
 
 void API::parseLogin(QJsonObject json)
@@ -1898,6 +1986,27 @@ void API::unlockAll() // In case something goes wrong, avoid deadlock and reset 
     fullMatchProfileLock = false;
     qWarning() << "All endpoints unlocked!";
     emit this->unlockedAllEndpoints();
+}
+
+QString API::phoneNumber() const
+{
+    return m_phoneNumber;
+}
+
+void API::setPhoneNumber(const QString &number)
+{
+    m_phoneNumber = number;
+}
+
+QString API::requestCode() const
+{
+    return m_requestCode;
+}
+
+void API::setRequestCode(const QString &code)
+{
+    m_requestCode = code;
+    this->requestCodeChanged();
 }
 
 QString API::token() const

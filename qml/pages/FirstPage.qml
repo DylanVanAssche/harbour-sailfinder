@@ -140,8 +140,9 @@ Page {
                 onClicked: {
                     _mode === "accountkit"? _mode = "facebook": _mode = "accountkit"
                     console.debug("Authentication mode: " + _mode)
+                    pageStack.replace(Qt.resolvedUrl("../pages/LoginPhone.qml"))
                 }
-                visible: false // Undo when phone login support is enabled
+//                visible: false // Undo when phone login support is enabled
             }
         }
 
