@@ -305,12 +305,14 @@
         <translation>O envio de fotos falhou!</translation>
     </message>
     <message id="sailfinder-login-facebook">
-        <source>Use Facebook login</source>
-        <translation>Use o login do Facebook</translation>
+        <source>Log in with Facebook</source>
+        <oldsource>Use Facebook login</oldsource>
+        <translation type="unfinished">Use o login do Facebook</translation>
     </message>
     <message id="sailfinder-login-phone">
-        <source>Use phone login</source>
-        <translation>Use o login do telefone</translation>
+        <source>Log in with phone number</source>
+        <oldsource>Use phone login</oldsource>
+        <translation type="unfinished">Use o login do telefone</translation>
     </message>
     <message id="sailfinder-reload">
         <source>Reload</source>
@@ -347,6 +349,30 @@
     <message id="sailfinder-deleting-account">
         <source>Deleting account</source>
         <translation>Deletando conta</translation>
+    </message>
+    <message id="sailfinder-enter-phone">
+        <source>Please enter your phone number in international format (with country code)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-phone-number">
+        <source>Phone number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-send-sms">
+        <source>Send SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-enter-sms-code">
+        <source>Please enter verification code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-sms-code">
+        <source>SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-log-in">
+        <source>Log in</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

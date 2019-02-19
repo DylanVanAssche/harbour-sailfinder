@@ -44,11 +44,13 @@ Page {
             spacing: Theme.paddingLarge
 
             PageHeader {
-                title: "Log in"
+                //% "Log in with phone number"
+                title: qsTrId("sailfinder-login-phone")
             }
 
             Label {
-                text: "Please enter verification code"
+                //% "Please enter verification code"
+                text: qsTrId("sailfinder-enter-sms-code")
                 wrapMode: Text.Wrap
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -58,7 +60,8 @@ Page {
                 id: code
                 width: parent.width
                 inputMethodHints: Qt.ImhDialableCharactersOnly
-                label: "SMS code"
+                //% "SMS code"
+                label: qsTrId("sailfinder-sms-code")
                 placeholderText: label
                 placeholderColor: Theme.highlightColor
                 color: Theme.highlightColor
@@ -68,7 +71,8 @@ Page {
             }
 
             Button {
-                text: "Log in"
+                //% "Log in"
+                text: qsTrId("sailfinder-log-in")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: api.authVerifySMS(code.text)
             }

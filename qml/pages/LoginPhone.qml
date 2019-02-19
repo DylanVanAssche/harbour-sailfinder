@@ -39,11 +39,13 @@ Page {
             spacing: Theme.paddingLarge
 
             PageHeader {
-                title: "Log in"
+                //% "Log in with phone number"
+                title: qsTrId("sailfinder-login-phone")
             }
 
             Label {
-                text: "Please enter your phone number in international format (with country code)"
+                //% "Please enter your phone number in international format (with country code)"
+                text: qsTrId("sailfinder-enter-phone")
                 wrapMode: Text.Wrap
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -53,7 +55,8 @@ Page {
                 id: phone
                 width: parent.width
                 inputMethodHints: Qt.ImhDialableCharactersOnly
-                label: "Phone number"
+                //% "Phone number"
+                label: qsTrId("sailfinder-phone-number")
                 placeholderText: label
                 placeholderColor: Theme.highlightColor
                 color: Theme.highlightColor
@@ -63,7 +66,8 @@ Page {
             }
 
             Button {
-                text: "Send SMS code"
+                //% "Send SMS code"
+                text: qsTrId("sailfinder-send-sms")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: api.authSendSMS(phone.text)
             }

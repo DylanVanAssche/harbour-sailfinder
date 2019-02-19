@@ -305,12 +305,12 @@
         <translation>Photo upload failed!</translation>
     </message>
     <message id="sailfinder-login-facebook">
-        <source>Use Facebook login</source>
-        <translation>Use Facebook login</translation>
+        <source>Log in with Facebook</source>
+        <translation>Log in with Facebook</translation>
     </message>
     <message id="sailfinder-login-phone">
-        <source>Use phone login</source>
-        <translation>Use phone login</translation>
+        <source>Log in with phone number</source>
+        <translation>Log in with phone number</translation>
     </message>
     <message id="sailfinder-reload">
         <source>Reload</source>
@@ -347,6 +347,30 @@
     <message id="sailfinder-deleting-account">
         <source>Deleting account</source>
         <translation>Deleting account</translation>
+    </message>
+    <message id="sailfinder-enter-phone">
+        <source>Please enter your phone number in international format (with country code)</source>
+        <translation>Please enter your phone number in international format (with country code)</translation>
+    </message>
+    <message id="sailfinder-phone-number">
+        <source>Phone number</source>
+        <translation>Phone number</translation>
+    </message>
+    <message id="sailfinder-send-sms">
+        <source>Send SMS code</source>
+        <translation>Send SMS code</translation>
+    </message>
+    <message id="sailfinder-enter-sms-code">
+        <source>Please enter verification code</source>
+        <translation>Please enter verification code</translation>
+    </message>
+    <message id="sailfinder-sms-code">
+        <source>SMS code</source>
+        <translation>SMS code</translation>
+    </message>
+    <message id="sailfinder-log-in">
+        <source>Log in</source>
+        <translation>Log in</translation>
     </message>
 </context>
 </TS>

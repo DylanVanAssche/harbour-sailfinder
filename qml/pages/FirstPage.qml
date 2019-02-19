@@ -54,11 +54,17 @@ Page {
         }
     }
 
+    PageHeader {
+        id: header
+        //% "Log in with Facebook"
+        title: qsTrId("sailfinder-login-facebook")
+    }
+
     SilicaWebView {
         id: webview
 
         anchors {
-            top: parent.top
+            top: header.bottom
             left: parent.left
             right: parent.right
             bottom: parent.bottom
@@ -129,22 +135,6 @@ Page {
         FadeAnimation on opacity {}
 
         Behavior on opacity { FadeAnimation {} }
-
-        PullDownMenu {
-            MenuItem {
-                text: _mode === "accountkit"?
-                          //% "Use Facebook login"
-                          qsTrId("sailfinder-login-facebook"):
-                          //% "Use phone login"
-                          qsTrId("sailfinder-login-phone")
-                onClicked: {
-                    _mode === "accountkit"? _mode = "facebook": _mode = "accountkit"
-                    console.debug("Authentication mode: " + _mode)
-                    pageStack.replace(Qt.resolvedUrl("../pages/LoginPhone.qml"))
-                }
-//                visible: false // Undo when phone login support is enabled
-            }
-        }
 
         ViewPlaceholder {
             id: errorLogin
