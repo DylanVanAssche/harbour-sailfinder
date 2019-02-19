@@ -146,32 +146,23 @@ void API::authSendSMS(QString phone)
  */
 void API::authVerifySMS(QString code)
 {
-    qDebug() << "enter authVerifySMS";
     this->setBusy(true);
-    qDebug() << "busy";
+
     // Build URL
     QUrl url(QString(ACCOUNTKIT_VERIFYSMS_ENDPOINT) + this->phoneNumber() + QString("&login_request_code=") + this->requestCode() + QString("&confirmation_code=") + code);
-    qDebug() << "url ok";
 
+    // Prepare request
     QNetworkRequest request(url);
-    qDebug() << "request ok";
     request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    qDebug() << "headers ok";
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
-    qDebug() << "attributes ok";
 
-    // Prepare & do request
+    // Send request
     QByteArray dummy;
-    qDebug() << "dummy ok";
     QNetworkReply* reply = QNAM->post(request, dummy);
-    qDebug() << "POST DONE";
     connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-    qDebug() << "signals ok";
-
-    qDebug() << "exit authVerifySMS";
 }
 
 /**
