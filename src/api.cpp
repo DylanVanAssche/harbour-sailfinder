@@ -123,7 +123,9 @@ void API::authSendSMS(QString phone)
     this->setPhoneNumber(phone);
 
     // Build URL
-    QUrl url(QString(ACCOUNTKIT_SENDSMS_ENDPOINT) + phone);
+    QUrl url(QString(ACCOUNTKIT_SENDSMS_ENDPOINT) + phone
+             + QString("&locale=") + QLocale::system().name()
+    );
 
     // Prepare request
     QNetworkRequest request(url);
@@ -149,7 +151,11 @@ void API::authVerifySMS(QString code)
     this->setBusy(true);
 
     // Build URL
-    QUrl url(QString(ACCOUNTKIT_VERIFYSMS_ENDPOINT) + this->phoneNumber() + QString("&login_request_code=") + this->requestCode() + QString("&confirmation_code=") + code);
+    QUrl url(QString(ACCOUNTKIT_VERIFYSMS_ENDPOINT) + this->phoneNumber()
+             + QString("&login_request_code=") + this->requestCode()
+             + QString("&confirmation_code=") + code
+             + QString("&locale=") + QLocale::system().name()
+    );
 
     // Prepare request
     QNetworkRequest request(url);

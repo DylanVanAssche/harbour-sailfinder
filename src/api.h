@@ -61,8 +61,8 @@
 #define TIMEOUT_TIME 15000 // 15 sec
 #define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36"
 #define TINDER_APP_VERSION "1020330"
-#define ACCOUNTKIT_SENDSMS_ENDPOINT "https://graph.accountkit.com/v1.2/start_login?access_token=AA%7C464891386855067%7Cd1891abb4b0bcdfa0580d9b839f4a522&credentials_type=phone_number&fb_app_events_enabled=1&fields=privacy_policy%2Cterms_of_service&locale=sv_SE&response_type=token&sdk=ios&phone_number="
-#define ACCOUNTKIT_VERIFYSMS_ENDPOINT "https://graph.accountkit.com/v1.2/confirm_login?access_token=AA%7C464891386855067%7Cd1891abb4b0bcdfa0580d9b839f4a522&credentials_type=phone_number&fb_app_events_enabled=1&fields=privacy_policy%2Cterms_of_service&locale=sv_SE&response_type=token&sdk=ios&phone_number="
+#define ACCOUNTKIT_SENDSMS_ENDPOINT "https://graph.accountkit.com/v1.2/start_login?access_token=AA%7C464891386855067%7Cd1891abb4b0bcdfa0580d9b839f4a522&credentials_type=phone_number&fb_app_events_enabled=1&fields=privacy_policy%2Cterms_of_service&response_type=token&sdk=ios&phone_number="
+#define ACCOUNTKIT_VERIFYSMS_ENDPOINT "https://graph.accountkit.com/v1.2/confirm_login?access_token=AA%7C464891386855067%7Cd1891abb4b0bcdfa0580d9b839f4a522&credentials_type=phone_number&fb_app_events_enabled=1&fields=privacy_policy%2Cterms_of_service&response_type=token&sdk=ios&phone_number="
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
 #define AUTH_ACCOUNTKIT_ENDPOINT "https://api.gotinder.com/v2/auth/login/accountkit"
 #define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
