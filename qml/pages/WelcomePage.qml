@@ -58,7 +58,7 @@ Page {
                 //% "Log in with Facebook"
                 text: qsTrId("sailfinder-login-facebook")
                 anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: pageStack.push(Qt.resolvedUrl("../pages/FirstPage.qml"))
+                onClicked: pageStack.push(Qt.resolvedUrl("../pages/LoginFacebook.qml"))
             }
 
             Button {

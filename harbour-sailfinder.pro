@@ -63,7 +63,6 @@ SOURCES += src/harbour-sailfinder.cpp \
 
 DISTFILES += qml/harbour-sailfinder.qml \
     qml/pages/CoverPage.qml \
-    qml/pages/FirstPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/MatchesView.qml \
@@ -103,7 +102,8 @@ DISTFILES += qml/harbour-sailfinder.qml \
     qml/pages/LoginPhone.qml \
     qml/pages/ValidatePhone.qml \
     qml/pages/WelcomePage.qml \
-    qml/components/SchoolJobDelegate.qml
+    qml/components/SchoolJobDelegate.qml \
+    qml/pages/LoginFacebook.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
