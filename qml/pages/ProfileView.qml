@@ -94,8 +94,8 @@ SilicaFlickable {
             updatesTimer.start()
         }
 
-        onLoggedOut: pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { clearData: true })
-        onDeleteAccount: pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"), { clearData: true })
+        onLoggedOut: pageStack.replace(Qt.resolvedUrl("../pages/WelcomePage.qml"), { clearData: true })
+        onDeleteAccount: pageStack.replace(Qt.resolvedUrl("../pages/WelcomePage.qml"), { clearData: true })
 
         onPersistentPollIntervalChanged: {
             if(api.persistentPollInterval > 0) {
