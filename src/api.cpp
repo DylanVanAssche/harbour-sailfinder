@@ -177,7 +177,7 @@ void API::authVerifySMS(QString code)
  * @details Retrieve the API token for the user based on it's Facebook access token
  * @param fbToken
  */
-void API::login(QString accessToken, bool accountkit=false, QString accessId=QString())
+void API::login(QString accessToken, bool accountkit, QString accessId)
 {
     // Build URL
     QUrl url(QString(accountkit ? AUTH_ACCOUNTKIT_ENDPOINT : AUTH_FACEBOOK_ENDPOINT));

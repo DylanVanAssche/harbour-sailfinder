@@ -30,7 +30,7 @@ Page {
         if(fbToken.length > 0) {
             loader.visible = true
             tinderLogin.visible = true
-            api.login(fbToken)
+            api.login(fbToken, false, "")
         }
     }
 
