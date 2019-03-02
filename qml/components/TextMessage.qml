@@ -27,4 +27,5 @@ Label {
         rightMargin: Theme.paddingMedium
     }
     wrapMode: Text.WordWrap
+    height: contentHeight + Theme.paddingMedium
 }
