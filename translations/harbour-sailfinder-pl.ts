@@ -305,12 +305,14 @@
         <translation>Wgrywanie zdjęcia zakończone niepowodzeniem!</translation>
     </message>
     <message id="sailfinder-login-facebook">
-        <source>Use Facebook login</source>
-        <translation>Zaloguj za pomocą Facebooka</translation>
+        <source>Log in with Facebook</source>
+        <oldsource>Use Facebook login</oldsource>
+        <translation type="unfinished">Zaloguj za pomocą Facebooka</translation>
     </message>
     <message id="sailfinder-login-phone">
-        <source>Use phone login</source>
-        <translation>Zaloguj za pomocą numeru telefonu</translation>
+        <source>Log in with phone number</source>
+        <oldsource>Use phone login</oldsource>
+        <translation type="unfinished">Zaloguj za pomocą numeru telefonu</translation>
     </message>
     <message id="sailfinder-reload">
         <source>Reload</source>
@@ -347,6 +349,30 @@
     <message id="sailfinder-deleting-account">
         <source>Deleting account</source>
         <translation>Usuwanie konta</translation>
+    </message>
+    <message id="sailfinder-enter-phone">
+        <source>Please enter your phone number in international format (with country code)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-phone-number">
+        <source>Phone number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-send-sms">
+        <source>Send SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-enter-sms-code">
+        <source>Please enter verification code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-sms-code">
+        <source>SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-log-in">
+        <source>Log in</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

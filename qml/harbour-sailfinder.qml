@@ -29,8 +29,8 @@ ApplicationWindow
     property int swipeViewIndex: 0
 
     Component {
-        id: firstPage
-        FirstPage {}
+        id: welcomePage
+        WelcomePage {}
     }
 
     Component {
@@ -39,7 +39,7 @@ ApplicationWindow
     }
 
     id: app
-    initialPage: temp.readTerms? firstPage: termsPage
+    initialPage: temp.readTerms? welcomePage: termsPage
     cover: Qt.resolvedUrl("pages/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
     onNetworkStatusChanged: {

@@ -70,7 +70,7 @@ Page {
                 preferredWidth: Theme.buttonWidthMedium
                 onClicked: {
                     temp.readTerms = true
-                    pageStack.replace(Qt.resolvedUrl("../pages/FirstPage.qml"))
+                    pageStack.replace(Qt.resolvedUrl("../pages/WelcomePage.qml"))
                 }
             }
 

@@ -307,12 +307,14 @@ GitHub-pakketbron van %0. Je kan steeds je account verwijderen in %0 als je dit 
         <translation>Foto uploaden mislukt!</translation>
     </message>
     <message id="sailfinder-login-facebook">
-        <source>Use Facebook login</source>
-        <translation>Gebruik Facebook login</translation>
+        <source>Log in with Facebook</source>
+        <oldsource>Use Facebook login</oldsource>
+        <translation type="unfinished">Gebruik Facebook login</translation>
     </message>
     <message id="sailfinder-login-phone">
-        <source>Use phone login</source>
-        <translation>Gebruik telefoon login</translation>
+        <source>Log in with phone number</source>
+        <oldsource>Use phone login</oldsource>
+        <translation type="unfinished">Gebruik telefoon login</translation>
     </message>
     <message id="sailfinder-reload">
         <source>Reload</source>
@@ -349,6 +351,30 @@ GitHub-pakketbron van %0. Je kan steeds je account verwijderen in %0 als je dit 
     <message id="sailfinder-deleting-account">
         <source>Deleting account</source>
         <translation>Account verwijderen</translation>
+    </message>
+    <message id="sailfinder-enter-phone">
+        <source>Please enter your phone number in international format (with country code)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-phone-number">
+        <source>Phone number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-send-sms">
+        <source>Send SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-enter-sms-code">
+        <source>Please enter verification code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-sms-code">
+        <source>SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-log-in">
+        <source>Log in</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

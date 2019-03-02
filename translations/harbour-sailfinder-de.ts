@@ -306,12 +306,14 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
         <translation>Hochladen des Fotos fehlgeschlagen!</translation>
     </message>
     <message id="sailfinder-login-facebook">
-        <source>Use Facebook login</source>
-        <translation>Nutze Facebook Login</translation>
+        <source>Log in with Facebook</source>
+        <oldsource>Use Facebook login</oldsource>
+        <translation type="unfinished">Nutze Facebook Login</translation>
     </message>
     <message id="sailfinder-login-phone">
-        <source>Use phone login</source>
-        <translation>Nutze Login mit Telefonnummer</translation>
+        <source>Log in with phone number</source>
+        <oldsource>Use phone login</oldsource>
+        <translation type="unfinished">Nutze Login mit Telefonnummer</translation>
     </message>
     <message id="sailfinder-reload">
         <source>Reload</source>
@@ -348,6 +350,30 @@ Veröffentlicht ist dieses Programm unter der Lizenz GPLv3. Der Quellcode und di
     <message id="sailfinder-deleting-account">
         <source>Deleting account</source>
         <translation>Konto wird gelöscht</translation>
+    </message>
+    <message id="sailfinder-enter-phone">
+        <source>Please enter your phone number in international format (with country code)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-phone-number">
+        <source>Phone number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-send-sms">
+        <source>Send SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-enter-sms-code">
+        <source>Please enter verification code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-sms-code">
+        <source>SMS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="sailfinder-log-in">
+        <source>Log in</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -29,5 +29,6 @@
         <file>images/sources.txt</file>
         <file>images/superlike.png</file>
         <file>images/remove.png</file>
+        <file>images/harbour-sailfinder.png</file>
     </qresource>
 </RCC>

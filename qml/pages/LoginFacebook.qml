@@ -30,7 +30,7 @@ Page {
         if(fbToken.length > 0) {
             loader.visible = true
             tinderLogin.visible = true
-            api.login(fbToken)
+            api.login(fbToken, false, "")
         }
     }
 
@@ -39,7 +39,8 @@ Page {
         onAuthenticatedChanged: {
             if(api.authenticated) {
                 console.debug("Tinder token successfully retrieved")
-                pageStack.replace(Qt.resolvedUrl("../pages/MainPage.qml"))
+                pageStack.clear()
+                pageStack.push(Qt.resolvedUrl("../pages/MainPage.qml"))
             }
         }
     }
@@ -54,11 +55,17 @@ Page {
         }
     }
 
+    PageHeader {
+        id: header
+        //% "Log in with Facebook"
+        title: qsTrId("sailfinder-login-facebook")
+    }
+
     SilicaWebView {
         id: webview
 
         anchors {
-            top: parent.top
+            top: header.bottom
             left: parent.left
             right: parent.right
             bottom: parent.bottom
@@ -129,21 +136,6 @@ Page {
         FadeAnimation on opacity {}
 
         Behavior on opacity { FadeAnimation {} }
-
-        PullDownMenu {
-            MenuItem {
-                text: _mode === "accountkit"?
-                          //% "Use Facebook login"
-                          qsTrId("sailfinder-login-facebook"):
-                          //% "Use phone login"
-                          qsTrId("sailfinder-login-phone")
-                onClicked: {
-                    _mode === "accountkit"? _mode = "facebook": _mode = "accountkit"
-                    console.debug("Authentication mode: " + _mode)
-                }
-                visible: false // Undo when phone login support is enabled
-            }
-        }
 
         ViewPlaceholder {
             id: errorLogin
