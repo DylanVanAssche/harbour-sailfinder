@@ -1,3 +1,12 @@
+* Sun Mar 31 2019 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.8-0
+- [NEW] Phone login support, thanks to Daneos!
+
+* Thu Jan 31 2019 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.7-0
+- [HOTFIX] Liking/Disliking/Superliking works again
+- [UPGRADE] Upgrade to the newest headers and parameters in most HTTP requests
+- [UPGRADE] Upgrade to the latest Tinder app version ID
+- [UPGRADE] Upgrade GIPHY endpoint
+
 * Wed Jul 2 2018 Dylan Van Assche <dylan.van.assche@protonmail.com> 4.6-5
 - [TRANSLATIONS] Updated translations to the latest release
 

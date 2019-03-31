@@ -109,7 +109,7 @@ Item {
             iconSource: "../resources/images/dislike.png"
             onTriggered: {
                 _loaded = false
-                api.passUser(api.recommendation.id)
+                api.passUser(api.recommendation.id, api.recommendation.sNumber)
             }
         }
 
@@ -117,7 +117,7 @@ Item {
             iconSource: "../resources/images/like.png"
             onTriggered: {
                 _loaded = false
-                api.likeUser(api.recommendation.id)
+                api.likeUser(api.recommendation.id, api.recommendation.sNumber)
             }
         }
     }

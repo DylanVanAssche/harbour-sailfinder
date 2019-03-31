@@ -47,7 +47,6 @@
 #include <stdlib.h>
 
 #include "os.h"
-#include "keys.h"
 #include "models/user.h"
 #include "models/photo.h"
 #include "models/recommendation.h"
@@ -60,9 +59,12 @@
 
 #define POSITION_MAX_UPDATE 10
 #define TIMEOUT_TIME 15000 // 15 sec
-#define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
-#define TINDER_APP_VERSION "1002224"
+#define TINDER_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36"
+#define TINDER_APP_VERSION "1020330"
+#define ACCOUNTKIT_SENDSMS_ENDPOINT "https://graph.accountkit.com/v1.2/start_login?access_token=AA%7C464891386855067%7Cd1891abb4b0bcdfa0580d9b839f4a522&credentials_type=phone_number&fb_app_events_enabled=1&fields=privacy_policy%2Cterms_of_service&response_type=token&sdk=ios&phone_number="
+#define ACCOUNTKIT_VERIFYSMS_ENDPOINT "https://graph.accountkit.com/v1.2/confirm_login?access_token=AA%7C464891386855067%7Cd1891abb4b0bcdfa0580d9b839f4a522&credentials_type=phone_number&fb_app_events_enabled=1&fields=privacy_policy%2Cterms_of_service&response_type=token&sdk=ios&phone_number="
 #define AUTH_FACEBOOK_ENDPOINT "https://api.gotinder.com/v2/auth/login/facebook"
+#define AUTH_ACCOUNTKIT_ENDPOINT "https://api.gotinder.com/v2/auth/login/accountkit"
 #define AUTH_LOGOUT_ENDPOINT "https://api.gotinder.com/v2/auth/logout"
 #define META_ENDPOINT "https://api.gotinder.com/v2/meta"
 #define UPDATES_ENDPOINT "https://api.gotinder.com/updates"
@@ -77,13 +79,15 @@
 #define MEDIA_ENDPOINT "https://api.gotinder.com/media"
 #define IMAGE_ENDPOINT "https://api.gotinder.com/image"
 #define USER_ENDPOINT "https://api.gotinder.com/user"
-#define GIPHY_SEARCH_ENDPOINT "https://api.giphy.com/v1/gifs/search"
+#define GIPHY_SEARCH_ENDPOINT "https://api.gotinder.com/giphy/search"
 #define GIPHY_FETCH_LIMIT "30" // 30 GIF's each time
 
 class API : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
+    Q_PROPERTY(QString phoneNumber READ phoneNumber)
+    Q_PROPERTY(QString requestCode READ requestCode NOTIFY requestCodeChanged)
     Q_PROPERTY(QString token READ token NOTIFY tokenChanged)
     Q_PROPERTY(bool authenticated READ authenticated NOTIFY authenticatedChanged)
     Q_PROPERTY(bool canEditJobs READ canEditJobs NOTIFY canEditJobsChanged)
@@ -104,7 +108,9 @@ class API : public QObject
 public:
     explicit API(QObject *parent = 0);
     ~API();
-    Q_INVOKABLE void login(QString fbToken);
+    Q_INVOKABLE void authSendSMS(QString phone);
+    Q_INVOKABLE void authVerifySMS(QString code);
+    Q_INVOKABLE void login(QString accessToken, bool accountkit, QString accessId);
     Q_INVOKABLE void getMeta(double latitude, double longitude);
     Q_INVOKABLE void getProfile();
     Q_INVOKABLE void getRecommendations();
@@ -114,12 +120,12 @@ public:
     Q_INVOKABLE void getUpdates(QDateTime lastActivityDate);
     Q_INVOKABLE void getMessages(QString matchId);
     Q_INVOKABLE void sendMessage(QString matchId, QString message, QString userId, QString tempMessageId);
-    Q_INVOKABLE void searchGIF(QString querry);
-    Q_INVOKABLE void searchGIF(QString querry, int offset);
+    Q_INVOKABLE void searchGIF(QString query);
+    Q_INVOKABLE void searchGIF(QString query, int offset);
     Q_INVOKABLE void sendGIF(QString matchId, QString url, QString gifId, QString userId, QString tempMessageId);
-    Q_INVOKABLE void likeUser(QString userId);
-    Q_INVOKABLE void passUser(QString userId);
-    Q_INVOKABLE void superlikeUser(QString userId);
+    Q_INVOKABLE void likeUser(QString userId, int s_number);
+    Q_INVOKABLE void passUser(QString userId, int s_number);
+    Q_INVOKABLE void superlikeUser(QString userId, int s_number);
     Q_INVOKABLE void nextRecommendation();
     Q_INVOKABLE void updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sailfinder::Gender interestedIn, bool discoverable, bool optimizer);
     Q_INVOKABLE void logout();
@@ -129,6 +135,10 @@ public:
     Q_INVOKABLE void getFullMatchProfile(QString userId);
     Q_INVOKABLE int getBearerType();
     Q_INVOKABLE void deleteAccount();
+    QString phoneNumber() const;
+    void setPhoneNumber(const QString &number);
+    QString requestCode() const;
+    void setRequestCode(const QString &code);
     QString token() const;
     void setToken(const QString &token);
     bool networkEnabled() const;
@@ -172,6 +182,7 @@ public:
 
 signals:
     void busyChanged();
+    void requestCodeChanged();
     void tokenChanged();
     void isNewUserChanged();
     void canEditJobsChanged();
@@ -212,6 +223,8 @@ public slots:
     void positionUpdated(const QGeoPositionInfo &info);
 
 private:
+    QString m_phoneNumber = QString();
+    QString m_requestCode = QString();
     QString m_token = QString();
     bool m_isNewUser = false;
     bool m_authenticated = false;
@@ -252,10 +265,12 @@ private:
     QTimer* QNAMTimeoutTimer = NULL;
     QGeoPositionInfoSource* source = NULL;
     OS SFOS;
-    QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters);
+    QNetworkRequest prepareRequest(QUrl url, QUrlQuery parameters, bool hasData = false);
     void getMatches(bool withMessages);
     void getMatches(QString pageToken);
     void getMessages(QString matchId, QString pageToken);
+    void parseRequestCode(QJsonObject json);
+    void parseAccessToken(QJsonObject json);
     void parseLogin(QJsonObject json);
     void parseMeta(QJsonObject json);
     void parseUpdates(QJsonObject json);

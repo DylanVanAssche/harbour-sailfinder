@@ -81,30 +81,31 @@ API::~API()
  * @param parameters
  * @return QNetworkRequest
  */
-QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
+QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters, bool hasData)
 {
     // Set busy state
     this->setBusy(true);
 
     // Add default URL parameters
-    parameters.addQueryItem("locale", "en-GB");
+    parameters.addQueryItem("locale", "en");
     url.setQuery(parameters);
 
     // Create QNetworkRequest
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    if(hasData) {
+        // Setting the Content-Type header when performing a GET request fails
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    }
     request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
-    request.setRawHeader("accept", "*/*");
-    request.setRawHeader("accept-language", "en-GB,en-US;q=0.9,en;q=0.8");
+    request.setRawHeader("Accept", "application/json");
     request.setRawHeader("app-version", TINDER_APP_VERSION);
-    request.setRawHeader("connection", "keep-alive");
-    request.setRawHeader("dnt", "1");
     request.setRawHeader("host", "api.gotinder.com");
-    request.setRawHeader("origin", "https://tinder.com");
+    request.setRawHeader("Origin", "https://tinder.com");
     request.setRawHeader("platform", "web");
-    request.setRawHeader("referer", "https://tinder.com");
+    request.setRawHeader("Referer", "https://tinder.com");
+    request.setRawHeader("x-supported-image-formats", "webp,jpeg");
     if(url.toString() != AUTH_FACEBOOK_ENDPOINT) { // not needed when we're authenticating
-        request.setRawHeader("x-auth-token", this->token().toLocal8Bit());
+        request.setRawHeader("X-Auth-Token", this->token().toLocal8Bit());
     }
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
@@ -113,23 +114,84 @@ QNetworkRequest API::prepareRequest(QUrl url, QUrlQuery parameters)
 
 /**
  * @class API
+ * @brief Send confirmation code to the phone number
+ * @param phone Phone number
+ */
+void API::authSendSMS(QString phone)
+{
+    this->setBusy(true);
+    this->setPhoneNumber(phone);
+
+    // Build URL
+    QUrl url(QString(ACCOUNTKIT_SENDSMS_ENDPOINT) + phone
+             + QString("&locale=") + QLocale::system().name()
+    );
+
+    // Prepare request
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
+
+    // Send request
+    QByteArray dummy;
+    QNetworkReply* reply = QNAM->post(request, dummy);
+    connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+}
+
+/**
+ * @class API
+ * @brief Verify phone number
+ * @param code Request code
+ */
+void API::authVerifySMS(QString code)
+{
+    this->setBusy(true);
+
+    // Build URL
+    QUrl url(QString(ACCOUNTKIT_VERIFYSMS_ENDPOINT) + this->phoneNumber()
+             + QString("&login_request_code=") + this->requestCode()
+             + QString("&confirmation_code=") + code
+             + QString("&locale=") + QLocale::system().name()
+    );
+
+    // Prepare request
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader, TINDER_USER_AGENT);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferNetwork);
+
+    // Send request
+    QByteArray dummy;
+    QNetworkReply* reply = QNAM->post(request, dummy);
+    connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
+}
+
+/**
+ * @class API
  * @brief Authenticate the user with the API
  * @details Retrieve the API token for the user based on it's Facebook access token
  * @param fbToken
  */
-void API::login(QString fbToken)
+void API::login(QString accessToken, bool accountkit, QString accessId)
 {
     // Build URL
-    QUrl url(QString(AUTH_FACEBOOK_ENDPOINT));
+    QUrl url(QString(accountkit ? AUTH_ACCOUNTKIT_ENDPOINT : AUTH_FACEBOOK_ENDPOINT));
     QUrlQuery parameters;
 
     // Build POST payload
     QVariantMap data;
-    data["token"] = fbToken;
+    data["token"] = accessToken;
+    if(accountkit)
+        data["id"] = accessId;
     QJsonDocument payload = QJsonDocument::fromVariant(data);
 
     // Prepare & do request
-    QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+    QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters, true), payload.toJson());
     connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
 }
@@ -156,7 +218,7 @@ void API::getMeta(double latitude, double longitude)
         qDebug() << "Tinder meta data: " << data;
 
         // Prepare & do request
-        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters, true), payload.toJson());
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
@@ -179,7 +241,7 @@ void API::getProfile()
         // Build URL
         QUrl url(QString(PROFILE_ENDPOINT));
         QUrlQuery parameters;
-        parameters.addQueryItem("include","user,plus_control,boost,travel,tutorials,notifications,purchase,products,likes,super_likes,facebook,instagram,spotify,select");
+        parameters.addQueryItem("include","account,boost,email_settings,instagram,likes,notifications,plus_control,products,purchase,spotify,super_likes,tinder_u,travel,tutorials,user");
 
         // Prepare & do request
         QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
@@ -261,6 +323,7 @@ void API::getMatches(bool withMessages)
         QUrl url(QString(MATCHES_ENDPOINT));
         QUrlQuery parameters;
         parameters.addQueryItem("count", "60");
+        parameters.addQueryItem("is_tinder_u", "false");
         if(withMessages) {
             parameters.addQueryItem("message", "1");
         }
@@ -342,7 +405,7 @@ void API::getUpdates(QDateTime lastActivityDate)
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
-        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters, true), payload.toJson());
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
@@ -396,23 +459,21 @@ void API::sendMessage(QString matchId, QString message, QString userId, QString 
     this->sendMessage(payload, matchId);
 }
 
-void API::searchGIF(QString querry)
+void API::searchGIF(QString query)
 {
-    this->searchGIF(querry, 0);
+    this->searchGIF(query, 0);
 }
 
-void API::searchGIF(QString querry, int offset)
+void API::searchGIF(QString query, int offset)
 {
     // No check if authenticated since this endpoint uses a different API key which doesn't change
 
     // Build URL
     QUrl url(QString(GIPHY_SEARCH_ENDPOINT));
     QUrlQuery parameters;
-    parameters.addQueryItem("api_key", GIPHY_KEY);
-    parameters.addQueryItem("q", querry);
+    parameters.addQueryItem("query", query);
     parameters.addQueryItem("limit", GIPHY_FETCH_LIMIT);
-    parameters.addQueryItem("offset", QString(offset)); // avoid encoding
-    parameters.addQueryItem("rating", "pg-13");
+   //parameters.addQueryItem("offset", QString(offset)); // avoid encoding
     url.setQuery(parameters);
 
     QNetworkRequest request(url);
@@ -444,12 +505,13 @@ void API::sendGIF(QString matchId, QString url, QString gifId, QString userId, Q
     this->sendMessage(payload, matchId);
 }
 
-void API::likeUser(QString userId)
+void API::likeUser(QString userId, int s_number)
 {
     if(this->authenticated()) {
         // Build URL
         QUrl url(QString(LIKE_ENDPOINT) + "/" + userId);
         QUrlQuery parameters;
+        parameters.addQueryItem("s_number", QString::number(s_number));
 
         // Prepare & do request
         QNetworkReply* reply = QNAM->get(this->prepareRequest(url, parameters));
@@ -461,12 +523,13 @@ void API::likeUser(QString userId)
     }
 }
 
-void API::passUser(QString userId)
+void API::passUser(QString userId, int s_number)
 {
     if(this->authenticated()) {
         // Build URL
         QUrl url(QString(PASS_ENDPOINT) + "/" + userId);
         QUrlQuery parameters;
+        parameters.addQueryItem("s_number", QString::number(s_number));
 
         // Prepare & do request
         QNetworkReply* reply= QNAM->get(this->prepareRequest(url, parameters));
@@ -478,12 +541,13 @@ void API::passUser(QString userId)
     }
 }
 
-void API::superlikeUser(QString userId)
+void API::superlikeUser(QString userId, int s_number)
 {
     if(this->authenticated()) {
         // Build URL
         QUrl url(QString(LIKE_ENDPOINT) + "/" + userId + QString(SUPERLIKE_ENDPOINT));
         QUrlQuery parameters;
+        parameters.addQueryItem("s_number", QString::number(s_number));
 
         // Build POST payload
         // Empty POST data for this endpoint but it's required to use HTTP POST request
@@ -491,7 +555,7 @@ void API::superlikeUser(QString userId)
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
-        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters, true), payload.toJson());
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
@@ -599,7 +663,7 @@ void API::updateProfile(QString bio, int ageMin, int ageMax, int distanceMax, Sa
 
         // Prepare & do request if update is required
         if(updateRequired) {
-            QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+            QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters, true), payload.toJson());
             connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
             connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         }
@@ -643,7 +707,7 @@ void API::logout()
         QJsonDocument payload = QJsonDocument::fromVariant(data);
 
         // Prepare & do request
-        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters, true), payload.toJson());
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
@@ -715,35 +779,6 @@ void API::uploadPhoto(QString path)
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         multiPart->setParent(reply); // Delete multiPart when reply is deleted
-
-        /*// Build URL
-        QUrl url(QString(IMAGE_ENDPOINT));
-        QUrlQuery parameters;
-        parameters.addQueryItem("client_photo_id", QString("{photoId}?client_photo_id=ProfilePhoto%1").arg(QDateTime::currentMSecsSinceEpoch()));
-        qDebug() << url;
-
-        // Rotate image if needed
-
-
-        // Build multipart
-        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-        QHttpPart imagePart; // Create imagePart and set headers
-        imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"blob\""));
-        imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
-        QFile *file = new QFile(path); // Read image
-        file->open(QIODevice::ReadOnly);
-        imagePart.setBodyDevice(file); // Attach file to imagePart
-        file->setParent(multiPart); // Delete file when multiPart is deleted
-        multiPart->append(imagePart);
-
-        // Prepare & do request
-        QNetworkRequest request = this->prepareRequest(url, parameters);
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data; boundary=" + multiPart->boundary()); // special content-type header
-        qDebug() << request.header(QNetworkRequest::ContentTypeHeader);
-        QNetworkReply* reply = QNAM->post(request, multiPart);
-        connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-        connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
-        multiPart->setParent(reply); // Delete multiPart when reply is deleted*/
     }
 }
 
@@ -1115,7 +1150,8 @@ void API::finished (QNetworkReply *reply)
             emit this->authenticationRequested(qtTrId("sailfinder-api-authentication-requested"));
         }
         else {
-            qCritical() << reply->errorString();
+            qCritical() << "ERROR MSG:" << reply->errorString();
+            qCritical() << "DATA:" << (QString)reply->readAll();
             emit this->errorOccurred(reply->errorString());
         }
 
@@ -1147,7 +1183,15 @@ void API::finished (QNetworkReply *reply)
             QJsonObject jsonObject = jsonData.object();
 
             // Parse data in the right C++ model or database
-            if(reply->url().toString().contains(AUTH_FACEBOOK_ENDPOINT, Qt::CaseInsensitive)) {
+            if(reply->url().toString().contains(ACCOUNTKIT_SENDSMS_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "AccountKit request code received";
+                this->parseRequestCode(jsonObject);
+            }
+            else if(reply->url().toString().contains(ACCOUNTKIT_VERIFYSMS_ENDPOINT, Qt::CaseInsensitive)) {
+                qDebug() << "AccountKit access token received";
+                this->parseAccessToken(jsonObject);
+            }
+            else if(reply->url().toString().contains(AUTH_FACEBOOK_ENDPOINT, Qt::CaseInsensitive) || reply->url().toString().contains(AUTH_ACCOUNTKIT_ENDPOINT, Qt::CaseInsensitive)) {
                 qDebug() << "Tinder login data received";
                 this->parseLogin(jsonObject);
             }
@@ -1232,7 +1276,7 @@ void API::finished (QNetworkReply *reply)
                 }*/
             }
             else {
-                qWarning() << "Received unhandeled API endpoint: " << reply->url().toString();
+                qWarning() << "Received unhandled API endpoint: " << reply->url().toString();
             }
         }
         else {
@@ -1266,6 +1310,22 @@ void API::timeoutChecker(qint64 bytesReceived, qint64 bytesTotal)
         qDebug() << "Progress:" << bytesReceived << " bytes received of " << bytesTotal << "bytes";
         QNAMTimeoutTimer->start(); // restart timer
     }
+}
+
+void API::parseRequestCode(QJsonObject json)
+{
+    this->setRequestCode(json["login_request_code"].toString());
+
+    qDebug() << "AccountKit request code: " << this->requestCode();
+}
+
+void API::parseAccessToken(QJsonObject json)
+{
+    QString access_token = json["access_token"].toString();
+    QString access_id = json["id"].toString();
+    qDebug() << "AccountKit access token: " << access_token << "; access id: " << access_id;
+
+    this->login(access_token, true, access_id);
 }
 
 void API::parseLogin(QJsonObject json)
@@ -1815,7 +1875,7 @@ void API::sendMessage(QJsonDocument payload, QString matchId)
         QUrlQuery parameters;
 
         // Prepare & do request
-        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters), payload.toJson());
+        QNetworkReply* reply = QNAM->post(this->prepareRequest(url, parameters, true), payload.toJson());
         connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
         connect(reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(timeoutChecker(qint64, qint64)));
     }
@@ -1923,6 +1983,27 @@ void API::unlockAll() // In case something goes wrong, avoid deadlock and reset 
     fullMatchProfileLock = false;
     qWarning() << "All endpoints unlocked!";
     emit this->unlockedAllEndpoints();
+}
+
+QString API::phoneNumber() const
+{
+    return m_phoneNumber;
+}
+
+void API::setPhoneNumber(const QString &number)
+{
+    m_phoneNumber = number;
+}
+
+QString API::requestCode() const
+{
+    return m_requestCode;
+}
+
+void API::setRequestCode(const QString &code)
+{
+    m_requestCode = code;
+    this->requestCodeChanged();
 }
 
 QString API::token() const
