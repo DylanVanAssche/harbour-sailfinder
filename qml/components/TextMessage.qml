@@ -18,7 +18,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Label {
+Text {
     width: parent.width
     anchors {
         left: parent.left
@@ -27,4 +27,5 @@ Label {
         rightMargin: Theme.paddingMedium
     }
     wrapMode: Text.WordWrap
+    textFormat: Text.StyledText
 }
