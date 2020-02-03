@@ -39,7 +39,7 @@ ListItem {
             messageItemLoader.setSource("GIFMessage.qml", {"source": model.message})
         }
         else {
-            messageItemLoader.setSource("TextMessage.qml", {"text": model.message, "color": model.authorIsUser? Theme.primaryColor: "black"})
+            messageItemLoader.setSource("TextMessage.qml", {"text": "<p>" + model.message + "</p>", "color": model.authorIsUser? Theme.primaryColor: "black"})
         }
     }
 
@@ -79,6 +79,7 @@ ListItem {
                 var status = "";
 
                 // Status is only needed for our messages, not the other person
+                // This does currently not work. Does model.readMessage exist?
                 if(model.readMessage && model.receivedMessage && model.authorIsUser) {
                     status = " ✓✓"
                 }

@@ -28,7 +28,9 @@ Page {
         contentWidth: parent.width
 
         Column {
-            width: parent.width
+            id: column
+            width: parent.width -2*Theme.paddingMedium
+            x: Theme.paddingMedium
             spacing: Theme.paddingLarge
 
             Item {
