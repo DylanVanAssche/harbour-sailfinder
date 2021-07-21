@@ -25,6 +25,7 @@ Image {
     id: image
     width: Theme.itemSizeLarge
     height: width
+    fillMode: Image.PreserveAspectCrop
     onStatusChanged: {
         if(status == Image.Error) {
             console.warn("Can't load image")

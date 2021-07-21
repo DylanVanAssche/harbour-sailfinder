@@ -66,6 +66,7 @@ Item {
                     id: image
                     width: parent.width
                     height: parent.height
+                    fillMode: Image.PreserveAspectCrop
                     sourceSize.width: width
                     sourceSize.height: height
                     source: {
@@ -159,6 +160,7 @@ Item {
         id: fullScreen
         width: parent.width
         height: parent.width
+        fillMode: Image.PreserveAspectCrop
         anchors.centerIn: parent
         visible: false
         asynchronous: true
