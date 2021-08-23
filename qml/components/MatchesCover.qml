@@ -48,6 +48,7 @@ Item {
                 id: image
                 width: Layout.columnSpan*parent.width/parent.columns
                 height: Layout.rowSpan*parent.width/parent.columns
+                fillMode: Image.PreserveAspectCrop
                 Layout.minimumWidth: width
                 Layout.minimumHeight: height
                 Layout.preferredWidth: width
