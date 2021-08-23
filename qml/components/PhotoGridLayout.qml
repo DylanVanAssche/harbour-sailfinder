@@ -29,8 +29,15 @@ Item {
     width: parent.width
     height: parent.width
 
+    function openFullScreen(imageSource) {
+        fullScreen.source = imageSource
+        fullScreen.visible = true
+        layout.visible = false
+    }
+
     function closeFullScreen() {
         fullScreen.visible = false
+        layout.visible = true
     }
 
     GridLayout {
@@ -113,14 +120,12 @@ Item {
                         anchors.fill: parent
                         enabled: image.status == Image.Ready && repeater.count > 1
                         onClicked: {
-                            fullScreen.source = image.source
-                            fullScreen.visible = true
+                            openFullScreen(image.source)
                             _showRemoveButton = false
                         }
                         onPressAndHold: {
                             if(editable) {
-                                fullScreen.source = image.source
-                                fullScreen.visible = true
+                                openFullScreen(image.source)
                                 deleteOverlay.photoId = model.id
                                 _showRemoveButton = true
                             }
@@ -160,7 +165,7 @@ Item {
         id: fullScreen
         width: parent.width
         height: parent.width
-        fillMode: Image.PreserveAspectCrop
+        fillMode: Image.PreserveAspectFit
         anchors.centerIn: parent
         visible: false
         asynchronous: true
@@ -170,7 +175,7 @@ Item {
             id: touchFull
             anchors.fill: parent
             enabled: repeater.count > 1
-            onClicked: fullScreen.visible = false
+            onClicked: closeFullScreen()
         }
 
         Rectangle {
@@ -196,7 +201,7 @@ Item {
                                                            : Theme.primaryColor)
                 onClicked: {
                     _showRemoveButton = false
-                    fullScreen.visible = false
+                    closeFullScreen()
                     removed(deleteOverlay.photoId)
                 }
             }
